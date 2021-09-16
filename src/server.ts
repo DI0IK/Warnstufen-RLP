@@ -68,6 +68,7 @@ app.get('/api/v1/data', (req, res) => {
 	res.json({
 		data: WarnstufenFix(data.map((d: Data) => getWarnstufe(d))),
 		lastUpdated: cachedData?.lastUpdated,
+		github: 'https://github.com/DI0IK/Warnstufen-RLP',
 	});
 });
 
@@ -160,6 +161,10 @@ function WarnstufenFix(data: Data[]) {
 		history.push(newWarnstufe);
 		dataPart.Warnstufe = history.shift();
 	}
+
+	return data.sort((a, b) => {
+		return new Date(b.Date).getTime() - new Date(a.Date).getTime();
+	});
 }
 
 // Start http/s server:
