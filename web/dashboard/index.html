@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Warnstufe Rheinland Pfalz</title>
+		<script src="/web/dashboard/script.js" defer></script>
+		<link rel="stylesheet" href="/web/dashboard/style.css" />
+		<meta
+			name="description"
+			content="Warnstufe Rheinland Pfalz ist eine Website, die die Warnstufe der Landkreise und Kreisstädte berechnet. Außerdem gibt es eine öffentliche API zur abfrage dieser Daten."
+		/>
+	</head>
+	<body>
+		<div id="header">
+			<h1>Warnstufe</h1>
+		</div>
+		<div id="page">
+			<div id="district-select">
+				<span>Landkreis/Kreisstadt:</span>
+				<select name="District" id="district"></select>
+			</div>
+			<div id="table-wrap">
+				<table id="table"></table>
+			</div>
+		</div>
+		<div id="footer">
+			<p>
+				Quelle:
+				<a
+					href="https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Listen/Leitindikatoren_Corona-Warnstufen.xlsx"
+				>
+					Landesuntersuchungsamt (LUA)
+				</a>
+			</p>
+			<p>
+				<span>Angaben ohne Gewähr</span>
+			</p>
+			<p>
+				<span>Clicks: <span id="clicks"></span></span>
+				<span class="spacer"></span>
+				<span><a href="/web/api-docs">API</a></span>
+				<span class="spacer"></span>
+				<span><a href="https://github.com/DI0IK">Github</a></span>
+			</p>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,23 @@
+{
+	"name": "corona-ampel-api",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"build": "tsc"
+	},
+	"keywords": [],
+	"author": "",
+	"type": "commonjs",
+	"license": "ISC",
+	"dependencies": {
+		"axios": "^0.21.4",
+		"exceljs": "^4.3.0",
+		"express": "^4.17.1",
+		"express-useragent": "^1.0.15"
+	},
+	"devDependencies": {
+		"@types/express": "^4.17.13",
+		"@types/express-useragent": "^1.0.1"
+	}
+}
