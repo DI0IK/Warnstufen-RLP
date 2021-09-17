@@ -68,11 +68,13 @@ getDistricts().then((districts) => {
 		option.innerText = district;
 		districtSelect.appendChild(option);
 	});
-	districtSelect.selectedIndex = districts.length - 10;
 
 	districtSelect.addEventListener('change', (e) => {
 		displayDistrict(e.target.value);
+		localStorage.setItem('district', e.target.selectedIndex);
 	});
+
+	districtSelect.selectedIndex = localStorage.getItem('district') || districts.length - 10;
 
 	displayDistrict(districtSelect.value);
 });
