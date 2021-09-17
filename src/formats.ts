@@ -18,6 +18,7 @@ export interface Config {
 	api: {
 		httpsPort: number;
 		httpPort: number;
+		limit: number;
 	};
 	ampel: {
 		Inzidenz7Tage: number[];

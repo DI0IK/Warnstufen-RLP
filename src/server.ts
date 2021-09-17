@@ -25,6 +25,10 @@ let cachedData: {
 
 let clickCount = 0;
 
+let apiLimits: {
+	[ip: string]: Date[];
+};
+
 const httpsServer = https.createServer(
 	{
 		key: fs.readFileSync(path.join(__dirname, '..', 'sslcert/server.key')),
@@ -53,6 +57,27 @@ app.get('/web/:folder/:filename?', (req, res) => {
 });
 
 app.get('/api/v1/data', (req, res) => {
+	const cDate = new Date();
+	const request = apiLimits[req.ip].filter(
+		(x) =>
+			x >
+			new Date(
+				cDate.getFullYear(),
+				cDate.getMonth(),
+				cDate.getDate() - 7,
+				cDate.getHours(),
+				cDate.getMinutes() - 1
+			)
+	);
+	if (request.length >= config.api.limit) {
+		res.status(429).json({
+			error: 'Too many requests',
+			limit: config.api.limit,
+			blockedUntil: request[request.length - 1].setMinutes(
+				request[request.length - 1].getMinutes() + 1
+			),
+		});
+	}
 	const district = req.query?.district;
 	const last = Number.parseInt(req.query?.last as string);
 
@@ -70,6 +95,8 @@ app.get('/api/v1/data', (req, res) => {
 		lastUpdated: cachedData?.lastUpdated,
 		github: 'https://github.com/DI0IK/Warnstufen-RLP',
 	});
+	if (!apiLimits[req.ip]) apiLimits[req.ip] = [];
+	apiLimits[req.ip].push(new Date());
 });
 
 app.get('/api/v1/districts', (req, res) => {
