@@ -27,7 +27,7 @@ let clickCount = 0;
 
 let apiLimits: {
 	[ip: string]: Date[];
-};
+} = {};
 
 const httpsServer = https.createServer(
 	{
@@ -58,25 +58,16 @@ app.get('/web/:folder/:filename?', (req, res) => {
 
 app.get('/api/v1/data', (req, res) => {
 	const cDate = new Date();
-	const request = apiLimits[req.ip].filter(
-		(x) =>
-			x >
-			new Date(
-				cDate.getFullYear(),
-				cDate.getMonth(),
-				cDate.getDate() - 7,
-				cDate.getHours(),
-				cDate.getMinutes() - 1
-			)
-	);
-	if (request.length >= config.api.limit) {
+	const request = apiLimits[req.ip]?.filter((x) => x.getTime() > Date.now() - 1000 * 60);
+	if (request && request.length >= config.api.limit) {
+		const lastDate = request.sort((a, b) => a.getTime() - b.getTime())[0];
+		let untilDate = new Date(lastDate.getTime() + 1000 * 60);
 		res.status(429).json({
 			error: 'Too many requests',
 			limit: config.api.limit,
-			blockedUntil: request[request.length - 1].setMinutes(
-				request[request.length - 1].getMinutes() + 1
-			),
+			blockedUntil: untilDate.toUTCString(),
 		});
+		return;
 	}
 	const district = req.query?.district;
 	const last = Number.parseInt(req.query?.last as string);
