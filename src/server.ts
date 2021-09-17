@@ -57,7 +57,6 @@ app.get('/web/:folder/:filename?', (req, res) => {
 });
 
 app.get('/api/v1/data', (req, res) => {
-	const cDate = new Date();
 	const request = apiLimits[req.ip]?.filter((x) => x.getTime() > Date.now() - 1000 * 60);
 	if (request && request.length >= config.api.limit) {
 		const lastDate = request.sort((a, b) => a.getTime() - b.getTime())[0];
