@@ -2,5 +2,5 @@ config.json
 node_modules
 dist
 sslcert/*
-data/clicks.txt
+data
 web/**/test*/
