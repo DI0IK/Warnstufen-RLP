@@ -113,6 +113,10 @@ app.get('/sitemap.xml', (req, res) => {
 	res.sendFile(path.join(__dirname, '..', 'sitemap.xml'));
 });
 
+app.get('robots.txt', (req, res) => {
+	res.sendFile(path.join(__dirname, '..', 'robots.txt'));
+});
+
 async function getData() {
 	const data = await getDataOfCovidSheet();
 	cachedData = {
