@@ -209,7 +209,10 @@ function loadData() {
 	} catch (error) {}
 	try {
 		let apiLimits_string = fs.readFileSync(path.join(__dirname, '..', 'data', 'apiLimits.json'));
-		if (apiLimits_string) apiLimits = JSON.parse(apiLimits_string.toString());
+		let apiLimits_n = JSON.parse(apiLimits_string.toString());
+		for (let ip in apiLimits_n) {
+			apiLimits[ip] = apiLimits_n[ip].map((x: string) => new Date(x));
+		}
 	} catch (error) {}
 }
 
