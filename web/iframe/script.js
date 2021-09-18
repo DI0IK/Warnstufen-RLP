@@ -16,14 +16,22 @@ function getData() {
 
 getData().then((data) => {
 	let day = 1;
+	const table = document.getElementById('table');
+	const tableHead = document.createElement('tr');
+	tableHead.innerHTML = `
+		<th>Tag</th>
+		<th>Warnstufe</th>
+		${urlParams.Inzidenz ? `<th>Inzidenz</th>` : ''}
+	`;
+	table.appendChild(tableHead);
 	for (let item of data.data) {
-		const htmlItem = document.createElement('div');
-		htmlItem.className = 'day';
+		const htmlItem = document.createElement('tr');
 		htmlItem.innerHTML = `
-			<span class="date">${getDay(item)}:</span>
-			<span class="Warnstufe">${item.Warnstufe}</span>
-			`;
-		document.getElementById('days').appendChild(htmlItem);
+			<td class="day">${day}</td>
+			<td class="Warnstufe">${item.Warnstufe}</td>
+			${urlParams.Inzidenz ? `<td class="Inzidenz">${item.Inzidenz7Tage}</td>` : ''}
+		`;
+		table.appendChild(htmlItem);
 		day++;
 	}
 });
