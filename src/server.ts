@@ -87,6 +87,7 @@ app.get('/api/v1/data', (req, res) => {
 	});
 	if (!apiLimits[req.ip]) apiLimits[req.ip] = [];
 	apiLimits[req.ip].push(new Date());
+	saveData();
 });
 
 app.get('/api/v1/districts', (req, res) => {
@@ -202,10 +203,18 @@ function loadData() {
 		let clicks_string = fs.readFileSync(path.join(__dirname, '..', 'data', 'clicks.txt'));
 		if (clicks_string) clickCount = Number.parseInt(clicks_string.toString());
 	} catch (error) {}
+	try {
+		let apiLimits_string = fs.readFileSync(path.join(__dirname, '..', 'data', 'apiLimits.json'));
+		if (apiLimits_string) apiLimits = JSON.parse(apiLimits_string.toString());
+	} catch (error) {}
 }
 
 function saveData() {
 	fs.writeFileSync(path.join(__dirname, '..', 'data', 'clicks.txt'), clickCount.toString());
+	fs.writeFileSync(
+		path.join(__dirname, '..', 'data', 'apiLimits.json'),
+		JSON.stringify(apiLimits)
+	);
 }
 
 loadData();
