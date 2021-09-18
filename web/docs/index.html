@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Dokumentation</title>
+		<script src="/web/docs/script.js"></script>
+		<link rel="stylesheet" href="/web/docs/style.css" />
+	</head>
+	<body>
+		<div>
+			<h1>API Dokumentation</h1>
+			<div>
+				<h2>Kreise</h2>
+				<div>GET - /api/v1/districts</div>
+			</div>
+			<div>
+				<h2>Daten</h2>
+				<div>GET - /api/v1/data</div>
+				<h3>Parameter</h3>
+				<ul>
+					<li>district: Kreis</li>
+					<li>last: Tageszahl</li>
+				</ul>
+				<h3>Beispiele</h3>
+				<ul>
+					<li>GET - /api/v1/data?district=Kaiserslautern&last=6</li>
+					<li>GET - /api/v1/data?district=Kaiserslautern</li>
+					<li>GET - /api/v1/data?last=6</li>
+					<li>GET - /api/v1/data</li>
+				</ul>
+			</div>
+			<br />
+			<div>
+				<h1>Iframe Dokumentation</h1>
+				<div>
+					<h2>Beispiel:</h2>
+					<pre id="code"></pre>
+				</div>
+				<link
+					rel="stylesheet"
+					href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/styles/default.min.css"
+				/>
+				<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.2.0/highlight.min.js"></script>
+				<script>
+					fetch('/web/iframe/example.html')
+						.then((x) => x.text())
+						.then((data) => {
+							document.getElementById('code').innerHTML = hljs.highlightAuto(data).value;
+						});
+				</script>
+			</div>
+		</div>
+	</body>
+</html>
