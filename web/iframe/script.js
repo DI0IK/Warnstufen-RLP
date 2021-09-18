@@ -27,7 +27,7 @@ getData().then((data) => {
 	for (let item of data.data) {
 		const htmlItem = document.createElement('tr');
 		htmlItem.innerHTML = `
-			<td class="day">${day}</td>
+			<td class="Tag">${getDay(item)}</td>
 			<td class="Warnstufe">${item.Warnstufe}</td>
 			${urlParams.Inzidenz ? `<td class="Inzidenz">${item.Inzidenz7Tage}</td>` : ''}
 		`;
