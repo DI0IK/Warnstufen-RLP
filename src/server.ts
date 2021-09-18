@@ -109,6 +109,10 @@ app.get('/api/v1/clicks', (req, res) => {
 	});
 });
 
+app.get('/sitemap.xml', (req, res) => {
+	res.sendFile(path.join(__dirname, '..', 'sitemap.xml'));
+});
+
 async function getData() {
 	const data = await getDataOfCovidSheet();
 	cachedData = {
