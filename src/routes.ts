@@ -1,0 +1,329 @@
+import express from 'express';
+import { Details } from 'express-useragent';
+import fs from 'fs';
+import { APIEndpoint, Config, Data, Route } from './formats';
+import sass from 'node-sass';
+import { districts } from './districts';
+const config = require('../config.json') as Config;
+
+//------------------------
+// Web routes
+//------------------------
+
+let router: express.Router = express.Router();
+
+export function setupRouter(app: express.Application) {
+	app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
+		router(req, res, next);
+	});
+	setRoutes();
+}
+
+function setRoutes() {
+	for (let route of routes) {
+		router.get(route.path, (req: express.Request, res: express.Response) => {
+			if (route.loginRequired) {
+				res.sendStatus(401);
+			} else {
+				if (!route.pageCalls) route.pageCalls = [];
+				route.pageCalls.push({
+					ip: req.ip,
+					time: Date.now(),
+					userAgent: {
+						isBot: req.useragent?.isBot,
+						isMobile: req.useragent?.isMobile,
+						isDesktop: req.useragent?.isDesktop,
+						geoIp: req.useragent?.geoIp,
+						browser: req.useragent?.browser,
+						os: req.useragent?.os,
+						useragent: req.useragent?.source,
+					},
+				});
+				res.send(getHTML(route, req));
+			}
+		});
+	}
+	for (let endpoint of APIEndpoints) {
+		(router as any)[endpoint.method.toLowerCase()](
+			endpoint.path,
+			(req: express.Request, res: express.Response) => {
+				if (endpoint.apiLimit) {
+					if (!endpoint.apiCalls) endpoint.apiCalls = [];
+					if (
+						endpoint.apiCalls.filter(
+							(item) => item.ip == req.ip && item.time > new Date().getTime() - 1000 * 60
+						).length < endpoint.apiLimit
+					) {
+						endpoint.handler(req, res);
+						endpoint.apiCalls.push({
+							ip: req.ip,
+							time: new Date().getTime(),
+						});
+					} else {
+						res.sendStatus(429);
+					}
+				} else {
+					endpoint.handler(req, res);
+				}
+			}
+		);
+	}
+}
+
+const routes: Route[] = [
+	{
+		path: '/',
+		loginRequired: false,
+		folderName: 'index',
+		page: {
+			htmlFileName: [
+				{
+					type: 'both',
+					fileName: 'index.html',
+				},
+			],
+			cssFileNames: [
+				{
+					type: 'both',
+					fileName: 'style.scss',
+				},
+			],
+			jsFileNames: [
+				{
+					type: 'both',
+					fileName: 'script.js',
+				},
+			],
+			titles: [
+				{
+					type: 'both',
+					title: 'Warnstufen Rheinland-Pfalz',
+				},
+			],
+		},
+	},
+	{
+		path: '/iframe',
+		loginRequired: false,
+		folderName: 'iframe',
+		page: {
+			htmlFileName: [
+				{
+					type: 'both',
+					fileName: 'index.html',
+				},
+			],
+			cssFileNames: [
+				{
+					type: 'both',
+					fileName: 'style.scss',
+				},
+			],
+			jsFileNames: [
+				{
+					type: 'both',
+					fileName: 'script.js',
+				},
+			],
+			titles: [
+				{
+					type: 'both',
+					title: 'Warnstufen Rheinland-Pfalz',
+				},
+			],
+		},
+	},
+	{
+		path: '/iframe/example',
+		loginRequired: false,
+		folderName: 'iframe',
+		page: {
+			htmlFileName: [],
+			cssFileNames: [],
+			jsFileNames: [],
+			titles: [],
+			replaceWholePage: [
+				{
+					type: 'both',
+					fileName: 'example.html',
+				},
+			],
+		},
+	},
+];
+
+function getHTML(route: Route, req: express.Request) {
+	let defaultHTML = fs.readFileSync('./app/default.html').toString();
+	const { isMobile, isDesktop } = req.useragent as Details;
+
+	if (route.page.replaceWholePage && route.page.replaceWholePage.length > 0) {
+		let page = '';
+		for (let replaceWholePage of route.page.replaceWholePage) {
+			if (
+				replaceWholePage.type === 'both' ||
+				(replaceWholePage.type === 'mobile' && isMobile) ||
+				(replaceWholePage.type === 'desktop' && isDesktop)
+			) {
+				page = fs
+					.readFileSync(`./app/${route.folderName}/${replaceWholePage.fileName}`)
+					.toString();
+				break;
+			}
+		}
+		if (page) return page;
+	}
+
+	if (route.page.htmlFileName.length === 0) {
+		return defaultHTML;
+	}
+
+	for (let htmlFile of route.page.htmlFileName) {
+		if (
+			htmlFile.type === 'both' ||
+			(htmlFile.type === 'mobile' && isMobile) ||
+			(htmlFile.type === 'desktop' && isDesktop)
+		) {
+			defaultHTML = defaultHTML.replace(
+				'%%BODY%%',
+				fs.readFileSync(`./app/${route.folderName}/${htmlFile.fileName}`).toString()
+			);
+		}
+	}
+
+	let cssFiles = '';
+	for (let cssFile of route.page.cssFileNames) {
+		if (
+			cssFile.type === 'both' ||
+			(cssFile.type === 'mobile' && isMobile) ||
+			(cssFile.type === 'desktop' && isDesktop)
+		) {
+			if (!cssFile.fileName.endsWith('.scss')) {
+				cssFiles +=
+					fs.readFileSync(`./app/${route.folderName}/${cssFile.fileName}`).toString() +
+					'\n\n\n';
+			} else {
+				cssFiles +=
+					sass
+						.renderSync({
+							file: `./app/${route.folderName}/${cssFile.fileName}`,
+						})
+						.css.toString() + '\n\n\n';
+			}
+		}
+	}
+	defaultHTML = defaultHTML.replace('%%STYLES%%', `<style>${cssFiles}</style>`);
+
+	let jsFiles = '';
+	for (let jsFile of route.page.jsFileNames) {
+		if (
+			jsFile.type === 'both' ||
+			(jsFile.type === 'mobile' && isMobile) ||
+			(jsFile.type === 'desktop' && isDesktop)
+		) {
+			jsFiles +=
+				fs.readFileSync(`./app/${route.folderName}/${jsFile.fileName}`).toString() + '\n\n\n';
+		}
+	}
+	defaultHTML = defaultHTML.replace('%%SCRIPTS%%', `<script>${jsFiles}</script>`);
+
+	for (let title of route.page.titles) {
+		if (
+			title.type === 'both' ||
+			(title.type === 'mobile' && isMobile) ||
+			(title.type === 'desktop' && isDesktop)
+		) {
+			defaultHTML = defaultHTML.replace('%%PAGENAME%%', title.title);
+		}
+	}
+
+	return defaultHTML;
+}
+
+//------------------------
+// API routes
+//------------------------
+
+const APIEndpoints: APIEndpoint[] = [
+	{
+		path: '/api/v1/data',
+		method: 'GET',
+		handler: (req: express.Request, res: express.Response) => {
+			const { district, last } = req.query;
+
+			let data = cache.data;
+
+			if (last)
+				data = data.filter(
+					(item) =>
+						new Date(item.Date).getTime() >
+						new Date().getTime() - 1000 * 60 * 60 * 24 * Number.parseInt(last as string)
+				);
+
+			if (district) data = data.filter((item) => item.Gebiet === district);
+
+			res.json({
+				data,
+				lastUpdate: cache.lastSync,
+				github: 'https://github.com/DI0IK/Warnstufen-RLP',
+			});
+		},
+		apiLimit: 30,
+	},
+	{
+		path: '/api/v1/statistics',
+		method: 'GET',
+		handler: (req: express.Request, res: express.Response) => {
+			if (req.headers.authorization === 'Bearer ' + config.api.token)
+				res.json({
+					api: APIEndpoints.map((endpoint) => {
+						return {
+							path: endpoint.path,
+							method: endpoint.method,
+							apiLimit: endpoint.apiLimit,
+							apiCalls: endpoint.apiCalls,
+						};
+					}),
+					pages: routes.map((route) => {
+						return {
+							path: route.path,
+							apiCalls: route.pageCalls,
+						};
+					}),
+				});
+			else res.sendStatus(401);
+		},
+		apiLimit: 30,
+	},
+	{
+		path: '/api/v1/districts',
+		method: 'GET',
+		handler: (req: express.Request, res: express.Response) => {
+			res.json(
+				districts
+					.filter((district) => !district.includes('Versorgungsgebiet'))
+					.sort((a, b) => {
+						const a_n = a.replace('KS ', '');
+						const b_n = b.replace('KS ', '');
+
+						if (a_n < b_n) return -1;
+						if (a_n > b_n) return 1;
+						return 0;
+					})
+			);
+		},
+		apiLimit: 30,
+	},
+];
+
+//------------------------
+// Update cache
+//------------------------
+
+let cache: {
+	data: Data[];
+	lastSync: Date;
+} = undefined as any;
+
+export function updateCache(data: { data: Data[]; lastSync: Date }) {
+	cache = data;
+}
