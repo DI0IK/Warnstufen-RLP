@@ -105,7 +105,7 @@ function view(path, type) {
 
 	if (!pathItem) return;
 
-	for (let call of pathItem.apiCalls || []) {
+	for (let call of (pathItem.apiCalls || []).sort((a, b) => b.time - a.time)) {
 		const row = document.createElement('tr');
 
 		const date = document.createElement('td');
