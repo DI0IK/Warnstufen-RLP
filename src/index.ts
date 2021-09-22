@@ -90,10 +90,12 @@ function WarnstufenFix(data: Data[]) {
 
 import express from 'express';
 import useragent from 'express-useragent';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
 app.use(useragent.express());
+app.use(cookieParser('test'));
 
 import http from 'http';
 import https from 'https';

@@ -75,4 +75,5 @@ export interface APIEndpoint {
 		ip: string;
 		time: number;
 	}[];
+	authRequired?: boolean;
 }

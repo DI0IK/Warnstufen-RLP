@@ -20,35 +20,42 @@ export function setupRouter(app: express.Application) {
 }
 
 function setRoutes() {
+	router = express.Router();
 	for (let route of routes) {
 		router.get(route.path, (req: express.Request, res: express.Response) => {
 			if (route.loginRequired) {
-				res.sendStatus(401);
-			} else {
-				if (!route.pageCalls) route.pageCalls = [];
-				route.pageCalls.push({
-					ip: req.ip,
-					time: Date.now(),
-					userAgent: {
-						isBot: req.useragent?.isBot,
-						isMobile: req.useragent?.isMobile,
-						isDesktop: req.useragent?.isDesktop,
-						geoIp: req.useragent?.geoIp,
-						browser: req.useragent?.browser,
-						os: req.useragent?.os,
-						useragent: req.useragent?.source,
-					},
-				});
-				res.send(getHTML(route, req));
+				if (req.cookies.token !== 'Bearer ' + config.api.token)
+					return res.redirect('/login?path=' + req.url);
 			}
+			if (!route.pageCalls) route.pageCalls = [];
+			route.pageCalls.push({
+				ip: req.ip,
+				time: Date.now(),
+				userAgent: {
+					isBot: req.useragent?.isBot,
+					isMobile: req.useragent?.isMobile,
+					isDesktop: req.useragent?.isDesktop,
+					geoIp: req.useragent?.geoIp,
+					browser: req.useragent?.browser,
+					os: req.useragent?.os,
+					useragent: req.useragent?.source,
+				},
+			});
+			res.send(getHTML(route, req));
 		});
 	}
 	for (let endpoint of APIEndpoints) {
 		(router as any)[endpoint.method.toLowerCase()](
 			endpoint.path,
 			(req: express.Request, res: express.Response) => {
+				if (
+					endpoint.authRequired &&
+					req.headers.authorization !== 'Bearer ' + config.api.token &&
+					req.cookies.token !== 'Bearer ' + config.api.token
+				)
+					return res.sendStatus(401);
+				if (!endpoint.apiCalls) endpoint.apiCalls = [];
 				if (endpoint.apiLimit) {
-					if (!endpoint.apiCalls) endpoint.apiCalls = [];
 					if (
 						endpoint.apiCalls.filter(
 							(item) => item.ip == req.ip && item.time > new Date().getTime() - 1000 * 60
@@ -64,93 +71,17 @@ function setRoutes() {
 					}
 				} else {
 					endpoint.handler(req, res);
+					endpoint.apiCalls.push({
+						ip: req.ip,
+						time: new Date().getTime(),
+					});
 				}
 			}
 		);
 	}
 }
 
-const routes: Route[] = [
-	{
-		path: '/',
-		loginRequired: false,
-		folderName: 'index',
-		page: {
-			htmlFileName: [
-				{
-					type: 'both',
-					fileName: 'index.html',
-				},
-			],
-			cssFileNames: [
-				{
-					type: 'both',
-					fileName: 'style.scss',
-				},
-			],
-			jsFileNames: [
-				{
-					type: 'both',
-					fileName: 'script.js',
-				},
-			],
-			titles: [
-				{
-					type: 'both',
-					title: 'Warnstufen Rheinland-Pfalz',
-				},
-			],
-		},
-	},
-	{
-		path: '/iframe',
-		loginRequired: false,
-		folderName: 'iframe',
-		page: {
-			htmlFileName: [
-				{
-					type: 'both',
-					fileName: 'index.html',
-				},
-			],
-			cssFileNames: [
-				{
-					type: 'both',
-					fileName: 'style.scss',
-				},
-			],
-			jsFileNames: [
-				{
-					type: 'both',
-					fileName: 'script.js',
-				},
-			],
-			titles: [
-				{
-					type: 'both',
-					title: 'Warnstufen Rheinland-Pfalz',
-				},
-			],
-		},
-	},
-	{
-		path: '/iframe/example',
-		loginRequired: false,
-		folderName: 'iframe',
-		page: {
-			htmlFileName: [],
-			cssFileNames: [],
-			jsFileNames: [],
-			titles: [],
-			replaceWholePage: [
-				{
-					type: 'both',
-					fileName: 'example.html',
-				},
-			],
-		},
-	},
-];
+let routes: Route[] = JSON.parse(fs.readFileSync('./app/routes.json').toString()) as Route[];
 
 function getHTML(route: Route, req: express.Request) {
 	let defaultHTML = fs.readFileSync('./app/default.html').toString();
@@ -244,6 +175,9 @@ function getHTML(route: Route, req: express.Request) {
 //------------------------
 
 const APIEndpoints: APIEndpoint[] = [
+	//----------------
+	// Data Routes
+	//----------------
 	{
 		path: '/api/v1/data',
 		method: 'GET',
@@ -270,31 +204,6 @@ const APIEndpoints: APIEndpoint[] = [
 		apiLimit: 30,
 	},
 	{
-		path: '/api/v1/statistics',
-		method: 'GET',
-		handler: (req: express.Request, res: express.Response) => {
-			if (req.headers.authorization === 'Bearer ' + config.api.token)
-				res.json({
-					api: APIEndpoints.map((endpoint) => {
-						return {
-							path: endpoint.path,
-							method: endpoint.method,
-							apiLimit: endpoint.apiLimit,
-							apiCalls: endpoint.apiCalls,
-						};
-					}),
-					pages: routes.map((route) => {
-						return {
-							path: route.path,
-							apiCalls: route.pageCalls,
-						};
-					}),
-				});
-			else res.sendStatus(401);
-		},
-		apiLimit: 30,
-	},
-	{
 		path: '/api/v1/districts',
 		method: 'GET',
 		handler: (req: express.Request, res: express.Response) => {
@@ -312,6 +221,92 @@ const APIEndpoints: APIEndpoint[] = [
 			);
 		},
 		apiLimit: 30,
+	},
+
+	//----------------
+	// Redirects
+	//----------------
+	{
+		path: '/web/:a1/',
+		method: 'GET',
+		handler: (req: express.Request, res: express.Response) => {
+			res.redirect(301, `/${req.params.a1}`);
+		},
+	},
+
+	//----------------
+	// Admin routes
+	//----------------
+	{
+		path: '/api/v1/admin/analytics',
+		method: 'GET',
+		handler: (req: express.Request, res: express.Response) => {
+			res.json({
+				api: APIEndpoints.map((endpoint) => {
+					return {
+						path: endpoint.path,
+						method: endpoint.method,
+						apiLimit: endpoint.apiLimit,
+						apiCalls: endpoint.apiCalls,
+					};
+				}),
+				pages: routes.map((route) => {
+					return {
+						path: route.path,
+						apiCalls: route.pageCalls,
+					};
+				}),
+			});
+		},
+		apiLimit: 30,
+		authRequired: true,
+	},
+	{
+		path: '/api/v1/admin/routes',
+		method: 'GET',
+		handler: (req: express.Request, res: express.Response) => {
+			res.json(routes);
+		},
+		apiLimit: 30,
+		authRequired: true,
+	},
+	{
+		path: '/api/v1/admin/reloadRoutes',
+		method: 'GET',
+		handler: (req: express.Request, res: express.Response) => {
+			try {
+				routes = JSON.parse(fs.readFileSync('./app/routes.json').toString());
+				setRoutes();
+				res.json({
+					success: true,
+				});
+			} catch (error) {
+				res.json({
+					success: false,
+					error,
+				});
+			}
+		},
+		apiLimit: 30,
+		authRequired: true,
+	},
+
+	//----------------
+	// GoogleBot routes
+	//----------------
+	{
+		path: '/robots.txt',
+		method: 'GET',
+		handler: (req: express.Request, res: express.Response) => {
+			res.send(fs.readFileSync('./app/robots.txt').toString());
+		},
+	},
+	{
+		path: '/sitemap.xml',
+		method: 'GET',
+		handler: (req: express.Request, res: express.Response) => {
+			res.send(fs.readFileSync('./app/sitemap.xml').toString());
+		},
 	},
 ];
 

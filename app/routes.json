@@ -1,0 +1,178 @@
+[
+	{
+		"path": "/",
+		"loginRequired": false,
+		"folderName": "index",
+		"page": {
+			"htmlFileName": [
+				{
+					"type": "both",
+					"fileName": "index.html"
+				}
+			],
+			"cssFileNames": [
+				{
+					"type": "both",
+					"fileName": "index.scss"
+				},
+				{
+					"type": "desktop",
+					"fileName": "desktop.scss"
+				}
+			],
+			"jsFileNames": [
+				{
+					"type": "both",
+					"fileName": "script.js"
+				}
+			],
+			"titles": [
+				{
+					"type": "both",
+					"title": "Warnstufen Rheinland-Pfalz"
+				}
+			]
+		}
+	},
+	{
+		"path": "/iframe",
+		"loginRequired": false,
+		"folderName": "iframe",
+		"page": {
+			"htmlFileName": [
+				{
+					"type": "both",
+					"fileName": "index.html"
+				}
+			],
+			"cssFileNames": [
+				{
+					"type": "both",
+					"fileName": "style.scss"
+				}
+			],
+			"jsFileNames": [
+				{
+					"type": "both",
+					"fileName": "script.js"
+				}
+			],
+			"titles": [
+				{
+					"type": "both",
+					"title": "Warnstufen Rheinland-Pfalz"
+				}
+			]
+		}
+	},
+	{
+		"path": "/iframe/example",
+		"loginRequired": false,
+		"folderName": "iframe",
+		"page": {
+			"htmlFileName": [],
+			"cssFileNames": [],
+			"jsFileNames": [],
+			"titles": [],
+			"replaceWholePage": [
+				{
+					"type": "both",
+					"fileName": "example.html"
+				}
+			]
+		}
+	},
+	{
+		"path": "/docs",
+		"loginRequired": false,
+		"folderName": "docs",
+		"page": {
+			"htmlFileName": [
+				{
+					"type": "both",
+					"fileName": "index.html"
+				}
+			],
+			"cssFileNames": [
+				{
+					"type": "both",
+					"fileName": "style.scss"
+				}
+			],
+			"jsFileNames": [
+				{
+					"type": "both",
+					"fileName": "script.js"
+				}
+			],
+			"titles": [
+				{
+					"type": "both",
+					"title": "Dokumentation"
+				}
+			]
+		}
+	},
+	{
+		"path": "/login",
+		"loginRequired": false,
+		"folderName": "login",
+		"page": {
+			"htmlFileName": [
+				{
+					"type": "both",
+					"fileName": "index.html"
+				}
+			],
+			"cssFileNames": [
+				{
+					"type": "both",
+					"fileName": "style.scss"
+				}
+			],
+			"jsFileNames": [
+				{
+					"type": "both",
+					"fileName": "script.js"
+				}
+			],
+			"titles": [
+				{
+					"type": "both",
+					"title": "Admin Panel"
+				}
+			]
+		}
+	},
+	{
+		"path": "/admin",
+		"loginRequired": true,
+		"folderName": "admin",
+		"page": {
+			"htmlFileName": [
+				{
+					"type": "both",
+					"fileName": "index.html"
+				}
+			],
+			"cssFileNames": [
+				{
+					"type": "both",
+					"fileName": "style.scss"
+				}
+			],
+			"jsFileNames": [
+				{
+					"type": "both",
+					"fileName": "script.js"
+				}
+			],
+			"titles": [
+				{
+					"type": "both",
+					"title": "Admin Panel"
+				}
+			]
+		}
+	}
+]
