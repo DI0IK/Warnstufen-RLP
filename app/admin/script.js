@@ -94,7 +94,23 @@ function view(path, type) {
 		tr.appendChild(th);
 
 		th = document.createElement('th');
-		th.innerText = 'Geo ip';
+		th.innerText = 'Country';
+		tr.appendChild(th);
+
+		th = document.createElement('th');
+		th.innerText = 'City';
+		tr.appendChild(th);
+
+		th = document.createElement('th');
+		th.innerText = 'ISP';
+		tr.appendChild(th);
+
+		th = document.createElement('th');
+		th.innerText = 'Reverse DNS';
+		tr.appendChild(th);
+
+		th = document.createElement('th');
+		th.innerText = 'Location';
 		tr.appendChild(th);
 	}
 
@@ -135,10 +151,28 @@ function view(path, type) {
 				: 'Unknown';
 			row.appendChild(device);
 			row.title = call.userAgent.useragent;
+			row.onclick = () => {
+				alert(call.userAgent.useragent);
+			};
 
-			const geo = document.createElement('td');
-			geo.innerText = JSON.stringify(call.geoIp);
-			row.appendChild(geo);
+			const geoCountry = document.createElement('td');
+			geoCountry.innerText = call.userAgent.geoIp.country;
+			row.appendChild(geoCountry);
+
+			const geoCity = document.createElement('td');
+			geoCity.innerText = call.userAgent.geoIp.city;
+			row.appendChild(geoCity);
+
+			const geoIsp = document.createElement('td');
+			geoIsp.innerText = call.userAgent.geoIp.isp;
+			row.appendChild(geoIsp);
+
+			const geoReverse = document.createElement('td');
+			geoReverse.innerText = call.userAgent.geoIp.reverse;
+			row.appendChild(geoReverse);
+
+			const geoLocation = document.createElement('td');
+			geoLocation.innerText = `${call.userAgent.geoIp.lat}, ${call.userAgent.geoIp.lon}`;
 		}
 
 		table.appendChild(row);

@@ -4,6 +4,7 @@ import fs from 'fs';
 import { APIEndpoint, Config, Data, Route } from './formats';
 import sass from 'node-sass';
 import { districts } from './districts';
+import axios from 'axios';
 const config = require('../config.json') as Config;
 
 //------------------------
@@ -19,6 +20,10 @@ export function setupRouter(app: express.Application) {
 	setRoutes();
 }
 
+let ipGeoCache: {
+	[ip: string]: any;
+} = {};
+
 function setRoutes() {
 	router = express.Router();
 	for (let route of routes) {
@@ -28,19 +33,43 @@ function setRoutes() {
 					return res.redirect('/login?path=' + req.url);
 			}
 			if (!route.pageCalls) route.pageCalls = [];
-			route.pageCalls.push({
-				ip: req.ip,
-				time: Date.now(),
-				userAgent: {
-					isBot: req.useragent?.isBot,
-					isMobile: req.useragent?.isMobile,
-					isDesktop: req.useragent?.isDesktop,
-					geoIp: req.useragent?.geoIp,
-					browser: req.useragent?.browser,
-					os: req.useragent?.os,
-					useragent: req.useragent?.source,
-				},
-			});
+			if (!ipGeoCache[req.ip]) {
+				axios
+					.get(`http://ip-api.com/json/${req.ip}?fields=196313`, { responseType: 'json' })
+					.then((response) => {
+						route.pageCalls?.push({
+							ip: req.ip,
+							time: Date.now(),
+							userAgent: {
+								isBot: req.useragent?.isBot,
+								isMobile: req.useragent?.isMobile,
+								isDesktop: req.useragent?.isDesktop,
+								browser: req.useragent?.browser,
+								os: req.useragent?.os,
+								useragent: req.useragent?.source,
+								geoIp: response.data,
+							},
+						});
+						ipGeoCache[req.ip] = response.data;
+						setTimeout(() => {
+							delete ipGeoCache[req.ip];
+						}, 1000 * 60 * 60 * 6);
+					});
+			} else {
+				route.pageCalls?.push({
+					ip: req.ip,
+					time: Date.now(),
+					userAgent: {
+						isBot: req.useragent?.isBot,
+						isMobile: req.useragent?.isMobile,
+						isDesktop: req.useragent?.isDesktop,
+						browser: req.useragent?.browser,
+						os: req.useragent?.os,
+						useragent: req.useragent?.source,
+						geoIp: ipGeoCache[req.ip],
+					},
+				});
+			}
 			res.send(getHTML(route, req));
 		});
 	}
