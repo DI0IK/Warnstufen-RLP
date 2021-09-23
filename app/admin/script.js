@@ -173,6 +173,7 @@ function view(path, type) {
 
 			const geoLocation = document.createElement('td');
 			geoLocation.innerText = `${call.userAgent.geoIp.lat}, ${call.userAgent.geoIp.lon}`;
+			row.appendChild(geoLocation);
 		}
 
 		table.appendChild(row);
