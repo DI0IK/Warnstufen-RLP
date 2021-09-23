@@ -173,6 +173,10 @@ function view(path, type) {
 
 			const geoLocation = document.createElement('td');
 			geoLocation.innerText = `${call.userAgent.geoIp.lat}, ${call.userAgent.geoIp.lon}`;
+			geoLocation.onclick = () => {
+				const url = `https://www.google.com/maps/search/?api=1&query=${call.userAgent.geoIp.lat},${call.userAgent.geoIp.lon}`;
+				window.open(url, '_blank');
+			};
 			row.appendChild(geoLocation);
 		}
 
