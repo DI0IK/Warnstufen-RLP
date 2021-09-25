@@ -348,7 +348,7 @@ function getGeoInfos(ip: string) {
 	return new Promise<any>((resolve, reject) => {
 		if (!ipGeoCache[ip]) {
 			axios
-				.get(`https://ipapi.co/${ip}/json/`, { responseType: 'json' })
+				.get(`https://ipapi.co/json/${ip}?fields=196313`, { responseType: 'json' })
 				.then((response) => {
 					resolve(response.data);
 					ipGeoCache[ip] = response.data;
