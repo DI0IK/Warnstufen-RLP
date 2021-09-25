@@ -33,29 +33,7 @@ function setRoutes() {
 					return res.redirect('/login?path=' + req.url);
 			}
 			if (!route.pageCalls) route.pageCalls = [];
-			if (!ipGeoCache[req.ip]) {
-				axios
-					.get(`http://ip-api.com/json/${req.ip}?fields=196313`, { responseType: 'json' })
-					.then((response) => {
-						route.pageCalls?.push({
-							ip: req.ip,
-							time: Date.now(),
-							userAgent: {
-								isBot: req.useragent?.isBot,
-								isMobile: req.useragent?.isMobile,
-								isDesktop: req.useragent?.isDesktop,
-								browser: req.useragent?.browser,
-								os: req.useragent?.os,
-								useragent: req.useragent?.source,
-								geoIp: response.data,
-							},
-						});
-						ipGeoCache[req.ip] = response.data;
-						setTimeout(() => {
-							delete ipGeoCache[req.ip];
-						}, 1000 * 60 * 60 * 6);
-					});
-			} else {
+			getGeoInfos(req.ip).then((geo) => {
 				route.pageCalls?.push({
 					ip: req.ip,
 					time: Date.now(),
@@ -66,10 +44,10 @@ function setRoutes() {
 						browser: req.useragent?.browser,
 						os: req.useragent?.os,
 						useragent: req.useragent?.source,
-						geoIp: ipGeoCache[req.ip],
+						geoIp: geo,
 					},
 				});
-			}
+			});
 			res.send(getHTML(route, req));
 		});
 	}
@@ -91,18 +69,28 @@ function setRoutes() {
 						).length < endpoint.apiLimit
 					) {
 						endpoint.handler(req, res);
-						endpoint.apiCalls.push({
-							ip: req.ip,
-							time: new Date().getTime(),
+						getGeoInfos(req.ip).then((geo) => {
+							endpoint.apiCalls?.push({
+								ip: req.ip,
+								time: new Date().getTime(),
+								userAgent: {
+									geoIp: geo,
+								},
+							});
 						});
 					} else {
 						res.sendStatus(429);
 					}
 				} else {
 					endpoint.handler(req, res);
-					endpoint.apiCalls.push({
-						ip: req.ip,
-						time: new Date().getTime(),
+					getGeoInfos(req.ip).then((geo) => {
+						endpoint.apiCalls?.push({
+							ip: req.ip,
+							time: new Date().getTime(),
+							userAgent: {
+								geoIp: geo,
+							},
+						});
 					});
 				}
 			}
@@ -350,4 +338,29 @@ let cache: {
 
 export function updateCache(data: { data: Data[]; lastSync: Date }) {
 	cache = data;
+}
+
+//------------------------
+// IP Geo Information
+//------------------------
+
+function getGeoInfos(ip: string) {
+	return new Promise<any>((resolve, reject) => {
+		if (!ipGeoCache[ip]) {
+			axios
+				.get(`https://ipapi.co/${ip}/json/`, { responseType: 'json' })
+				.then((response) => {
+					resolve(response.data);
+					ipGeoCache[ip] = response.data;
+					setTimeout(() => {
+						delete ipGeoCache[ip];
+					}, 1000 * 60 * 60 * 6);
+				})
+				.catch((error) => {
+					resolve(error);
+				});
+		} else {
+			resolve(ipGeoCache[ip]);
+		}
+	});
 }

@@ -74,6 +74,9 @@ export interface APIEndpoint {
 	apiCalls?: {
 		ip: string;
 		time: number;
+		userAgent?: {
+			geoIp: any;
+		};
 	}[];
 	authRequired?: boolean;
 }
