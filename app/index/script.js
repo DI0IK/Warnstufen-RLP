@@ -54,7 +54,7 @@ async function displayDistrict(district) {
             <td>${Inzidenz7Tage}</td>
             <td>${Hospitalisierung7Tage}</td>
             <td>${IntensivbettenProzent}</td>
-            <td>${Warnstufe}</td>
+            <td class="W-${Warnstufe}"">${Warnstufe}</td>
         `;
 		table.appendChild(tr);
 	}
@@ -78,24 +78,3 @@ getDistricts().then((districts) => {
 
 	displayDistrict(districtSelect.value);
 });
-
-// Click Clounter
-
-function getClicks() {
-	return new Promise((resolve, reject) => {
-		fetch('/api/v1/clicks')
-			.then((r) => r.json())
-			.then((r) => resolve(r));
-	});
-}
-
-function updateClicks() {
-	getClicks().then((clicks) => {
-		document.getElementById('clicks').innerText = clicks.count;
-	});
-}
-
-setInterval(() => {
-	updateClicks();
-}, 60 * 1000);
-updateClicks();

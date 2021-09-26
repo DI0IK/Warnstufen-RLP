@@ -1,0 +1,18 @@
+body {
+	h1,
+	input,
+	button {
+		position: relative;
+		text-align: center;
+		margin-top: 1em;
+	}
+	* {
+		left: 50%;
+		transform: translateX(-50%);
+	}
+	a {
+		font-size: larger;
+		position: absolute;
+		bottom: 0;
+	}
+}
