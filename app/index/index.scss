@@ -8,6 +8,27 @@ body {
 
 body {
 	background: linear-gradient(to top right, #19cbd8, #30dee4);
+
+	&::before,
+	&::after {
+		content: '';
+		position: absolute;
+		width: 20vh;
+		height: 20vh;
+		z-index: 2;
+		background: linear-gradient(to top right, #ffffff59, #ffffff8e);
+		backdrop-filter: blur(2em);
+		border-radius: 50%;
+	}
+
+	&::before {
+		bottom: 15%;
+		left: 10%;
+	}
+	&::after {
+		top: 12%;
+		right: 8%;
+	}
 }
 
 header {
@@ -25,6 +46,11 @@ main {
 		border-radius: 3px;
 		padding: 0.5em;
 		font-size: 1em;
+		font-weight: bold;
+	}
+
+	#selectText {
+		font-size: 1.2em;
 		font-weight: bold;
 	}
 
@@ -70,27 +96,6 @@ main {
 	backdrop-filter: blur(2em);
 	border-radius: 2em;
 	padding: 1em;
-
-	&::before,
-	&::after {
-		content: '';
-		position: absolute;
-		width: 20vh;
-		height: 20vh;
-		z-index: -1;
-		background: linear-gradient(to top right, #ffffff59, #ffffff8e);
-		backdrop-filter: blur(2em);
-		border-radius: 50%;
-	}
-
-	&::before {
-		bottom: 5%;
-		left: -10%;
-	}
-	&::after {
-		top: 0%;
-		right: -18%;
-	}
 }
 
 footer {
