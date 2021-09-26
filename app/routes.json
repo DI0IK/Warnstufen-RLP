@@ -114,6 +114,37 @@
 		}
 	},
 	{
+		"path": "/26teCoronaVerordnung",
+		"loginRequired": false,
+		"folderName": "26teCoronaVerordnung",
+		"page": {
+			"htmlFileName": [
+				{
+					"type": "both",
+					"fileName": "index.html"
+				}
+			],
+			"cssFileNames": [
+				{
+					"type": "both",
+					"fileName": "style.scss"
+				}
+			],
+			"jsFileNames": [
+				{
+					"type": "both",
+					"fileName": "script.ts"
+				}
+			],
+			"titles": [
+				{
+					"type": "both",
+					"title": "26te Corona Verordnung"
+				}
+			]
+		}
+	},
+	{
 		"path": "/login",
 		"loginRequired": false,
 		"folderName": "login",

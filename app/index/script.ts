@@ -40,7 +40,7 @@ async function displayDistrict(district) {
         <th><div>Inzidenz letzte 7 Tage</div><div>pro 100.000 Einwohner</div></th>
         <th><div>Hospitalisierung letzte 7 Tage</div><div>pro 100.000 Einwohner</div></th>
         <th><div>Intensivbetten belegt</div><div>in Prozent</div></th>
-        <th>Warnstufe</th>
+        <th><a href="/26teCoronaVerordnung">Warnstufe</a></th>
     `;
 	table.appendChild(header);
 
@@ -54,9 +54,16 @@ async function displayDistrict(district) {
             <td>${Inzidenz7Tage}</td>
             <td>${Hospitalisierung7Tage}</td>
             <td>${IntensivbettenProzent}</td>
-            <td class="W-${Warnstufe}"">${Warnstufe}</td>
+            <td class="W-${Warnstufe}"><a href="/26teCoronaVerordnung">${Warnstufe}</a></td>
         `;
 		table.appendChild(tr);
+	}
+
+	const warnstufenItems = document.querySelectorAll('.warnstufen');
+	for (let item of warnstufenItems) {
+		item.addEventListener('click', () => {
+			window.open('/26teCoronaVerordnung', '_blank');
+		});
 	}
 }
 
