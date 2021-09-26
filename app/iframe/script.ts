@@ -5,8 +5,8 @@ for (let item of window.location.search.substring(1).split('&')) {
 
 function getData() {
 	return new Promise((resolve, reject) => {
-		if (!urlParams.district) reject('district is required');
-		fetch(`/api/v1/data?district=${urlParams.district}&last=3`)
+		if (!urlParams['district']) reject('district is required');
+		fetch(`/api/v1/data?district=${urlParams['district']}&last=3`)
 			.then((r) => r.json())
 			.then((data) => {
 				resolve(data);
@@ -21,15 +21,15 @@ getData().then((data) => {
 	tableHead.innerHTML = `
 		<th>Tag</th>
 		<th>Warnstufe</th>
-		${urlParams.Inzidenz ? `<th>Inzidenz</th>` : ''}
+		${urlParams['Inzidenz'] ? `<th>Inzidenz</th>` : ''}
 	`;
 	table.appendChild(tableHead);
-	for (let item of data.data) {
+	for (let item of (data as any).data) {
 		const htmlItem = document.createElement('tr');
 		htmlItem.innerHTML = `
 			<td class="Tag">${getDay(item)}</td>
 			<td class="Warnstufe">${item.Warnstufe}</td>
-			${urlParams.Inzidenz ? `<td class="Inzidenz">${item.Inzidenz7Tage}</td>` : ''}
+			${urlParams['Inzidenz'] ? `<td class="Inzidenz">${item.Inzidenz7Tage}</td>` : ''}
 		`;
 		table.appendChild(htmlItem);
 		day++;
@@ -51,11 +51,11 @@ function getDay(item) {
 	const zeroD = Date.now();
 	const oneD = Date.now() - 1000 * 60 * 60 * 24;
 	const twoD = Date.now() - 1000 * 60 * 60 * 48;
-	return date < zeroD && date > oneD
+	return date.getTime() < zeroD && date.getTime() > oneD
 		? 'Heute'
-		: date < oneD && date > twoD
+		: date.getTime() < oneD && date.getTime() > twoD
 		? 'Gestern'
-		: date < twoD
+		: date.getTime() < twoD
 		? 'Vorgestern'
 		: date.getDate() + '.';
 }

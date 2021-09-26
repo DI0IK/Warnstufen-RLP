@@ -23,7 +23,7 @@
 			"jsFileNames": [
 				{
 					"type": "both",
-					"fileName": "script.js"
+					"fileName": "script.ts"
 				}
 			],
 			"titles": [
@@ -54,7 +54,7 @@
 			"jsFileNames": [
 				{
 					"type": "both",
-					"fileName": "script.js"
+					"fileName": "script.ts"
 				}
 			],
 			"titles": [
@@ -102,7 +102,7 @@
 			"jsFileNames": [
 				{
 					"type": "both",
-					"fileName": "script.js"
+					"fileName": "script.ts"
 				}
 			],
 			"titles": [
@@ -133,7 +133,7 @@
 			"jsFileNames": [
 				{
 					"type": "both",
-					"fileName": "script.js"
+					"fileName": "script.ts"
 				}
 			],
 			"titles": [
@@ -164,7 +164,7 @@
 			"jsFileNames": [
 				{
 					"type": "both",
-					"fileName": "script.js"
+					"fileName": "script.ts"
 				}
 			],
 			"titles": [

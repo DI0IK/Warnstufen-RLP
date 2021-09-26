@@ -44,7 +44,7 @@ async function displayDistrict(district) {
     `;
 	table.appendChild(header);
 
-	for (let day of data.data) {
+	for (let day of (data as any).data) {
 		const Datum = day.Date;
 		const { Inzidenz7Tage, Hospitalisierung7Tage, IntensivbettenProzent, Warnstufe } = day;
 
@@ -61,8 +61,8 @@ async function displayDistrict(district) {
 }
 
 getDistricts().then((districts) => {
-	const districtSelect = document.getElementById('district');
-	districts.forEach((district) => {
+	const districtSelect = document.getElementById('district') as HTMLSelectElement;
+	(districts as any[]).forEach((district) => {
 		const option = document.createElement('option');
 		option.value = district;
 		option.innerText = district;
@@ -70,11 +70,13 @@ getDistricts().then((districts) => {
 	});
 
 	districtSelect.addEventListener('change', (e) => {
-		displayDistrict(e.target.value);
-		localStorage.setItem('district', e.target.selectedIndex);
+		const target = e.target as HTMLSelectElement;
+		displayDistrict(target.value);
+		localStorage.setItem('district', target.selectedIndex.toString());
 	});
 
-	districtSelect.selectedIndex = localStorage.getItem('district') || districts.length - 10;
+	districtSelect.selectedIndex =
+		Number.parseInt(localStorage.getItem('district')) || (districts as any[]).length - 10;
 
 	displayDistrict(districtSelect.value);
 });

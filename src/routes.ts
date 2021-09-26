@@ -3,6 +3,7 @@ import { Details } from 'express-useragent';
 import fs from 'fs';
 import { APIEndpoint, Config, Data, Route } from './formats';
 import sass from 'node-sass';
+import ts from 'typescript';
 import { districts } from './districts';
 import axios from 'axios';
 const config = require('../config.json') as Config;
@@ -138,7 +139,7 @@ function getHTML(route: Route, req: express.Request) {
 		}
 	}
 
-	let cssFiles = '';
+	let cssFiles = [];
 	for (let cssFile of route.page.cssFileNames) {
 		if (
 			cssFile.type === 'both' ||
@@ -146,33 +147,55 @@ function getHTML(route: Route, req: express.Request) {
 			(cssFile.type === 'desktop' && isDesktop)
 		) {
 			if (!cssFile.fileName.endsWith('.scss')) {
-				cssFiles +=
-					fs.readFileSync(`./app/${route.folderName}/${cssFile.fileName}`).toString() +
-					'\n\n\n';
+				cssFiles.push(
+					fs.readFileSync(`./app/${route.folderName}/${cssFile.fileName}`).toString()
+				);
 			} else {
-				cssFiles +=
+				cssFiles.push(
 					sass
 						.renderSync({
 							file: `./app/${route.folderName}/${cssFile.fileName}`,
 						})
-						.css.toString() + '\n\n\n';
+						.css.toString()
+				);
 			}
 		}
 	}
-	defaultHTML = defaultHTML.replace('%%STYLES%%', `<style>${cssFiles}</style>`);
+	defaultHTML = defaultHTML.replace(
+		'%%STYLES%%',
+		cssFiles.map((file) => `<style>${file}</style>`).join('\n')
+	);
 
-	let jsFiles = '';
+	let jsFiles = [];
 	for (let jsFile of route.page.jsFileNames) {
 		if (
 			jsFile.type === 'both' ||
 			(jsFile.type === 'mobile' && isMobile) ||
 			(jsFile.type === 'desktop' && isDesktop)
 		) {
-			jsFiles +=
-				fs.readFileSync(`./app/${route.folderName}/${jsFile.fileName}`).toString() + '\n\n\n';
+			if (jsFile.fileName.endsWith('.ts')) {
+				jsFiles.push(
+					ts.transpileModule(
+						fs.readFileSync(`./app/${route.folderName}/${jsFile.fileName}`).toString(),
+						{
+							compilerOptions: {
+								target: ts.ScriptTarget.ES5,
+								module: ts.ModuleKind.CommonJS,
+							},
+						}
+					).outputText
+				);
+			} else {
+				jsFiles.push(
+					fs.readFileSync(`./app/${route.folderName}/${jsFile.fileName}`).toString()
+				);
+			}
 		}
 	}
-	defaultHTML = defaultHTML.replace('%%SCRIPTS%%', `<script>${jsFiles}</script>`);
+	defaultHTML = defaultHTML.replace(
+		'%%SCRIPTS%%',
+		jsFiles.map((file) => `<script>${file}</script>`).join('\n')
+	);
 
 	for (let title of route.page.titles) {
 		if (

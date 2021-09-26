@@ -14,7 +14,7 @@ function getAnalytics() {
 let analytics = undefined;
 
 async function load() {
-	const filter = document.getElementById('filterGermany');
+	const filter = document.getElementById('filterGermany') as HTMLInputElement;
 
 	if (!analytics) analytics = await getAnalytics();
 	const tablePages = document.getElementById('tablePages');
@@ -77,7 +77,7 @@ async function load() {
 }
 
 function view(path, type) {
-	const filter = document.getElementById('filterGermany');
+	const filter = document.getElementById('filterGermany') as HTMLInputElement;
 
 	const popup = document.getElementById('popup');
 	popup.innerHTML = '';
