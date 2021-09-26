@@ -1,5 +1,5 @@
 function login() {
-	const token = document.getElementById('token').value;
+	const token = (document.getElementById('token') as HTMLInputElement).value;
 
 	if (token.length < 1) {
 		alert('Token is empty');
