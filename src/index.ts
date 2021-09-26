@@ -95,7 +95,7 @@ import cookieParser from 'cookie-parser';
 const app = express();
 
 app.use(useragent.express());
-app.use(cookieParser('test'));
+app.use(cookieParser());
 
 import http from 'http';
 import https from 'https';
