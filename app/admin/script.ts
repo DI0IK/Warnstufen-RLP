@@ -38,7 +38,7 @@ async function load() {
 		if (!filter.checked) views.innerText = page.apiCalls?.length || 0;
 		else
 			views.innerText =
-				page.apiCalls?.filter((c) => c.userAgent.geoIp.country === 'Germany').length || 0;
+				page.apiCalls?.filter((c) => c.userAgent?.geoIp.country === 'Germany').length || 0;
 		row.appendChild(views);
 
 		row.onclick = () => view(page.path, 'pages');
@@ -67,7 +67,7 @@ async function load() {
 		if (!filter.checked) views.innerText = api.apiCalls?.length || 0;
 		else
 			views.innerText =
-				api.apiCalls?.filter((c) => c.userAgent.geoIp.country === 'Germany').length || 0;
+				api.apiCalls?.filter((c) => c.userAgent?.geoIp.country === 'Germany').length || 0;
 		row.appendChild(views);
 
 		row.onclick = () => view(api.path, 'api');
@@ -144,7 +144,7 @@ function view(path, type) {
 	table.appendChild(thead);
 
 	let pathItem = analytics[type].find((item) =>
-		item.path === path && filter ? item.userAgent.geoIp.country === 'Germany' : true
+		item.path === path && filter ? item.userAgent?.geoIp.country === 'Germany' : true
 	);
 
 	if (!pathItem) return;
@@ -162,48 +162,48 @@ function view(path, type) {
 
 		if (type === 'pages') {
 			const os = document.createElement('td');
-			os.innerText = call.userAgent.os;
+			os.innerText = call.userAgent?.os;
 			row.appendChild(os);
 
 			const browser = document.createElement('td');
-			browser.innerText = call.userAgent.browser;
+			browser.innerText = call.userAgent?.browser;
 			row.appendChild(browser);
 
 			const device = document.createElement('td');
-			device.innerText = call.userAgent.isMobile
+			device.innerText = call.userAgent?.isMobile
 				? 'Mobile'
-				: call.userAgent.isDesktop
+				: call.userAgent?.isDesktop
 				? 'Desktop'
-				: call.userAgent.isBot
+				: call.userAgent?.isBot
 				? 'Bot'
 				: 'Unknown';
 			row.appendChild(device);
-			row.title = call.userAgent.useragent;
+			row.title = call.userAgent?.useragent;
 			row.onclick = () => {
-				alert(call.userAgent.useragent);
+				alert(call.userAgent?.useragent);
 			};
 		}
 
 		const geoCountry = document.createElement('td');
-		geoCountry.innerText = call.userAgent.geoIp.country;
+		geoCountry.innerText = call.userAgent?.geoIp.country;
 		row.appendChild(geoCountry);
 
 		const geoCity = document.createElement('td');
-		geoCity.innerText = call.userAgent.geoIp.city;
+		geoCity.innerText = call.userAgent?.geoIp.city;
 		row.appendChild(geoCity);
 
 		const geoIsp = document.createElement('td');
-		geoIsp.innerText = call.userAgent.geoIp.isp;
+		geoIsp.innerText = call.userAgent?.geoIp.isp;
 		row.appendChild(geoIsp);
 
 		const geoReverse = document.createElement('td');
-		geoReverse.innerText = call.userAgent.geoIp.reverse;
+		geoReverse.innerText = call.userAgent?.geoIp.reverse;
 		row.appendChild(geoReverse);
 
 		const geoLocation = document.createElement('td');
-		geoLocation.innerText = `${call.userAgent.geoIp.lat}, ${call.userAgent.geoIp.lon}`;
+		geoLocation.innerText = `${call.userAgent?.geoIp.lat}, ${call.userAgent?.geoIp.lon}`;
 		geoLocation.onclick = () => {
-			const url = `https://www.google.com/maps/search/?api=1&query=${call.userAgent.geoIp.lat},${call.userAgent.geoIp.lon}`;
+			const url = `https://www.google.com/maps/search/?api=1&query=${call.userAgent?.geoIp.lat},${call.userAgent?.geoIp.lon}`;
 			window.open(url, '_blank');
 		};
 		row.appendChild(geoLocation);
