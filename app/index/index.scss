@@ -1,14 +1,3 @@
-footer {
-	position: fixed;
-	bottom: 0;
-}
-
-.spacer {
-	margin: 0 0 0 0;
-	width: 1em;
-	display: inline-block;
-}
-
 html,
 body {
 	height: 100%;
@@ -17,50 +6,104 @@ body {
 	padding: 0;
 }
 
-h1 {
+body {
+	background: linear-gradient(to top right, #19cbd8, #30dee4);
+}
+
+header {
+	position: absolute;
 	text-align: center;
+	top: 1em;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 100%;
 }
 
-#tableWrap {
-	#table {
-		th {
-			font-size: 1.2em;
-			font-weight: bold;
-			background-color: rgb(210, 210, 210);
-		}
-		td {
-			text-align: center;
-
-			&.W-1 {
-				background-color: darken(yellow, 5%);
-			}
-			&.W-2 {
-				background-color: orange;
-			}
-			&.W-3 {
-				background-color: red;
-			}
-		}
-		th,
-		td {
-			font-family: Arial, Helvetica, sans-serif;
-			border-bottom: 1px solid #999;
-			padding: 0.5em;
-			position: relative;
-		}
-
-		font-size: larger;
+main {
+	select {
+		border: 1px solid #999;
+		border-radius: 3px;
+		padding: 0.5em;
+		font-size: 1em;
+		font-weight: bold;
 	}
-	overflow-x: scroll;
-	overflow-y: hidden;
-	margin-top: 1em;
-	margin-bottom: 5em;
+
+	#tableWrap {
+		#table {
+			th {
+				font-size: 1.2em;
+				font-weight: bold;
+				background-color: rgb(210, 210, 210);
+			}
+			td {
+				text-align: center;
+
+				&.W-1 {
+					background-color: darken(yellow, 5%);
+				}
+				&.W-2 {
+					background-color: orange;
+				}
+				&.W-3 {
+					background-color: red;
+				}
+			}
+			th,
+			td {
+				font-family: Arial, Helvetica, sans-serif;
+				border-bottom: 1px solid #999;
+				padding: 0.5em;
+				position: relative;
+			}
+
+			font-size: larger;
+		}
+		overflow-x: scroll;
+		margin-top: 1em;
+	}
+
+	top: 8em;
+	position: relative;
+	margin-bottom: 10em;
+
+	background: linear-gradient(to top right, #ffffff73, #ffffffc0);
+	backdrop-filter: blur(2em);
+	border-radius: 2em;
+	padding: 1em;
+
+	&::before,
+	&::after {
+		content: '';
+		position: absolute;
+		width: 20vh;
+		height: 20vh;
+		z-index: -1;
+		background: linear-gradient(to top right, #ffffff59, #ffffff8e);
+		backdrop-filter: blur(2em);
+		border-radius: 50%;
+	}
+
+	&::before {
+		bottom: 5%;
+		left: -10%;
+	}
+	&::after {
+		top: 0%;
+		right: -18%;
+	}
 }
 
-select {
-	border: 1px solid #999;
-	border-radius: 3px;
-	padding: 0.5em;
-	font-size: 1em;
-	font-weight: bold;
+footer {
+	position: fixed;
+	bottom: 0;
+
+	.spacer {
+		margin: 0 0 0 0;
+		width: 1em;
+		display: inline-block;
+	}
+
+	&.hidden {
+		display: none;
+	}
 }
