@@ -40,7 +40,7 @@ window.addEventListener(
 	'message',
 	(e) => {
 		const style = document.createElement('style');
-		style.innerHTML = e.data;
+		style.innerText = e.data;
 		document.body.appendChild(style);
 	},
 	false

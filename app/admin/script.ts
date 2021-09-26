@@ -143,12 +143,9 @@ function view(path, type) {
 	thead.appendChild(tr);
 	table.appendChild(thead);
 
-	let pathItem = analytics[type].find((item) => item.path === path);
-
-	if (filter.checked)
-		pathItem.apiCalls = pathItem.apiCalls.filter(
-			(item) => item.userAgent.geoIp.country === 'Germany'
-		);
+	let pathItem = analytics[type].find((item) =>
+		item.path === path && filter ? item.userAgent.geoIp.country === 'Germany' : true
+	);
 
 	if (!pathItem) return;
 
