@@ -143,7 +143,9 @@ function view(path, type) {
 	thead.appendChild(tr);
 	table.appendChild(thead);
 
-	let pathItem = (analytics[type] as any[]).find((item) => item.path === path);
+	let pathItem = JSON.parse(
+		JSON.stringify((analytics[type] as any[]).find((item) => item.path === path))
+	);
 
 	if (filter.checked)
 		pathItem.apiCalls = pathItem.apiCalls.filter(
