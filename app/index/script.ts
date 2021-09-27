@@ -76,16 +76,24 @@ getDistricts().then((districts) => {
 		districtSelect.appendChild(option);
 	});
 
+	if (location.hash) {
+		districtSelect.selectedIndex =
+			Number.parseInt(location.hash.substr(1)) || (districts as any[]).length - 10;
+
+		displayDistrict(districtSelect.value);
+	} else {
+		districtSelect.selectedIndex =
+			Number.parseInt(localStorage.getItem('district')) || (districts as any[]).length - 10;
+
+		displayDistrict(districtSelect.value);
+	}
+
 	districtSelect.addEventListener('change', (e) => {
 		const target = e.target as HTMLSelectElement;
 		displayDistrict(target.value);
 		localStorage.setItem('district', target.selectedIndex.toString());
+		location.hash = target.selectedIndex.toString();
 	});
-
-	districtSelect.selectedIndex =
-		Number.parseInt(localStorage.getItem('district')) || (districts as any[]).length - 10;
-
-	displayDistrict(districtSelect.value);
 });
 
 let pageHeight = 0;
