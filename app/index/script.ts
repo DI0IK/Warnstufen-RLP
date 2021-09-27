@@ -77,8 +77,11 @@ getDistricts().then((districts) => {
 	});
 
 	if (location.hash) {
-		districtSelect.selectedIndex =
-			Number.parseInt(location.hash.substr(1)) || (districts as any[]).length - 10;
+		districtSelect.selectedIndex = (districts as any[]).indexOf(
+			location.hash.substr(1).replace(/%20/g, ' ')
+		);
+
+		console.log(location.hash.substr(1).replace(/%20/g, ' '));
 
 		displayDistrict(districtSelect.value);
 	} else {
@@ -92,7 +95,7 @@ getDistricts().then((districts) => {
 		const target = e.target as HTMLSelectElement;
 		displayDistrict(target.value);
 		localStorage.setItem('district', target.selectedIndex.toString());
-		location.hash = target.selectedIndex.toString();
+		location.hash = target.value;
 	});
 });
 
