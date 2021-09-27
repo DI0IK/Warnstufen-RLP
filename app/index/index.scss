@@ -102,6 +102,7 @@ main {
 footer {
 	position: fixed;
 	bottom: 0;
+	z-index: 3;
 
 	.spacer {
 		margin: 0 0 0 0;
