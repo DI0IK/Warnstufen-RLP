@@ -7,7 +7,7 @@ body {
 }
 
 body {
-	background: linear-gradient(to top right, #19cbd8, #30dee4);
+	background: linear-gradient(to top right, #19cbd8, #38e1e7);
 
 	&::before,
 	&::after {
@@ -15,7 +15,7 @@ body {
 		position: absolute;
 		width: 20vh;
 		height: 20vh;
-		z-index: 2;
+		z-index: -1;
 		background: linear-gradient(to top right, #ffffff59, #ffffff8e);
 		backdrop-filter: blur(2em);
 		border-radius: 50%;
@@ -92,7 +92,7 @@ main {
 	position: relative;
 	margin-bottom: 10em;
 
-	background: linear-gradient(to top right, #ffffff73, #ffffffc0);
+	background: linear-gradient(to top right, #ffffff60, #ffffff96);
 	backdrop-filter: blur(2em);
 	border-radius: 2em;
 	padding: 1em;
