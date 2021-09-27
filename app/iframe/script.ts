@@ -32,7 +32,7 @@ getData().then((data) => {
 		const htmlItem = document.createElement('tr');
 		htmlItem.innerHTML = `
 			<td class="Tag">${getDay(item)}</td>
-			<td class="Warnstufe">${item.Warnstufe}</td>
+			<td class="Warnstufe ${args.includes('colors') ? `W-${item.Warnstufe}` : ''}">${item.Warnstufe}</td>
 			${args.includes('inzidenz') ? `<td class="Inzidenz">${item.Inzidenz7Tage}</td>` : ''}
 			${
 				args.includes('hospitalisierung')

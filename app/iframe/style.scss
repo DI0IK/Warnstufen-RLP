@@ -23,5 +23,17 @@ table {
 		th {
 			padding: 0.2em;
 		}
+
+		td {
+			&.W-1 {
+				background-color: darken(yellow, 5%);
+			}
+			&.W-2 {
+				background-color: orange;
+			}
+			&.W-3 {
+				background-color: red;
+			}
+		}
 	}
 }
