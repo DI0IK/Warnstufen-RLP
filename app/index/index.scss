@@ -14,8 +14,8 @@ body {
 		position: absolute;
 		width: 20vh;
 		height: 20vh;
-		z-index: -1;
-		background: linear-gradient(to top right, #ffffff59, #ffffff8e);
+		z-index: 1;
+		background: linear-gradient(to top right, #ffffff23, #ffffff52);
 		backdrop-filter: blur(2em);
 		border-radius: 50%;
 	}
@@ -95,6 +95,8 @@ main {
 	backdrop-filter: blur(2em);
 	border-radius: 2em;
 	padding: 1em;
+
+	z-index: 2;
 }
 
 footer {
