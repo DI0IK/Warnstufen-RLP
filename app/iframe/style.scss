@@ -16,3 +16,12 @@ div {
 	position: absolute;
 	bottom: 0;
 }
+
+table {
+	tr {
+		td,
+		th {
+			padding: 0.2em;
+		}
+	}
+}
