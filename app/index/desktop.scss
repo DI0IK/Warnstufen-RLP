@@ -5,8 +5,7 @@ body {
 }
 
 main {
-	#selection,
-	#tableWrap {
+	.centerItem {
 		display: flex;
 		flex-direction: column;
 		align-items: center;

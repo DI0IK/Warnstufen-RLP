@@ -112,3 +112,18 @@ window.onscroll = function (e) {
 		document.getElementById('footer').classList.remove('bottom');
 	}
 };
+
+window.onresize = function (e) {
+	const tablewidth = document.getElementById('table').offsetWidth;
+	const bodywidth = document.querySelector('main').offsetWidth;
+
+	console.log(tablewidth, bodywidth);
+
+	if (bodywidth > tablewidth) {
+		document.getElementById('tableWrap').classList.add('centerItem');
+		console.log('center');
+	} else {
+		document.getElementById('tableWrap').classList.remove('centerItem');
+		console.log('left');
+	}
+};
