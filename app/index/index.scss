@@ -4,11 +4,10 @@ body {
 	width: 100%;
 	margin: 0;
 	padding: 0;
+	background: linear-gradient(to top right, #19cbd8, #38e1e7);
 }
 
 body {
-	background: linear-gradient(to top right, #19cbd8, #38e1e7);
-
 	&::before,
 	&::after {
 		content: '';
