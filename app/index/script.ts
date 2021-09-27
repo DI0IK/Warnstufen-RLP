@@ -88,15 +88,16 @@ getDistricts().then((districts) => {
 	displayDistrict(districtSelect.value);
 });
 
-let scrolled = 0;
+let pageHeight = 0;
 
-window.onscroll = function () {
-	const scrollDirection = scrolled > this.scrollY ? +1 : -1;
-	scrolled = this.scrollY;
+window.onscroll = function (e) {
+	if (!pageHeight) pageHeight = document.body.scrollHeight;
+	const scrolledTo = window.scrollY + window.innerHeight;
+	const pixelsToBottom = pageHeight - scrolledTo;
 
-	if (scrollDirection === -1) {
-		document.getElementById('footer').classList.add('hidden');
+	if (pixelsToBottom <= 0) {
+		document.getElementById('footer').classList.add('bottom');
 	} else {
-		document.getElementById('footer').classList.remove('hidden');
+		document.getElementById('footer').classList.remove('bottom');
 	}
 };
