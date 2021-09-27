@@ -3,6 +3,8 @@ for (let item of window.location.search.substring(1).split('&')) {
 	urlParams[item.split('=')[0]] = item.split('=')[1];
 }
 
+let args = urlParams['args']?.split(';').map((i: string) => i.toLowerCase()) || [];
+
 function getData() {
 	return new Promise((resolve, reject) => {
 		if (!urlParams['district']) reject('district is required');
@@ -21,18 +23,34 @@ getData().then((data) => {
 	tableHead.innerHTML = `
 		<th>Tag</th>
 		<th>Warnstufe</th>
-		${urlParams['Inzidenz'] ? `<th>Inzidenz</th>` : ''}
+		${args.includes('inzidenz') ? `<th>Inzidenz</th>` : ''}
+		${args.includes('hospitalisierung') ? `<th>Hospitalisierung</th>` : ''}
+		${args.includes('intensivbetten') ? `<th>Intensivbetten %</th>` : ''}
 	`;
 	table.appendChild(tableHead);
 	for (let item of (data as any).data) {
 		const htmlItem = document.createElement('tr');
 		htmlItem.innerHTML = `
 			<td class="Tag">${getDay(item)}</td>
-			<td class="Warnstufe">${item.Warnstufe}</td>
-			${urlParams['Inzidenz'] ? `<td class="Inzidenz">${item.Inzidenz7Tage}</td>` : ''}
+			<td class="Warnstufe ${args.includes('colors') ? `W-${item.Warnstufe}` : ''}">${item.Warnstufe}</td>
+			${args.includes('inzidenz') ? `<td class="Inzidenz">${item.Inzidenz7Tage}</td>` : ''}
+			${
+				args.includes('hospitalisierung')
+					? `<td class="Hospitalisierung">${item.Hospitalisierung7Tage}</td>`
+					: ''
+			}
+			${
+				args.includes('intensivbetten')
+					? `<td class="Intensivbetten">${item.IntensivbettenProzent}</td>`
+					: ''
+			}
 		`;
 		table.appendChild(htmlItem);
 		day++;
+	}
+
+	if (args.includes('nolink')) {
+		document.getElementById('link').style.display = 'none';
 	}
 });
 

@@ -87,3 +87,16 @@ getDistricts().then((districts) => {
 
 	displayDistrict(districtSelect.value);
 });
+
+let scrolled = 0;
+
+window.onscroll = function () {
+	const scrollDirection = scrolled > this.scrollY ? +1 : -1;
+	scrolled = this.scrollY;
+
+	if (scrollDirection === -1) {
+		document.getElementById('footer').classList.add('hidden');
+	} else {
+		document.getElementById('footer').classList.remove('hidden');
+	}
+};

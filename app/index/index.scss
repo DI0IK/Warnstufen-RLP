@@ -1,66 +1,115 @@
-footer {
-	position: fixed;
-	bottom: 0;
-}
-
-.spacer {
-	margin: 0 0 0 0;
-	width: 1em;
-	display: inline-block;
-}
-
 html,
 body {
 	height: 100%;
 	width: 100%;
 	margin: 0;
 	padding: 0;
+	background: linear-gradient(to top right, #19cbd8, #38e1e7);
 }
 
-h1 {
-	text-align: center;
-}
-
-#tableWrap {
-	#table {
-		th {
-			font-size: 1.2em;
-			font-weight: bold;
-			background-color: rgb(210, 210, 210);
-		}
-		td {
-			text-align: center;
-
-			&.W-1 {
-				background-color: darken(yellow, 5%);
-			}
-			&.W-2 {
-				background-color: orange;
-			}
-			&.W-3 {
-				background-color: red;
-			}
-		}
-		th,
-		td {
-			font-family: Arial, Helvetica, sans-serif;
-			border-bottom: 1px solid #999;
-			padding: 0.5em;
-			position: relative;
-		}
-
-		font-size: larger;
+body {
+	&::before,
+	&::after {
+		content: '';
+		position: absolute;
+		width: 20vh;
+		height: 20vh;
+		z-index: 1;
+		background: linear-gradient(to top right, #ffffff23, #ffffff52);
+		backdrop-filter: blur(2em);
+		border-radius: 50%;
 	}
-	overflow-x: scroll;
-	overflow-y: hidden;
-	margin-top: 1em;
-	margin-bottom: 5em;
+
+	&::before {
+		bottom: 15%;
+		left: 10%;
+	}
+	&::after {
+		top: 12%;
+		right: 8%;
+	}
 }
 
-select {
-	border: 1px solid #999;
-	border-radius: 3px;
-	padding: 0.5em;
-	font-size: 1em;
-	font-weight: bold;
+header {
+	position: absolute;
+	text-align: center;
+	top: 1em;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 100%;
+}
+
+main {
+	select {
+		border: 1px solid #999;
+		border-radius: 3px;
+		padding: 0.5em;
+		font-size: 1em;
+		font-weight: bold;
+	}
+
+	#selectText {
+		font-size: 1.2em;
+		font-weight: bold;
+	}
+
+	#tableWrap {
+		#table {
+			th {
+				font-size: 1.2em;
+				font-weight: bold;
+				background-color: rgb(210, 210, 210);
+			}
+			td {
+				text-align: center;
+
+				&.W-1 {
+					background-color: darken(yellow, 5%);
+				}
+				&.W-2 {
+					background-color: orange;
+				}
+				&.W-3 {
+					background-color: red;
+				}
+			}
+			th,
+			td {
+				font-family: Arial, Helvetica, sans-serif;
+				border-bottom: 1px solid #999;
+				padding: 0.5em;
+				position: relative;
+			}
+
+			font-size: larger;
+		}
+		overflow-x: scroll;
+		margin-top: 1em;
+	}
+
+	top: 8em;
+	position: relative;
+	margin-bottom: 10em;
+
+	background: linear-gradient(to top right, #ffffff60, #ffffff96);
+	backdrop-filter: blur(2em);
+	border-radius: 2em;
+	padding: 1em;
+
+	z-index: 2;
+}
+
+footer {
+	position: fixed;
+	bottom: 0;
+
+	.spacer {
+		margin: 0 0 0 0;
+		width: 1em;
+		display: inline-block;
+	}
+
+	&.hidden {
+		display: none;
+	}
 }
