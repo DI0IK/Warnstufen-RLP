@@ -1,4 +1,8 @@
 User-Agent: *
 Allow: /
+Disallow: /admin
+Disallow: /login
+Disallow: /kontakt
+Disallow: /iframe
 
-Sitemap: https://warnzahl-rlp.de/sitemap.xml
+Sitemap: https://www.warnzahl-rlp.de/sitemap.xml

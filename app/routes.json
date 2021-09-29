@@ -145,6 +145,37 @@
 		}
 	},
 	{
+		"path": "/kontakt",
+		"loginRequired": false,
+		"folderName": "kontakt",
+		"page": {
+			"htmlFileName": [
+				{
+					"type": "both",
+					"fileName": "index.html"
+				}
+			],
+			"cssFileNames": [
+				{
+					"type": "both",
+					"fileName": "style.scss"
+				}
+			],
+			"jsFileNames": [
+				{
+					"type": "both",
+					"fileName": "script.ts"
+				}
+			],
+			"titles": [
+				{
+					"type": "both",
+					"title": "Kontakt"
+				}
+			]
+		}
+	},
+	{
 		"path": "/login",
 		"loginRequired": false,
 		"folderName": "login",
