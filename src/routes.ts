@@ -20,7 +20,7 @@ export function setupRouter(app: express.Application) {
 			res.redirect(`https://${req.headers.host}${req.url}`);
 			return;
 		}
-		if (!req.subdomains[0] || req.subdomains[0] !== 'www') {
+		if (!req.subdomains[0]) {
 			res.redirect(`https://www.${req.headers.host}${req.url}`);
 			return;
 		}
