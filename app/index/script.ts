@@ -76,27 +76,54 @@ getDistricts().then((districts) => {
 		districtSelect.appendChild(option);
 	});
 
+	if (location.hash) {
+		districtSelect.selectedIndex = (districts as any[]).indexOf(
+			location.hash.substr(1).replace(/%20/g, ' ')
+		);
+
+		console.log(location.hash.substr(1).replace(/%20/g, ' '));
+
+		displayDistrict(districtSelect.value);
+	} else {
+		districtSelect.selectedIndex =
+			Number.parseInt(localStorage.getItem('district')) || (districts as any[]).length - 10;
+
+		displayDistrict(districtSelect.value);
+	}
+
 	districtSelect.addEventListener('change', (e) => {
 		const target = e.target as HTMLSelectElement;
 		displayDistrict(target.value);
 		localStorage.setItem('district', target.selectedIndex.toString());
+		location.hash = target.value;
 	});
-
-	districtSelect.selectedIndex =
-		Number.parseInt(localStorage.getItem('district')) || (districts as any[]).length - 10;
-
-	displayDistrict(districtSelect.value);
 });
 
-let scrolled = 0;
+let pageHeight = 0;
 
-window.onscroll = function () {
-	const scrollDirection = scrolled > this.scrollY ? +1 : -1;
-	scrolled = this.scrollY;
+window.onscroll = function (e) {
+	if (!pageHeight) pageHeight = document.body.scrollHeight;
+	const scrolledTo = window.scrollY + window.innerHeight;
+	const pixelsToBottom = pageHeight - scrolledTo;
 
-	if (scrollDirection === -1) {
-		document.getElementById('footer').classList.add('hidden');
+	if (pixelsToBottom <= 0) {
+		document.getElementById('footer').classList.add('bottom');
 	} else {
-		document.getElementById('footer').classList.remove('hidden');
+		document.getElementById('footer').classList.remove('bottom');
+	}
+};
+
+window.onresize = function (e) {
+	const tablewidth = document.getElementById('table').offsetWidth;
+	const bodywidth = document.querySelector('main').offsetWidth;
+
+	console.log(tablewidth, bodywidth);
+
+	if (bodywidth > tablewidth) {
+		document.getElementById('tableWrap').classList.add('centerItem');
+		console.log('center');
+	} else {
+		document.getElementById('tableWrap').classList.remove('centerItem');
+		console.log('left');
 	}
 };

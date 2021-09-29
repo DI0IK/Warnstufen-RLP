@@ -3,4 +3,4 @@ node_modules
 dist
 sslcert/*
 data
-web/**/test*/
+app/kontakt/index.html
