@@ -16,6 +16,14 @@ let router: express.Router = express.Router();
 
 export function setupRouter(app: express.Application) {
 	app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
+		if (!req.secure) {
+			res.redirect(`https://${req.headers.host}${req.url}`);
+			return;
+		}
+		if (!req.subdomains[0] || req.subdomains[0] !== 'www') {
+			res.redirect(`https://www.${req.headers.host}${req.url}`);
+			return;
+		}
 		router(req, res, next);
 	});
 	setRoutes();
