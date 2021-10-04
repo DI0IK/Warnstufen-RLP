@@ -25,7 +25,7 @@ body {
 		left: 10%;
 	}
 	&::after {
-		animation-duration: 1800s;
+		animation-duration: 3600s;
 		animation-name: kugeln;
 		animation-iteration-count: infinite;
 		animation-direction: alternate;
@@ -119,11 +119,11 @@ footer {
 
 @keyframes kugeln {
 	0% {
-		left:80%;
-		top:10%;
-	} 
+		left: 80%;
+		top: 10%;
+	}
 	100% {
-		left:20%;
-		top:11%;
+		left: 20%;
+		top: 11%;
 	}
 }
