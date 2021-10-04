@@ -6,7 +6,13 @@ import sass from 'node-sass';
 import ts from 'typescript';
 import { districts } from './districts';
 import axios from 'axios';
+import { Logger } from './logger';
 const config = require('../config.json') as Config;
+
+const logger = new Logger({
+	log: false,
+	logFiles: { access: './logs/access.log', log: './logs/log.log' },
+});
 
 //------------------------
 // Web routes
@@ -54,7 +60,14 @@ function setRoutes() {
 						os: req.useragent?.os,
 						useragent: req.useragent?.source,
 						geoIp: geo,
+						referer: req.headers.referer || req.headers.referrer || 'none',
 					},
+				});
+				logger.propertyAccess(req.ip, req.url, {
+					userAgent: req.useragent?.source,
+					geoIp: geo,
+					headers: req.headers,
+					referer: req.headers.referer || req.headers.referrer || 'none',
 				});
 			});
 			res.send(getHTML(route, req));
@@ -86,6 +99,10 @@ function setRoutes() {
 									geoIp: geo,
 								},
 							});
+							logger.propertyAccess(req.ip, req.url, {
+								geoIp: geo,
+								headers: req.headers,
+							});
 						});
 					} else {
 						res.sendStatus(429);
@@ -99,6 +116,10 @@ function setRoutes() {
 							userAgent: {
 								geoIp: geo,
 							},
+						});
+						logger.propertyAccess(req.ip, req.url, {
+							geoIp: geo,
+							headers: req.headers,
 						});
 					});
 				}

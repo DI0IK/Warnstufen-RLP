@@ -21,12 +21,14 @@ body {
 	}
 
 	&::before {
-		bottom: 15%;
-		left: 10%;
+		animation-duration: 1800s;
+		animation-name: anim1;
+		animation-iteration-count: infinite;
+		animation-direction: alternate;
 	}
 	&::after {
-		animation-duration: 3600s;
-		animation-name: kugeln;
+		animation-duration: 1800s;
+		animation-name: anim2;
 		animation-iteration-count: infinite;
 		animation-direction: alternate;
 	}
@@ -39,6 +41,7 @@ header {
 	left: 50%;
 	transform: translateX(-50%);
 	width: 100%;
+	z-index: 2;
 }
 
 main {
@@ -117,13 +120,24 @@ footer {
 	}
 }
 
-@keyframes kugeln {
+@keyframes anim1 {
 	0% {
-		left: 80%;
-		top: 10%;
+		left: #{(random($limit: 60) + 15) + vh};
+		top: #{(random($limit: 60) + 20) + vh};
 	}
 	100% {
-		left: 20%;
-		top: 11%;
+		left: #{(random($limit: 60) + 20) + vh};
+		top: #{(random($limit: 60) + 20) + vh};
+	}
+}
+
+@keyframes anim2 {
+	0% {
+		left: #{(random($limit: 60) + 20) + vh};
+		top: #{(random($limit: 60) + 20) + vh};
+	}
+	100% {
+		left: #{(random($limit: 60) + 20) + vh};
+		top: #{(random($limit: 60) + 20) + vh};
 	}
 }

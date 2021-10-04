@@ -4,3 +4,4 @@ dist
 sslcert/*
 data
 app/kontakt/index.html
+logs

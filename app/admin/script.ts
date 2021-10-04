@@ -140,6 +140,10 @@ function view(path, type) {
 	th.innerText = 'Location';
 	tr.appendChild(th);
 
+	th = document.createElement('th');
+	th.innerText = 'Redirect URL';
+	tr.appendChild(th);
+
 	thead.appendChild(tr);
 	table.appendChild(thead);
 
@@ -212,6 +216,10 @@ function view(path, type) {
 			window.open(url, '_blank');
 		};
 		row.appendChild(geoLocation);
+
+		const redirect = document.createElement('td');
+		redirect.innerText = call.userAgent?.referer;
+		row.appendChild(redirect);
 
 		table.appendChild(row);
 	}
