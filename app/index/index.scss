@@ -25,8 +25,10 @@ body {
 		left: 10%;
 	}
 	&::after {
-		top: 12%;
-		right: 8%;
+		animation-duration: 3600s;
+		animation-name: kugeln;
+		animation-iteration-count: infinite;
+		animation-direction: alternate;
 	}
 }
 
@@ -112,5 +114,16 @@ footer {
 
 	&.bottom {
 		position: static;
+	}
+}
+
+@keyframes kugeln {
+	0% {
+		left: 80%;
+		top: 10%;
+	}
+	100% {
+		left: 20%;
+		top: 11%;
 	}
 }
