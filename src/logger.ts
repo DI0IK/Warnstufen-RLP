@@ -19,7 +19,7 @@ export class Logger {
 		}
 		fs.appendFileSync(
 			this.options.logFiles.access,
-			`${ip}\t${path}\t${JSON.stringify(reqData)}\n`,
+			`${Date.now()}\t${ip}\t${path}\t${JSON.stringify(reqData)}\n`,
 			{ encoding: 'utf8' }
 		);
 	}
