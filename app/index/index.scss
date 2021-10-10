@@ -10,14 +10,6 @@ body {
 	padding: 0;
 }
 
-* {
-	&::-webkit-scrollbar {
-		width: 0px;
-		background: transparent;
-	}
-	scrollbar-width: none;
-}
-
 body {
 	background-color: #0099cc;
 	animation: changeColor 600s normal infinite;
@@ -51,7 +43,7 @@ a {
 	&:hover,
 	&:focus {
 		text-decoration: underline;
-		color: mix($red, black, 60%);
+		color: mix($red, black, 50%);
 	}
 
 	&:visited {

@@ -65,6 +65,8 @@ async function displayDistrict(district) {
 			window.open('/26teCoronaVerordnung', '_blank');
 		});
 	}
+
+	checkTableWidth();
 }
 
 getDistricts().then((districts) => {
@@ -131,5 +133,3 @@ function checkTableWidth() {
 		console.log('left');
 	}
 }
-
-checkTableWidth();
