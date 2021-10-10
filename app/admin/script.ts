@@ -227,3 +227,7 @@ function view(path, type) {
 	popup.appendChild(table);
 	popup.classList.remove('hidden');
 }
+
+function logs() {
+	location.href = 'api/v1/admin/logs';
+}

@@ -359,6 +359,44 @@ const APIEndpoints: APIEndpoint[] = [
 		apiLimit: 30,
 		authRequired: true,
 	},
+	{
+		path: '/api/v1/admin/logs',
+		method: 'GET',
+		handler: (req: express.Request, res: express.Response) => {
+			// Read tab separated log file
+			const logFile = fs.readFileSync('./logs/access.log').toString();
+			const logLines = logFile.split('\n');
+
+			// Parse log lines
+			const logEntries = logLines
+				.map((line) => {
+					const [time, ip, path, data] = line.split('\t');
+					if (!time || !ip || !path || !data) return;
+					return {
+						time,
+						ip,
+						path,
+						data: JSON.parse(data),
+					};
+				})
+				.filter((entry) => entry);
+
+			// Sort log entries by time
+			logEntries.sort((a, b) => {
+				if (!a || !b) return 0;
+				const a_time = new Date(a.time).getTime();
+				const b_time = new Date(b.time).getTime();
+
+				if (a_time < b_time) return -1;
+				if (a_time > b_time) return 1;
+				return 0;
+			});
+
+			res.json(logEntries);
+		},
+		apiLimit: 30,
+		authRequired: true,
+	},
 
 	//----------------
 	// GoogleBot routes

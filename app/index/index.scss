@@ -1,36 +1,61 @@
+$lightblue: #008fb3;
+$lightgreen: #50ccad;
+$red: #ff5b57;
+
 html,
 body {
 	height: 100%;
 	width: 100%;
 	margin: 0;
 	padding: 0;
-	background: linear-gradient(to top right, #19cbd8, #38e1e7);
+}
+
+* {
+	&::-webkit-scrollbar {
+		width: 0px;
+		background: transparent;
+	}
+	scrollbar-width: none;
 }
 
 body {
-	&::before,
+	background-color: #0099cc;
+	animation: changeColor 600s normal infinite;
+	position: relative;
 	&::after {
 		content: '';
-		position: absolute;
-		width: 20vh;
-		height: 20vh;
+		backdrop-filter: blur(10px);
+		filter: blur(10px);
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
 		z-index: 1;
-		background: linear-gradient(to top right, #ffffff23, #ffffff52);
-		backdrop-filter: blur(2em);
-		border-radius: 50%;
+	}
+}
+
+select,
+button,
+input,
+textarea {
+	&:hover,
+	&:focus {
+		border: 1px solid #000;
+	}
+}
+
+a {
+	text-decoration: underline;
+	color: mix($red, black, 70%);
+	&:hover,
+	&:focus {
+		text-decoration: underline;
+		color: mix($red, black, 60%);
 	}
 
-	&::before {
-		animation-duration: 1800s;
-		animation-name: anim1;
-		animation-iteration-count: infinite;
-		animation-direction: alternate;
-	}
-	&::after {
-		animation-duration: 1800s;
-		animation-name: anim2;
-		animation-iteration-count: infinite;
-		animation-direction: alternate;
+	&:visited {
+		color: mix($red, black, 80%);
 	}
 }
 
@@ -120,24 +145,14 @@ footer {
 	}
 }
 
-@keyframes anim1 {
+@keyframes changeColor {
 	0% {
-		left: #{(random($limit: 60) + 15) + vh};
-		top: #{(random($limit: 60) + 20) + vh};
+		background-color: $lightblue;
+	}
+	50% {
+		background-color: $lightgreen;
 	}
 	100% {
-		left: #{(random($limit: 60) + 20) + vh};
-		top: #{(random($limit: 60) + 20) + vh};
-	}
-}
-
-@keyframes anim2 {
-	0% {
-		left: #{(random($limit: 60) + 20) + vh};
-		top: #{(random($limit: 60) + 20) + vh};
-	}
-	100% {
-		left: #{(random($limit: 60) + 20) + vh};
-		top: #{(random($limit: 60) + 20) + vh};
+		background-color: $lightblue;
 	}
 }
