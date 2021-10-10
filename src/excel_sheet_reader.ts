@@ -61,7 +61,7 @@ export async function getDataOfCovidSheet(): Promise<Data[]> {
 }
 
 function DateFromString(date: string | any): string {
-	const datePart = date.split(',')[1].split('.');
+	const datePart = date.split(' ')[1].split('.');
 	const parsedDate = new Date(
 		Number.parseInt(datePart[2]),
 		Number.parseInt(datePart[1]) - 1,
