@@ -11,8 +11,7 @@ body {
 }
 
 body {
-	background-color: #0099cc;
-	animation: changeColor 600s normal infinite;
+	background-color: #2db7e6;
 	position: relative;
 	&::after {
 		content: '';
@@ -134,17 +133,5 @@ footer {
 
 	&.bottom {
 		position: static;
-	}
-}
-
-@keyframes changeColor {
-	0% {
-		background-color: $lightblue;
-	}
-	50% {
-		background-color: $lightgreen;
-	}
-	100% {
-		background-color: $lightblue;
 	}
 }
