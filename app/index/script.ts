@@ -114,6 +114,10 @@ window.onscroll = function (e) {
 };
 
 window.onresize = function (e) {
+	checkTableWidth();
+};
+
+function checkTableWidth() {
 	const tablewidth = document.getElementById('table').offsetWidth;
 	const bodywidth = document.querySelector('main').offsetWidth;
 
@@ -126,4 +130,6 @@ window.onresize = function (e) {
 		document.getElementById('tableWrap').classList.remove('centerItem');
 		console.log('left');
 	}
-};
+}
+
+checkTableWidth();
