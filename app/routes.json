@@ -32,7 +32,8 @@
 					"title": "Warnstufen Rheinland-Pfalz"
 				}
 			]
-		}
+		},
+		"inSitemap": true
 	},
 	{
 		"path": "/iframe",
@@ -111,7 +112,8 @@
 					"title": "Dokumentation"
 				}
 			]
-		}
+		},
+		"inSitemap": true
 	},
 	{
 		"path": "/26teCoronaVerordnung",
@@ -142,7 +144,8 @@
 					"title": "26te Corona Verordnung"
 				}
 			]
-		}
+		},
+		"inSitemap": true
 	},
 	{
 		"path": "/kontakt",
