@@ -64,6 +64,7 @@ export interface Route {
 		time: number;
 		userAgent: any;
 	}[];
+	inSitemap?: boolean;
 }
 
 export interface APIEndpoint {
@@ -79,4 +80,5 @@ export interface APIEndpoint {
 		};
 	}[];
 	authRequired?: boolean;
+	inSitemap?: boolean;
 }

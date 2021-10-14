@@ -7,6 +7,7 @@ import ts from 'typescript';
 import { districts } from './districts';
 import axios from 'axios';
 import { Logger } from './logger';
+import { genSiteMap } from './sitemap';
 const config = require('../config.json') as Config;
 
 const logger = new Logger({
@@ -41,7 +42,7 @@ let ipGeoCache: {
 
 function setRoutes() {
 	router = express.Router();
-	for (let route of routes) {
+	for (let route of Routes) {
 		router.get(route.path, (req: express.Request, res: express.Response) => {
 			if (route.loginRequired) {
 				if (req.cookies.token !== 'Bearer ' + config.api.token)
@@ -128,7 +129,7 @@ function setRoutes() {
 	}
 }
 
-let routes: Route[] = JSON.parse(fs.readFileSync('./app/routes.json').toString()) as Route[];
+let Routes: Route[] = JSON.parse(fs.readFileSync('./app/routes.json').toString()) as Route[];
 
 function getHTML(route: Route, req: express.Request) {
 	let defaultHTML = fs.readFileSync('./app/default.html').toString();
@@ -302,6 +303,14 @@ const APIEndpoints: APIEndpoint[] = [
 			res.redirect(301, `/${req.params.a1}`);
 		},
 	},
+	{
+		path: '/lk/:lk',
+		method: 'GET',
+		handler: (req: express.Request, res: express.Response) => {
+			res.redirect(301, `/#${req.params.lk}`);
+		},
+		inSitemap: true,
+	},
 
 	//----------------
 	// Admin routes
@@ -319,7 +328,7 @@ const APIEndpoints: APIEndpoint[] = [
 						apiCalls: endpoint.apiCalls,
 					};
 				}),
-				pages: routes.map((route) => {
+				pages: Routes.map((route) => {
 					return {
 						path: route.path,
 						apiCalls: route.pageCalls,
@@ -334,7 +343,7 @@ const APIEndpoints: APIEndpoint[] = [
 		path: '/api/v1/admin/routes',
 		method: 'GET',
 		handler: (req: express.Request, res: express.Response) => {
-			res.json(routes);
+			res.json(Routes);
 		},
 		apiLimit: 30,
 		authRequired: true,
@@ -344,7 +353,7 @@ const APIEndpoints: APIEndpoint[] = [
 		method: 'GET',
 		handler: (req: express.Request, res: express.Response) => {
 			try {
-				routes = JSON.parse(fs.readFileSync('./app/routes.json').toString());
+				Routes = JSON.parse(fs.readFileSync('./app/routes.json').toString());
 				setRoutes();
 				res.json({
 					success: true,
@@ -412,7 +421,7 @@ const APIEndpoints: APIEndpoint[] = [
 		path: '/sitemap.xml',
 		method: 'GET',
 		handler: (req: express.Request, res: express.Response) => {
-			res.send(fs.readFileSync('./app/sitemap.xml').toString());
+			res.send(genSiteMap(APIEndpoints, Routes));
 		},
 	},
 ];

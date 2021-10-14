@@ -29,6 +29,9 @@ function getDistricts() {
 }
 
 async function displayDistrict(district) {
+	if (!district) {
+		throw new Error('No/Invalid district provided');
+	}
 	const data = await getDistrictData(district);
 
 	const table = document.getElementById('table');
@@ -66,6 +69,8 @@ async function displayDistrict(district) {
 		});
 	}
 
+	document.title = `Warnstufe ${district.replace('KS ', '')}`;
+
 	checkTableWidth();
 }
 
@@ -85,7 +90,14 @@ getDistricts().then((districts) => {
 
 		console.log(location.hash.substr(1).replace(/%20/g, ' '));
 
-		displayDistrict(districtSelect.value);
+		try {
+			displayDistrict(districtSelect.value);
+		} catch (error) {
+			districtSelect.selectedIndex =
+				Number.parseInt(localStorage.getItem('district')) || (districts as any[]).length - 10;
+
+			displayDistrict(districtSelect.value);
+		}
 	} else {
 		districtSelect.selectedIndex =
 			Number.parseInt(localStorage.getItem('district')) || (districts as any[]).length - 10;
