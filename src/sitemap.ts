@@ -22,7 +22,7 @@ export function genSiteMap(
 				if (!r.inSitemap) return '';
 				const url = r.path;
 				return `<url>
-					<loc>${url}</loc>
+					<loc>https://www.warnzahl-rlp.de${url}</loc>
 				</url>`;
 			});
 		})
