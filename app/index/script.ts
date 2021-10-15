@@ -88,8 +88,6 @@ getDistricts().then((districts) => {
 			location.hash.substr(1).replace(/%20/g, ' ')
 		);
 
-		console.log(location.hash.substr(1).replace(/%20/g, ' '));
-
 		try {
 			displayDistrict(districtSelect.value);
 		} catch (error) {
@@ -98,6 +96,12 @@ getDistricts().then((districts) => {
 
 			displayDistrict(districtSelect.value);
 		}
+	} else if (location.pathname.startsWith('/lk/')) {
+		districtSelect.selectedIndex =
+			(districts as any[]).indexOf(location.pathname.substr(4).replace(/_/g, ' ')) ||
+			(districts as any[]).length - 10;
+
+		displayDistrict(districtSelect.value);
 	} else {
 		districtSelect.selectedIndex =
 			Number.parseInt(localStorage.getItem('district')) || (districts as any[]).length - 10;
@@ -107,9 +111,12 @@ getDistricts().then((districts) => {
 
 	districtSelect.addEventListener('change', (e) => {
 		const target = e.target as HTMLSelectElement;
-		displayDistrict(target.value);
-		localStorage.setItem('district', target.selectedIndex.toString());
 		location.hash = target.value;
+		localStorage.setItem('district', target.selectedIndex.toString());
+		if (location.pathname.startsWith('/lk/')) {
+			location.pathname = `/`;
+		}
+		displayDistrict(target.value);
 	});
 });
 

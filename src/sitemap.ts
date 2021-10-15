@@ -10,20 +10,24 @@ export function genSiteMap(
 		.map((route) => {
 			if (!route.path.includes(':lk')) return [route];
 
-			const routes = districts.map((district) => {
-				const newPath = route.path.replace(':lk', district).replace(/ /g, '_');
-				return { ...route, path: newPath };
-			});
+			const routes = districts
+				.filter((district) => !district.includes('Versorgungsgebiet'))
+				.map((district) => {
+					const newPath = route.path.replace(':lk', district).replace(/ /g, '_');
+					return { ...route, path: newPath };
+				});
 
 			return routes;
 		})
 		.map((route) => {
 			return route.map((r) => {
-				if (!r.inSitemap) return '';
+				if (!r.sitemap.listed) return '';
 				const url = r.path;
 				return `<url>
-					<loc>https://www.warnzahl-rlp.de${url}</loc>
-				</url>`;
+	<loc>https://www.warnzahl-rlp.de${url}</loc>
+	<changefreq>${r.sitemap.changeFreq}</changefreq>
+	<priority>${r.sitemap.priority}</priority>
+</url>`;
 			});
 		})
 		.map((route) => route.filter((r) => r !== ''))

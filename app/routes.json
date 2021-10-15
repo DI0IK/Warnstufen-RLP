@@ -33,7 +33,51 @@
 				}
 			]
 		},
-		"inSitemap": true
+		"isitemap": {
+			"listed": true,
+			"changeFreq": "dayly",
+			"priority": 1.0
+		}
+	},
+	{
+		"path": "/lk/:lk",
+		"loginRequired": false,
+		"folderName": "index",
+		"page": {
+			"htmlFileName": [
+				{
+					"type": "both",
+					"fileName": "index.html"
+				}
+			],
+			"cssFileNames": [
+				{
+					"type": "both",
+					"fileName": "index.scss"
+				},
+				{
+					"type": "desktop",
+					"fileName": "desktop.scss"
+				}
+			],
+			"jsFileNames": [
+				{
+					"type": "both",
+					"fileName": "script.ts"
+				}
+			],
+			"titles": [
+				{
+					"type": "both",
+					"title": "Warnstufen Rheinland-Pfalz"
+				}
+			]
+		},
+		"isitemap": {
+			"listed": true,
+			"changeFreq": "dayly",
+			"priority": 0.9
+		}
 	},
 	{
 		"path": "/iframe",
@@ -64,6 +108,11 @@
 					"title": "Warnstufen Rheinland-Pfalz"
 				}
 			]
+		},
+		"sitemap": {
+			"listed": false,
+			"changeFreq": "",
+			"priority": ""
 		}
 	},
 	{
@@ -81,6 +130,11 @@
 					"fileName": "example.html"
 				}
 			]
+		},
+		"sitemap": {
+			"listed": false,
+			"changeFreq": "",
+			"priority": ""
 		}
 	},
 	{
@@ -113,7 +167,11 @@
 				}
 			]
 		},
-		"inSitemap": true
+		"sitemap": {
+			"listed": true,
+			"changeFreq": "monthly",
+			"priority": "0.5"
+		}
 	},
 	{
 		"path": "/26teCoronaVerordnung",
@@ -145,7 +203,11 @@
 				}
 			]
 		},
-		"inSitemap": true
+		"sitemap": {
+			"listed": true,
+			"changeFreq": "monthly",
+			"priority": "0.5"
+		}
 	},
 	{
 		"path": "/kontakt",
@@ -176,6 +238,11 @@
 					"title": "Kontakt"
 				}
 			]
+		},
+		"sitemap": {
+			"listed": false,
+			"changeFreq": "",
+			"priority": ""
 		}
 	},
 	{
@@ -207,6 +274,11 @@
 					"title": "Admin Panel"
 				}
 			]
+		},
+		"sitemap": {
+			"listed": false,
+			"changeFreq": "",
+			"priority": ""
 		}
 	},
 	{
@@ -238,6 +310,11 @@
 					"title": "Admin Panel"
 				}
 			]
+		},
+		"sitemap": {
+			"listed": false,
+			"changeFreq": "",
+			"priority": ""
 		}
 	}
 ]
