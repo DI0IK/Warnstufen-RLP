@@ -307,7 +307,7 @@ const APIEndpoints: APIEndpoint[] = [
 		path: '/lk/:lk',
 		method: 'GET',
 		handler: (req: express.Request, res: express.Response) => {
-			res.redirect(301, `/#${req.params.lk}`);
+			res.redirect(301, `/#${req.params.lk.replace(/_/g, ' ')}`);
 		},
 		inSitemap: true,
 	},
