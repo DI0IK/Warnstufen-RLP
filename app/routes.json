@@ -33,7 +33,7 @@
 				}
 			]
 		},
-		"isitemap": {
+		"sitemap": {
 			"listed": true,
 			"changeFreq": "dayly",
 			"priority": 1.0
@@ -73,7 +73,7 @@
 				}
 			]
 		},
-		"isitemap": {
+		"sitemap": {
 			"listed": true,
 			"changeFreq": "dayly",
 			"priority": 0.9
