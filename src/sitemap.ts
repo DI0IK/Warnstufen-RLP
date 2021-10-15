@@ -11,7 +11,7 @@ export function genSiteMap(
 			if (!route.path.includes(':lk')) return [route];
 
 			const routes = districts.map((district) => {
-				const newPath = route.path.replace(':lk', district).replace(/ /g, "%20");
+				const newPath = route.path.replace(':lk', district).replace(/ /g, '_');
 				return { ...route, path: newPath };
 			});
 
