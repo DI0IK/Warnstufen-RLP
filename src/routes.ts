@@ -272,6 +272,11 @@ const APIEndpoints: APIEndpoint[] = [
 			});
 		},
 		apiLimit: 30,
+		sitemap: {
+			listed: false,
+			changeFreq: 'daily',
+			priority: 0.5,
+		},
 	},
 	{
 		path: '/api/v1/districts',
@@ -291,6 +296,11 @@ const APIEndpoints: APIEndpoint[] = [
 			);
 		},
 		apiLimit: 30,
+		sitemap: {
+			listed: false,
+			changeFreq: 'daily',
+			priority: 0.5,
+		},
 	},
 
 	//----------------
@@ -302,14 +312,12 @@ const APIEndpoints: APIEndpoint[] = [
 		handler: (req: express.Request, res: express.Response) => {
 			res.redirect(301, `/${req.params.a1}`);
 		},
-	},
-	{
-		path: '/lk/:lk',
-		method: 'GET',
-		handler: (req: express.Request, res: express.Response) => {
-			res.redirect(301, `/#${req.params.lk.replace(/_/g, ' ')}`);
+		apiLimit: 30,
+		sitemap: {
+			listed: false,
+			changeFreq: 'daily',
+			priority: 0.5,
 		},
-		inSitemap: true,
 	},
 
 	//----------------
@@ -338,6 +346,11 @@ const APIEndpoints: APIEndpoint[] = [
 		},
 		apiLimit: 30,
 		authRequired: true,
+		sitemap: {
+			listed: false,
+			changeFreq: 'daily',
+			priority: 0.5,
+		},
 	},
 	{
 		path: '/api/v1/admin/routes',
@@ -347,6 +360,11 @@ const APIEndpoints: APIEndpoint[] = [
 		},
 		apiLimit: 30,
 		authRequired: true,
+		sitemap: {
+			listed: false,
+			changeFreq: 'daily',
+			priority: 0.5,
+		},
 	},
 	{
 		path: '/api/v1/admin/reloadRoutes',
@@ -367,6 +385,11 @@ const APIEndpoints: APIEndpoint[] = [
 		},
 		apiLimit: 30,
 		authRequired: true,
+		sitemap: {
+			listed: false,
+			changeFreq: 'daily',
+			priority: 0.5,
+		},
 	},
 	{
 		path: '/api/v1/admin/logs',
@@ -405,6 +428,11 @@ const APIEndpoints: APIEndpoint[] = [
 		},
 		apiLimit: 30,
 		authRequired: true,
+		sitemap: {
+			listed: false,
+			changeFreq: 'daily',
+			priority: 0.5,
+		},
 	},
 
 	//----------------
@@ -416,12 +444,24 @@ const APIEndpoints: APIEndpoint[] = [
 		handler: (req: express.Request, res: express.Response) => {
 			res.send(fs.readFileSync('./app/robots.txt').toString());
 		},
+		apiLimit: 30,
+		sitemap: {
+			listed: false,
+			changeFreq: 'daily',
+			priority: 0.5,
+		},
 	},
 	{
 		path: '/sitemap.xml',
 		method: 'GET',
 		handler: (req: express.Request, res: express.Response) => {
 			res.send(genSiteMap(APIEndpoints, Routes));
+		},
+		apiLimit: 30,
+		sitemap: {
+			listed: false,
+			changeFreq: 'daily',
+			priority: 0.5,
 		},
 	},
 ];

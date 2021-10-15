@@ -64,7 +64,11 @@ export interface Route {
 		time: number;
 		userAgent: any;
 	}[];
-	inSitemap?: boolean;
+	sitemap: {
+		listed: boolean;
+		changeFreq: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
+		priority: number;
+	};
 }
 
 export interface APIEndpoint {
@@ -80,5 +84,9 @@ export interface APIEndpoint {
 		};
 	}[];
 	authRequired?: boolean;
-	inSitemap?: boolean;
+	sitemap: {
+		listed: boolean;
+		changeFreq: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
+		priority: number;
+	};
 }
