@@ -12,7 +12,7 @@ export interface config {
 	api: {
 		httpsPort: number;
 		httpPort: number;
-		token: string;
+		secret: string;
 	};
 	ampel: {
 		Inzidenz7Tage: number[];

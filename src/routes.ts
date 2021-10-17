@@ -10,6 +10,7 @@ import { APIDate } from './definitions/data';
 import { config } from './definitions/config';
 import { genSitemap } from './sitemap';
 import { Analytics } from './analytics';
+import { TokenGenerator } from './tokens';
 
 interface APIRoute {
 	path: string;
@@ -17,6 +18,7 @@ interface APIRoute {
 	method: 'get' | 'post' | 'put' | 'delete';
 	handler: (req: express.Request, res: express.Response, reader: Router) => void;
 	apilimit: number;
+	groupsAllowed: string[];
 }
 interface StaticRoute {
 	path: string;
@@ -24,6 +26,7 @@ interface StaticRoute {
 	folder: string;
 	apilimit: number;
 	listInSitemap: boolean;
+	groupsAllowed: string[];
 }
 
 const routes: Route[] = [
@@ -37,41 +40,47 @@ const routes: Route[] = [
 		folder: '/app/index',
 		apilimit: 0,
 		listInSitemap: true,
+		groupsAllowed: ['all'],
 	},
 	{
-		path: '/lk/:lk',
+		path: '/lk/:lk/',
 		type: 'STATIC',
 		folder: '/app/index',
 		apilimit: 0,
 		listInSitemap: true,
+		groupsAllowed: ['all'],
 	},
 	{
-		path: '/docs',
+		path: '/docs/',
 		type: 'STATIC',
 		folder: '/app/docs',
 		apilimit: 0,
 		listInSitemap: true,
+		groupsAllowed: ['all'],
 	},
 	{
-		path: '/26teCoronaVerordnung',
+		path: '/26teCoronaVerordnung/',
 		type: 'STATIC',
 		folder: '/app/26teCoronaVerordnung',
 		apilimit: 0,
 		listInSitemap: true,
+		groupsAllowed: ['all'],
 	},
 	{
-		path: '/kontakt',
+		path: '/kontakt/',
 		type: 'STATIC',
 		folder: '/app/kontakt',
 		apilimit: 0,
 		listInSitemap: false,
+		groupsAllowed: ['all'],
 	},
 	{
-		path: '/iframe',
+		path: '/iframe/',
 		type: 'STATIC',
 		folder: '/app/iframe',
 		apilimit: 0,
 		listInSitemap: false,
+		groupsAllowed: ['all'],
 	},
 
 	//---------------------
@@ -140,6 +149,7 @@ const routes: Route[] = [
 			});
 		},
 		apilimit: 30,
+		groupsAllowed: ['all'],
 	},
 	{
 		path: '/api/v1/districts',
@@ -158,6 +168,7 @@ const routes: Route[] = [
 			);
 		},
 		apilimit: 30,
+		groupsAllowed: ['all'],
 	},
 	{
 		path: '/api/v2/data',
@@ -167,6 +178,7 @@ const routes: Route[] = [
 			res.json(router.reader.data);
 		},
 		apilimit: 30,
+		groupsAllowed: ['all'],
 	},
 	{
 		path: '/api/v2/districts',
@@ -185,6 +197,7 @@ const routes: Route[] = [
 			);
 		},
 		apilimit: 30,
+		groupsAllowed: ['all'],
 	},
 
 	//---------------------
@@ -195,24 +208,24 @@ const routes: Route[] = [
 		path: '/admin/analytics',
 		type: 'API',
 		method: 'get',
-		handler: (req, res, router) => {
-			if (req.headers.authorization === 'Bearer ' + config.api.token) {
-				res.json(Analytics.getInstance().data);
-			} else res.status(401).json({ error: 'Unauthorized' });
+		handler: (req, res) => {
+			res.json(Analytics.getInstance().data);
 		},
 		apilimit: 30,
+		groupsAllowed: ['admin'],
 	},
 	{
 		path: '/admin/clearCache',
 		type: 'API',
 		method: 'get',
-		handler: (req, res, reader) => {
-			if (req.headers.authorization === 'Bearer ' + config.api.token) {
-				reader.clearCache();
-				res.json({ success: true });
-			} else res.status(401).json({ error: 'Unauthorized' });
+		handler: (req, res, router) => {
+			router.clearCache();
+			res.json({
+				success: true,
+			});
 		},
 		apilimit: 30,
+		groupsAllowed: ['admin'],
 	},
 
 	//---------------------
@@ -227,6 +240,7 @@ const routes: Route[] = [
 			res.send(fs.readFileSync('/app/app/robots.txt'));
 		},
 		apilimit: 30,
+		groupsAllowed: ['all'],
 	},
 	{
 		path: '/sitemap.xml',
@@ -236,6 +250,25 @@ const routes: Route[] = [
 			res.send(genSitemap(routes));
 		},
 		apilimit: 30,
+		groupsAllowed: ['all'],
+	},
+
+	//---------------------
+	// Generate Token
+	//---------------------
+
+	{
+		path: '/generateToken',
+		type: 'API',
+		method: 'get',
+		handler: (req, res) => {
+			const token = TokenGenerator.getInstance().createToken(`${req.query.userId}`);
+			res.json({
+				token: token,
+			});
+		},
+		apilimit: 6,
+		groupsAllowed: ['all'],
 	},
 ];
 
@@ -281,9 +314,12 @@ export class Router {
 			if (!this._filecache[route.folder]) {
 				const file = fs.readFileSync('/app' + route.folder + '/index.html').toString();
 				this._filecache[route.folder] = file;
-				res.send(file);
+				setTimeout(() => {
+					delete this._filecache[route.folder];
+				}, 1000 * 60 * 60 * 24);
+				res.header('from-server-cache', 'false').send(file);
 			} else {
-				res.send(this._filecache[route.folder]);
+				res.header('from-server-cache', 'true').send(this._filecache[route.folder]);
 			}
 		});
 		this._router.get(route.path + 'script.ts', (req: express.Request, res: express.Response) => {
@@ -295,9 +331,14 @@ export class Router {
 					target: typescript.ScriptTarget.ES5,
 				});
 				this._filecache[route.folder + '/script.ts'] = compiled;
-				res.type('text/javascript').send(compiled);
+				setTimeout(() => {
+					delete this._filecache[route.folder + '/script.ts'];
+				}, 1000 * 60 * 60 * 24);
+				res.type('text/javascript').header('from-server-cache', 'false').send(compiled);
 			} else {
-				res.type('text/javascript').send(this._filecache[route.folder + '/script.ts']);
+				res.type('text/javascript')
+					.header('from-server-cache', 'true')
+					.send(this._filecache[route.folder + '/script.ts']);
 			}
 		});
 		this._router.get(route.path + 'style.scss', (req: express.Request, res: express.Response) => {
@@ -309,9 +350,14 @@ export class Router {
 					outputStyle: 'compressed',
 				});
 				this._filecache[route.folder + '/style.scss'] = compiled.css.toString();
-				res.type('text/css').send(compiled.css.toString());
+				setTimeout(() => {
+					delete this._filecache[route.folder + '/style.scss'];
+				}, 1000 * 60 * 60 * 24);
+				res.type('text/css').header('from-server-cache', 'false').send(compiled.css.toString());
 			} else {
-				res.type('text/css').send(this._filecache[route.folder + '/style.scss']);
+				res.type('text/css')
+					.header('from-server-cache', 'true')
+					.send(this._filecache[route.folder + '/style.scss']);
 			}
 		});
 	}
@@ -329,14 +375,34 @@ export class Router {
 		};
 	} = {};
 	private checklimit(req: express.Request, res: express.Response, route: StaticRoute | APIRoute) {
+		const token =
+			req.header('token')?.split(' ')[1] || req.header('authorization')?.split(' ')[1];
+		const tokenData = TokenGenerator.getInstance().getPermissions(token);
+
 		if (this._ipcache[route.path] === undefined) this._ipcache[route.path] = {};
 		if (this._ipcache[route.path][req.ip] === undefined) this._ipcache[route.path][req.ip] = 0;
-		if (this._ipcache[route.path][req.ip] >= route.apilimit && route.apilimit > 0) {
+		if (
+			this._ipcache[route.path][req.ip] >= route.apilimit &&
+			route.apilimit > 0 &&
+			!tokenData.permissions.some(
+				(p) =>
+					p.path === route.path &&
+					p.limitMultiplicator &&
+					(p.limitMultiplicator === 0 ||
+						p.limitMultiplicator * route.apilimit > this._ipcache[route.path][req.ip])
+			)
+		) {
 			res.status(429)
-				.send('Too many requests. Please try again later.')
-				.header('Retry-After', '60');
+				.header('Retry-After', '60')
+				.send('Too many requests. Please try again later.');
 			return false;
 		} else {
+			if (!route.groupsAllowed.includes('all')) {
+				if (!route.groupsAllowed.some((group) => tokenData.groups.some((g) => g === group))) {
+					res.status(403).send('You are not allowed to access this resource.');
+					return false;
+				}
+			}
 			this._ipcache[route.path][req.ip]++;
 			setTimeout(() => {
 				this._ipcache[route.path][req.ip]--;
