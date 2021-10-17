@@ -1,0 +1,10 @@
+services:
+   api:
+      build: .
+      volumes:
+         - ./config.json:/config.json
+         - ./data:/data
+         - ./sslcert:/certs
+      ports:
+         - '80:80'
+         - '443:443'

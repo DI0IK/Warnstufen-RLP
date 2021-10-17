@@ -1,507 +1,346 @@
+export type Route = APIRoute | StaticRoute;
+
 import express from 'express';
-import { Details } from 'express-useragent';
 import fs from 'fs';
-import { APIEndpoint, Config, Data, Route } from './formats';
+import typescript from 'typescript';
 import sass from 'node-sass';
-import ts from 'typescript';
-import { districts } from './districts';
-import axios from 'axios';
-import { Logger } from './logger';
-import { genSiteMap } from './sitemap';
-const config = require('../config.json') as Config;
+import { Reader } from './sheetReader';
+import { APIDistrict, District } from './definitions/districts';
+import { APIDate } from './definitions/data';
+import { config } from './definitions/config';
+import { genSitemap } from './sitemap';
 
-const logger = new Logger({
-	log: false,
-	logFiles: { access: './logs/access.log', log: './logs/log.log' },
-});
-
-//------------------------
-// Web routes
-//------------------------
-
-let router: express.Router = express.Router();
-
-export function setupRouter(app: express.Application) {
-	app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
-		if (!req.secure) {
-			res.redirect(`https://${req.headers.host}${req.url}`);
-			return;
-		}
-		if (!req.subdomains[0]) {
-			res.redirect(`https://www.${req.headers.host}${req.url}`);
-			return;
-		}
-		router(req, res, next);
-	});
-	setRoutes();
+interface APIRoute {
+	path: string;
+	type: 'API';
+	method: 'get' | 'post' | 'put' | 'delete';
+	handler: (req: express.Request, res: express.Response, reader: Router) => void;
+	apilimit: number;
+}
+interface StaticRoute {
+	path: string;
+	type: 'STATIC';
+	folder: string;
+	apilimit: number;
+	listInSitemap: boolean;
 }
 
-let ipGeoCache: {
-	[ip: string]: any;
-} = {};
+const routes: Route[] = [
+	//---------------------
+	// Static Routes
+	//---------------------
 
-function setRoutes() {
-	router = express.Router();
-	for (let route of Routes) {
-		router.get(route.path, (req: express.Request, res: express.Response) => {
-			if (route.loginRequired) {
-				if (req.cookies.token !== 'Bearer ' + config.api.token)
-					return res.redirect('/login?path=' + req.url);
-			}
-			if (!route.pageCalls) route.pageCalls = [];
-			getGeoInfos(req.ip).then((geo) => {
-				route.pageCalls?.push({
-					ip: req.ip,
-					time: Date.now(),
-					userAgent: {
-						isBot: req.useragent?.isBot,
-						isMobile: req.useragent?.isMobile,
-						isDesktop: req.useragent?.isDesktop,
-						browser: req.useragent?.browser,
-						os: req.useragent?.os,
-						useragent: req.useragent?.source,
-						geoIp: geo,
-						referer: req.headers.referer || req.headers.referrer || 'none',
-					},
-				});
-				logger.propertyAccess(req.ip, req.url, {
-					userAgent: req.useragent?.source,
-					geoIp: geo,
-					headers: req.headers,
-					referer: req.headers.referer || req.headers.referrer || 'none',
-				});
-			});
-			res.send(getHTML(route, req));
-		});
-	}
-	for (let endpoint of APIEndpoints) {
-		(router as any)[endpoint.method.toLowerCase()](
-			endpoint.path,
-			(req: express.Request, res: express.Response) => {
-				if (
-					endpoint.authRequired &&
-					req.headers.authorization !== 'Bearer ' + config.api.token &&
-					req.cookies.token !== 'Bearer ' + config.api.token
-				)
-					return res.sendStatus(401);
-				if (!endpoint.apiCalls) endpoint.apiCalls = [];
-				if (endpoint.apiLimit) {
-					if (
-						endpoint.apiCalls.filter(
-							(item) => item.ip == req.ip && item.time > new Date().getTime() - 1000 * 60
-						).length < endpoint.apiLimit
-					) {
-						endpoint.handler(req, res);
-						getGeoInfos(req.ip).then((geo) => {
-							endpoint.apiCalls?.push({
-								ip: req.ip,
-								time: new Date().getTime(),
-								userAgent: {
-									geoIp: geo,
-								},
-							});
-							logger.propertyAccess(req.ip, req.url, {
-								geoIp: geo,
-								headers: req.headers,
-							});
-						});
-					} else {
-						res.sendStatus(429);
-					}
-				} else {
-					endpoint.handler(req, res);
-					getGeoInfos(req.ip).then((geo) => {
-						endpoint.apiCalls?.push({
-							ip: req.ip,
-							time: new Date().getTime(),
-							userAgent: {
-								geoIp: geo,
-							},
-						});
-						logger.propertyAccess(req.ip, req.url, {
-							geoIp: geo,
-							headers: req.headers,
-						});
+	{
+		path: '/',
+		type: 'STATIC',
+		folder: '/app/index',
+		apilimit: 0,
+		listInSitemap: true,
+	},
+	{
+		path: '/lk/:lk',
+		type: 'STATIC',
+		folder: '/app/index',
+		apilimit: 0,
+		listInSitemap: true,
+	},
+	{
+		path: '/docs',
+		type: 'STATIC',
+		folder: '/app/docs',
+		apilimit: 0,
+		listInSitemap: true,
+	},
+	{
+		path: '/26teCoronaVerordnung',
+		type: 'STATIC',
+		folder: '/app/26teCoronaVerordnung',
+		apilimit: 0,
+		listInSitemap: true,
+	},
+	{
+		path: '/kontakt',
+		type: 'STATIC',
+		folder: '/app/kontakt',
+		apilimit: 0,
+		listInSitemap: false,
+	},
+	{
+		path: '/iframe',
+		type: 'STATIC',
+		folder: '/app/iframe',
+		apilimit: 0,
+		listInSitemap: false,
+	},
+
+	//---------------------
+	// API Routes
+	//---------------------
+
+	{
+		path: '/api/v1/data',
+		type: 'API',
+		method: 'get',
+		handler: (req, res, router) => {
+			let { last, district } = req.query;
+
+			let dataToSend: {
+				Gebiet: APIDistrict;
+				Inzidenz7Tage: number;
+				Hospitalisierung7Tage: number;
+				IntensivbettenProzent: number;
+				Date: string;
+				Warnstufe: number;
+			}[] = [];
+
+			for (const district of APIDistrict) {
+				if (!router.reader.data?.data[district as District]) continue;
+
+				const districtData = router.reader.data?.data[district as District];
+
+				for (const date of Object.keys(districtData)) {
+					const data = districtData[date as APIDate];
+
+					dataToSend.push({
+						Gebiet: district as APIDistrict,
+						Inzidenz7Tage: data.Inzidenz7Tage,
+						Hospitalisierung7Tage: data.Hospitalisierung7Tage,
+						IntensivbettenProzent: data.IntensivbettenProzent,
+						Date: new Date(
+							Number.parseInt(date.split('.')[2]),
+							Number.parseInt(date.split('.')[1]) - 1,
+							Number.parseInt(date.split('.')[0])
+						).toLocaleDateString(),
+						Warnstufe: data.Warnstufe,
 					});
 				}
 			}
-		);
-	}
-}
 
-let Routes: Route[] = JSON.parse(fs.readFileSync('./app/routes.json').toString()) as Route[];
-
-function getHTML(route: Route, req: express.Request) {
-	let defaultHTML = fs.readFileSync('./app/default.html').toString();
-	const { isMobile, isDesktop } = req.useragent as Details;
-
-	if (route.page.replaceWholePage && route.page.replaceWholePage.length > 0) {
-		let page = '';
-		for (let replaceWholePage of route.page.replaceWholePage) {
-			if (
-				replaceWholePage.type === 'both' ||
-				(replaceWholePage.type === 'mobile' && isMobile) ||
-				(replaceWholePage.type === 'desktop' && isDesktop)
-			) {
-				page = fs
-					.readFileSync(`./app/${route.folderName}/${replaceWholePage.fileName}`)
-					.toString();
-				break;
-			}
-		}
-		if (page) return page;
-	}
-
-	if (route.page.htmlFileName.length === 0) {
-		return defaultHTML;
-	}
-
-	for (let htmlFile of route.page.htmlFileName) {
-		if (
-			htmlFile.type === 'both' ||
-			(htmlFile.type === 'mobile' && isMobile) ||
-			(htmlFile.type === 'desktop' && isDesktop)
-		) {
-			defaultHTML = defaultHTML.replace(
-				'%%BODY%%',
-				fs.readFileSync(`./app/${route.folderName}/${htmlFile.fileName}`).toString()
-			);
-		}
-	}
-
-	let cssFiles = [];
-	for (let cssFile of route.page.cssFileNames) {
-		if (
-			cssFile.type === 'both' ||
-			(cssFile.type === 'mobile' && isMobile) ||
-			(cssFile.type === 'desktop' && isDesktop)
-		) {
-			if (!cssFile.fileName.endsWith('.scss')) {
-				cssFiles.push(
-					fs.readFileSync(`./app/${route.folderName}/${cssFile.fileName}`).toString()
-				);
-			} else {
-				cssFiles.push(
-					sass
-						.renderSync({
-							file: `./app/${route.folderName}/${cssFile.fileName}`,
-						})
-						.css.toString()
+			if (last) {
+				dataToSend = dataToSend.filter(
+					(d) =>
+						Date.now() - Number.parseInt(last as string) * 24 * 60 * 60 * 1000 <
+						new Date(d.Date).getTime()
 				);
 			}
-		}
-	}
-	defaultHTML = defaultHTML.replace(
-		'%%STYLES%%',
-		cssFiles.map((file) => `<style>${file}</style>`).join('\n')
-	);
 
-	let jsFiles = [];
-	for (let jsFile of route.page.jsFileNames) {
-		if (
-			jsFile.type === 'both' ||
-			(jsFile.type === 'mobile' && isMobile) ||
-			(jsFile.type === 'desktop' && isDesktop)
-		) {
-			if (jsFile.fileName.endsWith('.ts')) {
-				jsFiles.push(
-					ts.transpileModule(
-						fs.readFileSync(`./app/${route.folderName}/${jsFile.fileName}`).toString(),
-						{
-							compilerOptions: {
-								target: ts.ScriptTarget.ES5,
-								module: ts.ModuleKind.CommonJS,
-							},
-						}
-					).outputText
-				);
-			} else {
-				jsFiles.push(
-					fs.readFileSync(`./app/${route.folderName}/${jsFile.fileName}`).toString()
-				);
+			if (district) {
+				dataToSend = dataToSend.filter((d) => d.Gebiet === (district as APIDistrict));
 			}
-		}
-	}
-	defaultHTML = defaultHTML.replace(
-		'%%SCRIPTS%%',
-		jsFiles.map((file) => `<script>${file}</script>`).join('\n')
-	);
 
-	for (let title of route.page.titles) {
-		if (
-			title.type === 'both' ||
-			(title.type === 'mobile' && isMobile) ||
-			(title.type === 'desktop' && isDesktop)
-		) {
-			defaultHTML = defaultHTML.replace('%%PAGENAME%%', title.title);
-		}
-	}
-
-	return defaultHTML;
-}
-
-//------------------------
-// API routes
-//------------------------
-
-const APIEndpoints: APIEndpoint[] = [
-	//----------------
-	// Data Routes
-	//----------------
-	{
-		path: '/api/v1/data',
-		method: 'GET',
-		handler: (req: express.Request, res: express.Response) => {
-			const { district, last } = req.query;
-
-			let data = cache.data;
-
-			if (last)
-				data = data.filter(
-					(item) =>
-						new Date(item.Date).getTime() >
-						new Date().getTime() - 1000 * 60 * 60 * 24 * Number.parseInt(last as string)
-				);
-
-			if (district) data = data.filter((item) => item.Gebiet === district);
+			dataToSend.sort((a, b) => {
+				return new Date(a.Date).getTime() - new Date(b.Date).getTime();
+			});
 
 			res.json({
-				data,
-				lastUpdate: cache.lastSync,
-				github: 'https://github.com/DI0IK/Warnstufen-RLP',
+				data: dataToSend,
+				lastUpdate: undefined,
+				github: router.reader.data?.github,
 			});
 		},
-		apiLimit: 30,
-		sitemap: {
-			listed: false,
-			changeFreq: 'daily',
-			priority: 0.5,
-		},
+		apilimit: 30,
 	},
 	{
 		path: '/api/v1/districts',
-		method: 'GET',
-		handler: (req: express.Request, res: express.Response) => {
+		type: 'API',
+		method: 'get',
+		handler: (req, res) => {
 			res.json(
-				districts
-					.filter((district) => !district.includes('Versorgungsgebiet'))
-					.sort((a, b) => {
-						const a_n = a.replace('KS ', '');
-						const b_n = b.replace('KS ', '');
+				APIDistrict.sort((a, b) => {
+					const aName = a.replace('KS ', '');
+					const bName = b.replace('KS ', '');
 
-						if (a_n < b_n) return -1;
-						if (a_n > b_n) return 1;
-						return 0;
-					})
+					if (aName < bName) return -1;
+					if (aName > bName) return 1;
+					return 0;
+				})
 			);
 		},
-		apiLimit: 30,
-		sitemap: {
-			listed: false,
-			changeFreq: 'daily',
-			priority: 0.5,
-		},
+		apilimit: 30,
 	},
+	{
+		path: '/api/v2/data',
+		type: 'API',
+		method: 'get',
+		handler: (req, res, router) => {
+			res.json(router.reader.data);
+		},
+		apilimit: 30,
+	},
+	{
+		path: '/api/v2/districts',
+		type: 'API',
+		method: 'get',
+		handler: (req, res) => {
+			res.json(
+				APIDistrict.sort((a, b) => {
+					const aName = a.replace('KS ', '');
+					const bName = b.replace('KS ', '');
 
-	//----------------
-	// Redirects
-	//----------------
-	{
-		path: '/web/:a1/',
-		method: 'GET',
-		handler: (req: express.Request, res: express.Response) => {
-			res.redirect(301, `/${req.params.a1}`);
-		},
-		apiLimit: 30,
-		sitemap: {
-			listed: false,
-			changeFreq: 'daily',
-			priority: 0.5,
-		},
-	},
-
-	//----------------
-	// Admin routes
-	//----------------
-	{
-		path: '/api/v1/admin/analytics',
-		method: 'GET',
-		handler: (req: express.Request, res: express.Response) => {
-			res.json({
-				api: APIEndpoints.map((endpoint) => {
-					return {
-						path: endpoint.path,
-						method: endpoint.method,
-						apiLimit: endpoint.apiLimit,
-						apiCalls: endpoint.apiCalls,
-					};
-				}),
-				pages: Routes.map((route) => {
-					return {
-						path: route.path,
-						apiCalls: route.pageCalls,
-					};
-				}),
-			});
-		},
-		apiLimit: 30,
-		authRequired: true,
-		sitemap: {
-			listed: false,
-			changeFreq: 'daily',
-			priority: 0.5,
-		},
-	},
-	{
-		path: '/api/v1/admin/routes',
-		method: 'GET',
-		handler: (req: express.Request, res: express.Response) => {
-			res.json(Routes);
-		},
-		apiLimit: 30,
-		authRequired: true,
-		sitemap: {
-			listed: false,
-			changeFreq: 'daily',
-			priority: 0.5,
-		},
-	},
-	{
-		path: '/api/v1/admin/reloadRoutes',
-		method: 'GET',
-		handler: (req: express.Request, res: express.Response) => {
-			try {
-				Routes = JSON.parse(fs.readFileSync('./app/routes.json').toString());
-				setRoutes();
-				res.json({
-					success: true,
-				});
-			} catch (error) {
-				res.json({
-					success: false,
-					error,
-				});
-			}
-		},
-		apiLimit: 30,
-		authRequired: true,
-		sitemap: {
-			listed: false,
-			changeFreq: 'daily',
-			priority: 0.5,
-		},
-	},
-	{
-		path: '/api/v1/admin/logs',
-		method: 'GET',
-		handler: (req: express.Request, res: express.Response) => {
-			// Read tab separated log file
-			const logFile = fs.readFileSync('./logs/access.log').toString();
-			const logLines = logFile.split('\n');
-
-			// Parse log lines
-			const logEntries = logLines
-				.map((line) => {
-					const [time, ip, path, data] = line.split('\t');
-					if (!time || !ip || !path || !data) return;
-					return {
-						time,
-						ip,
-						path,
-						data: JSON.parse(data),
-					};
+					if (aName < bName) return -1;
+					if (aName > bName) return 1;
+					return 0;
 				})
-				.filter((entry) => entry);
-
-			// Sort log entries by time
-			logEntries.sort((a, b) => {
-				if (!a || !b) return 0;
-				const a_time = new Date(a.time).getTime();
-				const b_time = new Date(b.time).getTime();
-
-				if (a_time < b_time) return -1;
-				if (a_time > b_time) return 1;
-				return 0;
-			});
-
-			res.json(logEntries);
+			);
 		},
-		apiLimit: 30,
-		authRequired: true,
-		sitemap: {
-			listed: false,
-			changeFreq: 'daily',
-			priority: 0.5,
-		},
+		apilimit: 30,
 	},
 
-	//----------------
-	// GoogleBot routes
-	//----------------
+	//---------------------
+	// Admin Routes
+	//---------------------
+
+	{
+		path: '/admin/analytics',
+		type: 'API',
+		method: 'get',
+		handler: (req, res, router) => {
+			if (req.headers.authorization === config.api.token) {
+				res.json(router.reader.data);
+			} else res.status(401).json({ error: 'Unauthorized' });
+		},
+		apilimit: 30,
+	},
+	{
+		path: '/admin/clearCache',
+		type: 'API',
+		method: 'get',
+		handler: (req, res, reader) => {
+			if (req.headers.authorization === config.api.token) {
+				reader.clearCache();
+				res.json({ success: true });
+			} else res.status(401).json({ error: 'Unauthorized' });
+		},
+		apilimit: 30,
+	},
+
+	//---------------------
+	// Bot Routes
+	//---------------------
+
 	{
 		path: '/robots.txt',
-		method: 'GET',
-		handler: (req: express.Request, res: express.Response) => {
-			res.send(fs.readFileSync('./app/robots.txt').toString());
+		type: 'API',
+		method: 'get',
+		handler: (req, res) => {
+			res.send(fs.readFileSync('/app/app/robots.txt'));
 		},
-		apiLimit: 30,
-		sitemap: {
-			listed: false,
-			changeFreq: 'daily',
-			priority: 0.5,
-		},
+		apilimit: 30,
 	},
 	{
 		path: '/sitemap.xml',
-		method: 'GET',
-		handler: (req: express.Request, res: express.Response) => {
-			res.send(genSiteMap(APIEndpoints, Routes));
+		type: 'API',
+		method: 'get',
+		handler: (req, res) => {
+			res.send(genSitemap(routes));
 		},
-		apiLimit: 30,
-		sitemap: {
-			listed: false,
-			changeFreq: 'daily',
-			priority: 0.5,
-		},
+		apilimit: 30,
 	},
 ];
 
-//------------------------
-// Update cache
-//------------------------
+export class Router {
+	private _router: express.Router;
+	private _filecache: { [key: string]: string } = {};
+	private _reader: Reader;
 
-let cache: {
-	data: Data[];
-	lastSync: Date;
-} = undefined as any;
+	constructor(reader: Reader) {
+		this._router = express.Router();
+		this._reader = reader;
+		this.init();
+	}
 
-export function updateCache(data: { data: Data[]; lastSync: Date }) {
-	cache = data;
-}
+	public get router() {
+		return this._router;
+	}
 
-//------------------------
-// IP Geo Information
-//------------------------
+	public get reader() {
+		return this._reader;
+	}
 
-function getGeoInfos(ip: string) {
-	return new Promise<any>((resolve, reject) => {
-		if (!ipGeoCache[ip]) {
-			axios
-				.get(`http://ip-api.com/json/${ip.replace('::ffff:', '')}?fields=196313`, {
-					responseType: 'json',
-				})
-				.then((response) => {
-					resolve(response.data);
-					ipGeoCache[ip] = response.data;
-					setTimeout(() => {
-						delete ipGeoCache[ip];
-					}, 1000 * 60 * 60 * 6);
-				})
-				.catch((error) => {
-					resolve(error);
+	public clearCache() {
+		this._filecache = {};
+	}
+
+	private init() {
+		routes.forEach((route) => {
+			switch (route.type) {
+				case 'API':
+					this.api(route);
+					break;
+				case 'STATIC':
+					this.static(route);
+					break;
+			}
+		});
+	}
+
+	private static(route: StaticRoute) {
+		this._router.get(route.path, (req: express.Request, res: express.Response) => {
+			if (!this.checklimit(req, res, route)) return;
+			if (!this._filecache[route.folder]) {
+				const file = fs.readFileSync('/app' + route.folder + '/index.html').toString();
+				this._filecache[route.folder] = file;
+				res.send(file);
+			} else {
+				res.send(this._filecache[route.folder]);
+			}
+		});
+		this._router.get(route.path + 'script.ts', (req: express.Request, res: express.Response) => {
+			if (!this.checklimit(req, res, route)) return;
+			if (!this._filecache[route.folder + '/script.ts']) {
+				const file = fs.readFileSync('/app' + route.folder + '/script.ts').toString();
+				const compiled = typescript.transpile(file, {
+					module: typescript.ModuleKind.CommonJS,
+					target: typescript.ScriptTarget.ES5,
 				});
+				this._filecache[route.folder + '/script.ts'] = compiled;
+				res.type('text/javascript').send(compiled);
+			} else {
+				res.type('text/javascript').send(this._filecache[route.folder + '/script.ts']);
+			}
+		});
+		this._router.get(route.path + 'style.scss', (req: express.Request, res: express.Response) => {
+			if (!this.checklimit(req, res, route)) return;
+			if (!this._filecache[route.folder + '/style.scss']) {
+				const file = fs.readFileSync('/app' + route.folder + '/style.scss').toString();
+				const compiled = sass.renderSync({
+					data: file,
+					outputStyle: 'compressed',
+				});
+				this._filecache[route.folder + '/style.scss'] = compiled.css.toString();
+				res.type('text/css').send(compiled.css.toString());
+			} else {
+				res.type('text/css').send(this._filecache[route.folder + '/style.scss']);
+			}
+		});
+	}
+
+	private api(route: APIRoute) {
+		this._router[route.method](route.path, (req: express.Request, res: express.Response) => {
+			if (!this.checklimit(req, res, route)) return;
+			route.handler(req, res, this);
+		});
+	}
+
+	private _ipcache: {
+		[route: string]: {
+			[ip: string]: number;
+		};
+	} = {};
+	private checklimit(req: express.Request, res: express.Response, route: StaticRoute | APIRoute) {
+		if (this._ipcache[route.path] === undefined) this._ipcache[route.path] = {};
+		if (this._ipcache[route.path][req.ip] === undefined) this._ipcache[route.path][req.ip] = 0;
+		if (this._ipcache[route.path][req.ip] >= route.apilimit && route.apilimit > 0) {
+			res.status(429)
+				.send('Too many requests. Please try again later.')
+				.header('Retry-After', '60');
+			return false;
 		} else {
-			resolve(ipGeoCache[ip]);
+			this._ipcache[route.path][req.ip]++;
+			setTimeout(() => {
+				this._ipcache[route.path][req.ip]--;
+			}, 60 * 1000);
+			return true;
 		}
-	});
+	}
 }

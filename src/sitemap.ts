@@ -1,40 +1,21 @@
-import * as formats from './formats';
-import { districts } from './districts';
+import { Route } from './routes';
+import { APIDistrict } from './definitions/districts';
 
-export function genSiteMap(
-	apiRoutes: formats.APIEndpoint[],
-	normalRoutes: formats.Route[]
-): string {
-	const routes = [...apiRoutes, ...normalRoutes];
-	const sitemap = routes
-		.map((route) => {
-			if (!route.path.includes(':lk')) return [route];
-
-			const routes = districts
-				.filter((district) => !district.includes('Versorgungsgebiet'))
-				.map((district) => {
-					const newPath = route.path.replace(':lk', district).replace(/ /g, '_');
-					return { ...route, path: newPath };
-				});
-
-			return routes;
-		})
-		.map((route) => {
-			return route.map((r) => {
-				if (!r.sitemap.listed) return '';
-				const url = r.path;
-				return `<url>
-	<loc>https://www.warnzahl-rlp.de${url}</loc>
-	<changefreq>${r.sitemap.changeFreq}</changefreq>
-	<priority>${r.sitemap.priority}</priority>
-</url>`;
-			});
-		})
-		.map((route) => route.filter((r) => r !== ''))
-		.filter((route) => route.length > 0);
-
-	return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${sitemap.map((r) => r.join('\n')).join('\n')}
-</urlset>`;
+export function genSitemap(endpoints: Route[]): string {
+	let sitemap =
+		'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+	for (const endpoint of endpoints) {
+		if (endpoint.type === 'STATIC' && endpoint.listInSitemap && !endpoint.path.includes(':lk')) {
+			sitemap += `<url><loc>https://www.warnzahl-rlp.de${endpoint.path}</loc></url>\n`;
+		} else if (endpoint.path.includes(':lk')) {
+			for (const district of APIDistrict) {
+				sitemap += `<url><loc>https://www.warnzahl-rlp.de${endpoint.path.replace(
+					':lk',
+					district
+				)}</loc></url>\n`;
+			}
+		}
+	}
+	sitemap += '</urlset>';
+	return sitemap;
 }

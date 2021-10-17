@@ -24,6 +24,13 @@ body {
 		height: 100%;
 		z-index: 1;
 	}
+
+	// Check if device is desktop
+	@media (min-width: 768px) {
+		width: 70%;
+		padding-left: 15%;
+		padding-right: 15%;
+	}
 }
 
 select,
@@ -74,6 +81,13 @@ main {
 		font-weight: bold;
 	}
 
+	.centerItem {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
 	#tableWrap {
 		#table {
 			th {
@@ -104,6 +118,7 @@ main {
 
 			font-size: larger;
 		}
+
 		overflow-x: scroll;
 		margin-top: 1em;
 	}

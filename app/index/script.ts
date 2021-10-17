@@ -79,7 +79,7 @@ getDistricts().then((districts) => {
 	(districts as any[]).forEach((district) => {
 		const option = document.createElement('option');
 		option.value = district;
-		option.innerText = district;
+		option.innerText = district.replace('KS ', '');
 		districtSelect.appendChild(option);
 	});
 

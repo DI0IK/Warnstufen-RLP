@@ -1,43 +1,57 @@
-<h1>Dokumentation</h1>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>26teCoronaVerordnung</title>
+		<link rel="stylesheet" href="./style.scss" />
+		<script src="./script.ts"></script>
+	</head>
+	<body>
+		<h1>Dokumentation</h1>
 
-<h2>API</h2>
+		<h2>API</h2>
 
-<h3>URL: /api/v1/data</h3>
+		<h3>URL: /api/v1/data</h3>
 
-<p>Erlaubte Optionen:</p>
+		<p>Erlaubte Optionen:</p>
 
-<ul>
-	<li>/api/v1/data</li>
-	<li>/api/v1/data?district=<i>Gebiet</i></li>
-	<li>/api/v1/data?last=<i>Tage</i></li>
-	<li>/api/v1/data?last=<i>Tage</i>&district=<i>Gebiet</i></li>
-</ul>
+		<ul>
+			<li>/api/v1/data</li>
+			<li>/api/v1/data?district=<i>Gebiet</i></li>
+			<li>/api/v1/data?last=<i>Tage</i></li>
+			<li>/api/v1/data?last=<i>Tage</i>&district=<i>Gebiet</i></li>
+		</ul>
 
-<h2>Iframe</h2>
+		<h2>Iframe</h2>
 
-<h3>URL: /iframe</h3>
+		<h3>URL: /iframe</h3>
 
-<p>Erlaubte Optionen:</p>
+		<p>Erlaubte Optionen:</p>
 
-<ul>
-	<li>/iframe?district=<i>Gebiet</i></li>
-	<li>/iframe?district=<i>Gebiet</i>&Inzidenz=true</li>
-</ul>
+		<ul>
+			<li>/iframe?district=<i>Gebiet</i></li>
+			<li>/iframe?district=<i>Gebiet</i>&Inzidenz=true</li>
+		</ul>
 
-<p>Beispiel:</p>
+		<p>Beispiel:</p>
 
-<div>
-	&lt;iframe src="/iframe?district=KS Landau
-	i.d.Pf.&args=Inzidenz;Hospitalisierung;Intensivbetten;colors" frameborder="0"&gt;&lt;/iframe&gt;
-</div>
+		<div>
+			&lt;iframe src="/iframe?district=KS Landau
+			i.d.Pf.&args=Inzidenz;Hospitalisierung;Intensivbetten;colors"
+			frameborder="0"&gt;&lt;/iframe&gt;
+		</div>
 
-<iframe
-	src="/iframe?district=KS Landau i.d.Pf.&args=Inzidenz;Hospitalisierung;Intensivbetten;colors"
-	frameborder="0"
-	width="600px"
-	height="150px"
-></iframe>
+		<iframe
+			src="/iframe?district=KS Landau i.d.Pf.&args=Inzidenz;Hospitalisierung;Intensivbetten;colors"
+			frameborder="0"
+			width="600px"
+			height="150px"
+		></iframe>
 
-<br />
+		<br />
 
-<a href="/kontakt">Kontakt/Datenschutzerklärung</a>
+		<a href="/kontakt">Kontakt/Datenschutzerklärung</a>
+	</body>
+</html>
