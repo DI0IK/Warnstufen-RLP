@@ -9,6 +9,7 @@ import { APIDistrict, District } from './definitions/districts';
 import { APIDate } from './definitions/data';
 import { config } from './definitions/config';
 import { genSitemap } from './sitemap';
+import { Analytics } from './analytics';
 
 interface APIRoute {
 	path: string;
@@ -195,8 +196,8 @@ const routes: Route[] = [
 		type: 'API',
 		method: 'get',
 		handler: (req, res, router) => {
-			if (req.headers.authorization === config.api.token) {
-				res.json(router.reader.data);
+			if (req.headers.authorization === 'Bearer ' + config.api.token) {
+				res.json(Analytics.getInstance().data);
 			} else res.status(401).json({ error: 'Unauthorized' });
 		},
 		apilimit: 30,
@@ -206,7 +207,7 @@ const routes: Route[] = [
 		type: 'API',
 		method: 'get',
 		handler: (req, res, reader) => {
-			if (req.headers.authorization === config.api.token) {
+			if (req.headers.authorization === 'Bearer ' + config.api.token) {
 				reader.clearCache();
 				res.json({ success: true });
 			} else res.status(401).json({ error: 'Unauthorized' });

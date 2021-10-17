@@ -5,6 +5,16 @@ import ws from 'ws';
 export class Analytics {
 	private static instance: Analytics;
 
+	private _data: {
+		ip?: string;
+		geoip?: any;
+		url?: string;
+		method?: string;
+		headers?: any;
+		query?: any;
+		time: string;
+	}[] = [];
+
 	private constructor() {}
 
 	public static getInstance(): Analytics {
@@ -20,17 +30,20 @@ export class Analytics {
 			method: req.method,
 			ip: req.ip,
 			headers: req.headers,
-			body: req.body,
 			query: req.query,
 			geoip: await this.getGeoIPData(req.ip),
+			time: new Date().toISOString(),
 		};
+		this._data.push(data);
 	}
 
 	public async wsConnected(ws: ws, ip: string | undefined): Promise<void> {
 		const data = {
 			ip,
 			geoip: await this.getGeoIPData(ip),
+			time: new Date().toISOString(),
 		};
+		this._data.push(data);
 	}
 
 	private _ipGeoCache: any = {};
@@ -39,8 +52,14 @@ export class Analytics {
 		if (this._ipGeoCache[ip]) {
 			return this._ipGeoCache[ip];
 		}
-		const data = await axios.get(`http://ip-api.com/json/${ip}?fields=556793`);
+		const data = await axios.get(`http://ip-api.com/json/${ip}?fields=556793`, {
+			responseType: 'json',
+		});
 		this._ipGeoCache[ip] = data.data;
-		return data;
+		return data.data;
+	}
+
+	public get data() {
+		return this._data;
 	}
 }
