@@ -1,3 +1,5 @@
+const isOnPath = location.pathname.includes('/lk/');
+
 function getDistrictData() {
 	return new Promise<any>((resolve, reject) => {
 		fetch(`/api/v2/data`, {
@@ -82,52 +84,39 @@ async function displayDistrict(district) {
 	checkTableWidth();
 }
 
-getDistricts().then((districts) => {
-	const districtSelect = document.getElementById('district') as HTMLSelectElement;
-	(districts as any[]).forEach((district) => {
-		const option = document.createElement('option');
-		option.value = district;
-		option.innerText = district.replace('KS ', '');
-		districtSelect.appendChild(option);
-	});
+function loaded() {
+	getDistricts().then((districts) => {
+		const districtSelect = document.getElementById('district') as HTMLSelectElement;
+		(districts as any[]).forEach((district) => {
+			const option = document.createElement('option');
+			option.value = district;
+			option.innerText = district.replace('KS ', '');
+			districtSelect.appendChild(option);
+		});
 
-	if (location.hash) {
-		districtSelect.selectedIndex = (districts as any[]).indexOf(
-			location.hash.substr(1).replace(/%20/g, ' ')
+		let index = (districts as any[]).findIndex(
+			(district) =>
+				district === location.hash.replace('#', '').replace(/_/g, ' ').replace(/%20/g, ' ') ||
+				district ===
+					location.pathname.replace('/lk/', '').replace(/_/g, ' ').replace(/%20/g, ' ')
 		);
+		if (index === -1) index = Number.parseInt(localStorage.getItem('district')) || 0;
 
-		try {
-			displayDistrict(districtSelect.value);
-		} catch (error) {
-			districtSelect.selectedIndex =
-				Number.parseInt(localStorage.getItem('district')) || (districts as any[]).length - 10;
+		districtSelect.selectedIndex = index;
 
-			displayDistrict(districtSelect.value);
-		}
-	} else if (location.pathname.startsWith('/lk/')) {
-		districtSelect.selectedIndex =
-			(districts as any[]).indexOf(
-				location.pathname.substr(4).replace(/_/g, ' ').replace(/%20/g, ' ')
-			) || (districts as any[]).length - 10;
+		console.log(index);
 
 		displayDistrict(districtSelect.value);
-	} else {
-		districtSelect.selectedIndex =
-			Number.parseInt(localStorage.getItem('district')) || (districts as any[]).length - 10;
 
-		displayDistrict(districtSelect.value);
-	}
-
-	districtSelect.addEventListener('change', (e) => {
-		const target = e.target as HTMLSelectElement;
-		location.hash = target.value;
-		localStorage.setItem('district', target.selectedIndex.toString());
-		if (location.pathname.startsWith('/lk/')) {
-			location.pathname = `/`;
-		}
-		displayDistrict(target.value);
+		districtSelect.addEventListener('change', (e) => {
+			const target = e.target as HTMLSelectElement;
+			if (isOnPath) location.href = `/#${target.value.replace(/ /g, '_')}`;
+			location.hash = target.value.replace(/ /g, '_');
+			localStorage.setItem('district', target.selectedIndex.toString());
+			displayDistrict(target.value);
+		});
 	});
-});
+}
 
 let pageHeight = 0;
 

@@ -11,7 +11,7 @@ export function genSitemap(endpoints: Route[]): string {
 			for (const district of APIDistrict) {
 				sitemap += `<url><loc>https://www.warnzahl-rlp.de${endpoint.path.replace(
 					':lk',
-					district
+					district.replace(/ /g, '_')
 				)}</loc></url>\n`;
 			}
 		}
