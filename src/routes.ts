@@ -10,7 +10,6 @@ import { APIDate } from './definitions/data';
 import { config } from './definitions/config';
 import { genSitemap } from './sitemap';
 import { Analytics } from './analytics';
-import { TokenGenerator } from './tokens';
 
 interface APIRoute {
 	path: string;
@@ -252,24 +251,6 @@ const routes: Route[] = [
 		apilimit: 30,
 		groupsAllowed: ['all'],
 	},
-
-	//---------------------
-	// Generate Token
-	//---------------------
-
-	{
-		path: '/generateToken',
-		type: 'API',
-		method: 'get',
-		handler: (req, res) => {
-			const token = TokenGenerator.getInstance().createToken(`${req.query.userId}`);
-			res.json({
-				token: token,
-			});
-		},
-		apilimit: 6,
-		groupsAllowed: ['all'],
-	},
 ];
 
 export class Router {
@@ -377,20 +358,13 @@ export class Router {
 	private checklimit(req: express.Request, res: express.Response, route: StaticRoute | APIRoute) {
 		const token =
 			req.header('token')?.split(' ')[1] || req.header('authorization')?.split(' ')[1];
-		const tokenData = TokenGenerator.getInstance().getPermissions(token);
 
 		if (this._ipcache[route.path] === undefined) this._ipcache[route.path] = {};
 		if (this._ipcache[route.path][req.ip] === undefined) this._ipcache[route.path][req.ip] = 0;
 		if (
 			this._ipcache[route.path][req.ip] >= route.apilimit &&
 			route.apilimit > 0 &&
-			!tokenData.permissions.some(
-				(p) =>
-					p.path === route.path &&
-					p.limitMultiplicator &&
-					(p.limitMultiplicator === 0 ||
-						p.limitMultiplicator * route.apilimit > this._ipcache[route.path][req.ip])
-			)
+			!(token && token === config.api.adminToken)
 		) {
 			res.status(429)
 				.header('Retry-After', '60')
@@ -398,9 +372,11 @@ export class Router {
 			return false;
 		} else {
 			if (!route.groupsAllowed.includes('all')) {
-				if (!route.groupsAllowed.some((group) => tokenData.groups.some((g) => g === group))) {
-					res.status(403).send('You are not allowed to access this resource.');
-					return false;
+				if (route.groupsAllowed.includes('admin')) {
+					if (!(token && token === config.api.adminToken)) {
+						res.status(401).send('Unauthorized');
+						return false;
+					}
 				}
 			}
 			this._ipcache[route.path][req.ip]++;
