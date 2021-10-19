@@ -13,7 +13,8 @@ async function updateAnalytics() {
 			datetime.getMonth() === date.getMonth() &&
 			datetime.getFullYear() === date.getFullYear() &&
 			!item.url.match(/\.(?:scss|ts)$/) &&
-			!item.url.match(/\/admin/)
+			!item.url.match(/\/admin/) &&
+			!item.url.match(/\/api\/v(?:1|2)\//)
 		);
 	});
 
