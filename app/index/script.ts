@@ -1,28 +1,18 @@
-function getDistrictData(district = 'all', last = 8) {
-	return new Promise((resolve, reject) => {
-		if (district !== 'all') {
-			fetch(`/api/v1/data?district=${district}&last=${last}`, {
-				headers: {
-					'User-Agent': 'web-dashboard',
-				},
-			})
-				.then((r) => r.json())
-				.then((r) => resolve(r));
-		} else {
-			fetch(`/api/v1/data?last=${last}`, {
-				headers: {
-					'User-Agent': 'web-dashboard',
-				},
-			})
-				.then((r) => r.json())
-				.then((r) => resolve(r));
-		}
+function getDistrictData() {
+	return new Promise<any>((resolve, reject) => {
+		fetch(`/api/v2/data`, {
+			headers: {
+				'User-Agent': 'web-dashboard',
+			},
+		})
+			.then((r) => r.json())
+			.then((r) => resolve(r));
 	});
 }
 
 function getDistricts() {
 	return new Promise((resolve, reject) => {
-		fetch('/api/v1/districts')
+		fetch('/api/v2/districts')
 			.then((r) => r.json())
 			.then((r) => resolve(r));
 	});
@@ -32,7 +22,25 @@ async function displayDistrict(district) {
 	if (!district) {
 		throw new Error('No/Invalid district provided');
 	}
-	const data = await getDistrictData(district);
+
+	const aData = await getDistrictData();
+	console.log(aData);
+	const dData = aData.data[district];
+	let data = [];
+	const date8DaysAgo = new Date();
+	date8DaysAgo.setDate(date8DaysAgo.getDate() - 8);
+	for (let date in dData) {
+		const [day, month, year] = date.split('.');
+		const dateObj = new Date(
+			Number.parseInt(year),
+			Number.parseInt(month) - 1,
+			Number.parseInt(day)
+		);
+
+		if (dateObj > date8DaysAgo) {
+			data.push({ ...dData[date], Date: dateObj.getTime() });
+		}
+	}
 
 	const table = document.getElementById('table');
 	table.innerHTML = '';
@@ -47,7 +55,7 @@ async function displayDistrict(district) {
     `;
 	table.appendChild(header);
 
-	for (let day of (data as any).data) {
+	for (let day of data as any) {
 		const Datum = day.Date;
 		const { Inzidenz7Tage, Hospitalisierung7Tage, IntensivbettenProzent, Warnstufe } = day;
 
@@ -98,8 +106,9 @@ getDistricts().then((districts) => {
 		}
 	} else if (location.pathname.startsWith('/lk/')) {
 		districtSelect.selectedIndex =
-			(districts as any[]).indexOf(location.pathname.substr(4).replace(/_/g, ' ')) ||
-			(districts as any[]).length - 10;
+			(districts as any[]).indexOf(
+				location.pathname.substr(4).replace(/_/g, ' ').replace(/%20/g, ' ')
+			) || (districts as any[]).length - 10;
 
 		displayDistrict(districtSelect.value);
 	} else {

@@ -82,7 +82,7 @@ const routes: Route[] = [
 		groupsAllowed: ['all'],
 	},
 	{
-		path: '/admin',
+		path: '/admin/',
 		type: 'STATIC',
 		folder: '/app/admin',
 		apilimit: 0,
@@ -333,7 +333,7 @@ export class Router {
 		this._router.get(route.path + ':file', (req, res, next) => {
 			const fileName = req.params.file;
 			if (!this.checklimit(req, res, route)) return;
-			if (!fileName.includes('.')) {
+			if (!fileName.match(/\.(?:scss|ts)$/)) {
 				next();
 				return;
 			}

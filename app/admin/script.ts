@@ -11,14 +11,16 @@ async function updateAnalytics() {
 		return (
 			datetime.getDate() === date.getDate() &&
 			datetime.getMonth() === date.getMonth() &&
-			datetime.getFullYear() === date.getFullYear()
+			datetime.getFullYear() === date.getFullYear() &&
+			!item.url.match(/\.(?:scss|ts)$/) &&
+			!item.url.match(/\/admin/)
 		);
 	});
 
 	takenRandomColors = new Set();
 
 	const countrys = dayData
-		.map((item) => item.geoip.country || 'unknown')
+		.map((item) => (germanyOnly ? item.geoip.city || 'unknown' : item.geoip.country || 'unknown'))
 		.filter((item, index, array) => array.indexOf(item) === index);
 
 	const pages = dayData
@@ -63,8 +65,10 @@ async function updateAnalytics() {
 							return {
 								label: country,
 								data: clicksPerHour.map((hour) => {
-									return hour.items.filter(
-										(item) => item.geoip.country || 'unknown' === country
+									return hour.items.filter((item) =>
+										germanyOnly
+											? item.geoip.city || 'unknown' === country
+											: item.geoip.country || 'unknown' === country
 									).length;
 								}),
 								backgroundColor: getRandomColor(),
