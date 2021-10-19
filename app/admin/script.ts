@@ -68,8 +68,8 @@ async function updateAnalytics() {
 								data: clicksPerHour.map((hour) => {
 									return hour.items.filter((item) =>
 										germanyOnly
-											? item.geoip.city || 'unknown' === country
-											: item.geoip.country || 'unknown' === country
+											? (item.geoip.city || 'unknown') === country
+											: (item.geoip.country || 'unknown') === country
 									).length;
 								}),
 								backgroundColor: getRandomColor(),
