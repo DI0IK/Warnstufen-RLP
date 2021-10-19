@@ -1,72 +1,3 @@
-$lightblue: #008fb3;
-$lightgreen: #50ccad;
-$red: #ff5b57;
-
-html,
-body {
-	height: 100%;
-	width: 100%;
-	margin: 0;
-	padding: 0;
-}
-
-body {
-	background-color: #2db7e6;
-	position: relative;
-	&::after {
-		content: '';
-		backdrop-filter: blur(10px);
-		filter: blur(10px);
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		z-index: 1;
-	}
-
-	// Check if device is desktop
-	@media (min-width: 768px) {
-		width: 70%;
-		padding-left: 15%;
-		padding-right: 15%;
-	}
-}
-
-select,
-button,
-input,
-textarea {
-	&:hover,
-	&:focus {
-		border: 1px solid #000;
-	}
-}
-
-a {
-	text-decoration: underline;
-	color: mix($red, black, 70%);
-	&:hover,
-	&:focus {
-		text-decoration: underline;
-		color: mix($red, black, 50%);
-	}
-
-	&:visited {
-		color: mix($red, black, 80%);
-	}
-}
-
-header {
-	position: absolute;
-	text-align: center;
-	top: 1em;
-	left: 50%;
-	transform: translateX(-50%);
-	width: 100%;
-	z-index: 2;
-}
-
 main {
 	select {
 		border: 1px solid #999;
@@ -81,13 +12,6 @@ main {
 		font-weight: bold;
 	}
 
-	.centerItem {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
-
 	#tableWrap {
 		#table {
 			th {
@@ -99,13 +23,13 @@ main {
 				text-align: center;
 
 				&.W-1 {
-					background-color: darken(yellow, 5%);
+					background-color: var(--ampel-yellow);
 				}
 				&.W-2 {
-					background-color: orange;
+					background-color: var(--ampel-orange);
 				}
 				&.W-3 {
-					background-color: red;
+					background-color: var(--ampel-red);
 				}
 			}
 			th,
@@ -121,32 +45,5 @@ main {
 
 		overflow-x: scroll;
 		margin-top: 1em;
-	}
-
-	top: 8em;
-	position: relative;
-	margin-bottom: 10em;
-
-	background: linear-gradient(to top right, #ffffff60, #ffffff96);
-	backdrop-filter: blur(2em);
-	border-radius: 2em;
-	padding: 1em;
-
-	z-index: 2;
-}
-
-footer {
-	position: fixed;
-	bottom: 0;
-	z-index: 3;
-
-	.spacer {
-		margin: 0 0 0 0;
-		width: 1em;
-		display: inline-block;
-	}
-
-	&.bottom {
-		position: static;
 	}
 }

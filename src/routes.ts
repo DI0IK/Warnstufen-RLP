@@ -300,6 +300,11 @@ export class Router {
 	private static(route: StaticRoute) {
 		this._router.get(route.path, (req: express.Request, res: express.Response) => {
 			if (!this.checklimit(req, res, route)) return;
+			if (!fs.existsSync(`/app${route.folder}/index.html`)) {
+				res.sendStatus(404);
+				return;
+			}
+
 			if (!this._filecache[route.folder]) {
 				const file = fs.readFileSync('/app' + route.folder + '/index.html').toString();
 				this._filecache[route.folder] = file;
@@ -311,36 +316,52 @@ export class Router {
 				res.header('from-server-cache', 'true').send(this._filecache[route.folder]);
 			}
 		});
-		this._router.get(route.path + ':file', (req: express.Request, res: express.Response) => {
-			const file = req.params.file;
+		this._router.get(route.path + ':file', (req, res, next) => {
+			const fileName = req.params.file;
 			if (!this.checklimit(req, res, route)) return;
-			if (file.endsWith('.ts')) {
-				if (!this._filecache[route.folder + '/script.ts']) {
-					const file = fs.readFileSync('/app' + route.folder + '/script.ts').toString();
+			if (!fileName.includes('.')) {
+				next();
+				return;
+			}
+			if (!fs.existsSync(`/app${route.folder}/${fileName}`)) {
+				res.sendStatus(404);
+				return;
+			}
+			// Typescript
+			if (fileName.endsWith('.ts')) {
+				if (
+					!this._filecache[route.folder + fileName] ||
+					process.env.NODE_ENV === 'development'
+				) {
+					const file = fs.readFileSync('/app' + route.folder + '/' + fileName).toString();
 					const compiled = typescript.transpile(file, {
 						module: typescript.ModuleKind.CommonJS,
 						target: typescript.ScriptTarget.ES5,
 					});
-					this._filecache[route.folder + '/script.ts'] = compiled;
+					this._filecache[route.folder + fileName] = compiled;
 					setTimeout(() => {
-						delete this._filecache[route.folder + '/script.ts'];
+						delete this._filecache[route.folder + '/' + fileName];
 					}, 1000 * 60 * 60 * 24);
 					res.type('text/javascript').header('from-server-cache', 'false').send(compiled);
 				} else {
 					res.type('text/javascript')
 						.header('from-server-cache', 'true')
-						.send(this._filecache[route.folder + '/script.ts']);
+						.send(this._filecache[route.folder + '/' + fileName]);
 				}
-			} else if (file.endsWith('.scss')) {
-				if (!this._filecache[route.folder + '/style.scss']) {
-					const file = fs.readFileSync('/app' + route.folder + '/style.scss').toString();
+				// SCSS
+			} else if (fileName.endsWith('.scss')) {
+				if (
+					!this._filecache[route.folder + fileName] ||
+					process.env.NODE_ENV === 'development'
+				) {
+					const file = fs.readFileSync('/app' + route.folder + '/' + fileName).toString();
 					const compiled = sass.renderSync({
 						data: file,
 						outputStyle: 'compressed',
 					});
-					this._filecache[route.folder + '/style.scss'] = compiled.css.toString();
+					this._filecache[route.folder + fileName] = compiled.css.toString();
 					setTimeout(() => {
-						delete this._filecache[route.folder + '/style.scss'];
+						delete this._filecache[route.folder + '/' + fileName];
 					}, 1000 * 60 * 60 * 24);
 					res.type('text/css')
 						.header('from-server-cache', 'false')
@@ -348,7 +369,7 @@ export class Router {
 				} else {
 					res.type('text/css')
 						.header('from-server-cache', 'true')
-						.send(this._filecache[route.folder + '/style.scss']);
+						.send(this._filecache[route.folder + '/' + fileName]);
 				}
 			}
 		});

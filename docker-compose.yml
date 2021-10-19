@@ -5,6 +5,9 @@ services:
          - ./config.json:/config.json
          - ./data:/data
          - ./sslcert:/certs
+         - ./app:/app/app
       ports:
          - '80:80'
          - '443:443'
+      environment:
+         - 'NODE_ENV=development'

@@ -7,66 +7,70 @@
 		<title>Dokumentation</title>
 		<link rel="stylesheet" href="/docs/style.scss" />
 		<script src="/docs/script.ts"></script>
+		<link rel="stylesheet" href="/default.scss" />
 	</head>
 	<body>
-		<h1>Dokumentation</h1>
+		<header>
+			<h1>Dokumentation</h1>
+		</header>
 
-		<h2>API</h2>
+		<main>
+			<h2 class="centerItem">API</h2>
 
-		<h3>URL: /api/v2/data</h3>
+			<h3>URL: /api/v2/data</h3>
 
-		<h4 class="json">
-			<code>
-				<pre>
-{
-	"data": {
-		"**Gebiet**": {
-			"**Datum**": {
-				"Inzidenz7Tage": **zahl**,
-				"Hospitalisierung7Tage": **zahl**,
-				"IntensivbettenProzent": **zahl**,
-				"Warnstufe": **zahl**,
+			<h4 class="json">
+				<code>
+					<pre>
+	{
+		"data": {
+			"**Gebiet**": {
+				"**Datum**": {
+					"Inzidenz7Tage": **zahl**,
+					"Hospitalisierung7Tage": **zahl**,
+					"IntensivbettenProzent": **zahl**,
+					"Warnstufe": **zahl**,
+				}
 			}
 		}
-	}
-}
-				</pre
-				>
-			</code>
-		</h4>
+	}</pre
+					>
+				</code>
+			</h4>
 
-		<h2>Iframe</h2>
+			<h2 class="centerItem">Iframe</h2>
 
-		<h3>URL: /iframe</h3>
+			<h3>URL: /iframe</h3>
 
-		<p>Erlaubte Optionen:</p>
+			<p>Erlaubte Optionen:</p>
 
-		<ul>
-			<li>/iframe?district=<i>Gebiet</i></li>
-			<li>
-				/iframe?district=<i>Gebiet</i>&args=<i
-					>Inzidenz;Hospitalisierung;Intensivbetten;colors</i
-				>
-			</li>
-		</ul>
+			<ul>
+				<li>/iframe?district=<i>Gebiet</i></li>
+				<li>
+					/iframe?district=<i>Gebiet</i>&args=<i
+						>Inzidenz;Hospitalisierung;Intensivbetten;colors</i
+					>
+				</li>
+			</ul>
 
-		<p>Beispiel:</p>
+			<p>Beispiel:</p>
 
-		<div>
-			&lt;iframe src="/iframe?district=KS Landau
-			i.d.Pf.&args=Inzidenz;Hospitalisierung;Intensivbetten;colors"
-			frameborder="0"&gt;&lt;/iframe&gt;
-		</div>
+			<div>
+				&lt;iframe src="/iframe?district=KS Landau
+				i.d.Pf.&args=Inzidenz;Hospitalisierung;Intensivbetten;colors"
+				frameborder="0"&gt;&lt;/iframe&gt;
+			</div>
 
-		<iframe
-			src="/iframe?district=KS Landau i.d.Pf.&args=Inzidenz;Hospitalisierung;Intensivbetten;colors"
-			frameborder="0"
-			width="600px"
-			height="150px"
-		></iframe>
+			<iframe
+				src="/iframe?district=KS Landau i.d.Pf.&args=Inzidenz;Hospitalisierung;Intensivbetten;colors"
+				frameborder="0"
+				width="600px"
+				height="150px"
+			></iframe>
+		</main>
 
-		<br />
-
-		<a href="/kontakt">Kontakt/Datenschutzerklärung</a>
+		<footer>
+			<a href="/kontakt">Kontakt/Datenschutzerklärung</a>
+		</footer>
 	</body>
 </html>
