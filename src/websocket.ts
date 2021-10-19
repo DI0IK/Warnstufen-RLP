@@ -28,6 +28,13 @@ export class Websocket {
 				ws.send(Websocket._cache);
 			});
 
+			ws.on('close', () => {
+				Analytics.getInstance().wsDisconnected(
+					ws,
+					String(req.headers['x-forwarded-for']) || req.socket.remoteAddress
+				);
+			});
+
 			Analytics.getInstance().wsConnected(
 				ws,
 				String(req.headers['x-forwarded-for']) || req.socket.remoteAddress

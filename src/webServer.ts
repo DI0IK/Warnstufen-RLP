@@ -6,6 +6,8 @@ import { config } from './definitions/config';
 import { Reader } from './sheetReader';
 import { Analytics } from './analytics';
 import { Router } from './routes';
+import useragent from 'express-useragent';
+import cookieParser from 'cookie-parser';
 
 export class WebServer {
 	private _app: express.Application = express();
@@ -32,6 +34,8 @@ export class WebServer {
 	private init(): void {
 		this._app.use(express.json());
 		this._app.use(express.urlencoded({ extended: false }));
+		this._app.use(useragent.express());
+		this._app.use(cookieParser());
 		this._app.use((req, res, next) => {
 			this._analytics.routeCalled(req, res);
 			this._router(req, res, next);

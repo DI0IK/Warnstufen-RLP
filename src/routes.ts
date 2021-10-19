@@ -212,11 +212,20 @@ const routes: Route[] = [
 	//---------------------
 
 	{
-		path: '/admin/analytics',
+		path: '/admin/analytics/:date',
 		type: 'API',
 		method: 'get',
 		handler: (req, res) => {
-			res.json(Analytics.getInstance().data);
+			const { date } = req.params;
+
+			const filepath = '/data/analytics-' + date + '.json';
+			if (!fs.existsSync(filepath)) {
+				res.status(404).send('File not found');
+				return;
+			}
+
+			const data = JSON.parse(fs.readFileSync(filepath, 'utf8'));
+			res.json(data);
 		},
 		apilimit: 30,
 		groupsAllowed: ['admin'],
@@ -232,6 +241,14 @@ const routes: Route[] = [
 			});
 		},
 		apilimit: 30,
+		groupsAllowed: ['admin'],
+	},
+	{
+		path: '/admin/',
+		type: 'STATIC',
+		folder: '/app/admin',
+		apilimit: 0,
+		listInSitemap: false,
 		groupsAllowed: ['admin'],
 	},
 
@@ -305,12 +322,9 @@ export class Router {
 				return;
 			}
 
-			if (!this._filecache[route.folder]) {
+			if (!this._filecache[route.folder] || process.env.NODE_ENV === 'development') {
 				const file = fs.readFileSync('/app' + route.folder + '/index.html').toString();
 				this._filecache[route.folder] = file;
-				setTimeout(() => {
-					delete this._filecache[route.folder];
-				}, 1000 * 60 * 60 * 24);
 				res.header('from-server-cache', 'false').send(file);
 			} else {
 				res.header('from-server-cache', 'true').send(this._filecache[route.folder]);
@@ -330,7 +344,7 @@ export class Router {
 			// Typescript
 			if (fileName.endsWith('.ts')) {
 				if (
-					!this._filecache[route.folder + fileName] ||
+					!this._filecache[route.folder + '/' + fileName] ||
 					process.env.NODE_ENV === 'development'
 				) {
 					const file = fs.readFileSync('/app' + route.folder + '/' + fileName).toString();
@@ -338,10 +352,7 @@ export class Router {
 						module: typescript.ModuleKind.CommonJS,
 						target: typescript.ScriptTarget.ES5,
 					});
-					this._filecache[route.folder + fileName] = compiled;
-					setTimeout(() => {
-						delete this._filecache[route.folder + '/' + fileName];
-					}, 1000 * 60 * 60 * 24);
+					this._filecache[route.folder + '/' + fileName] = compiled;
 					res.type('text/javascript').header('from-server-cache', 'false').send(compiled);
 				} else {
 					res.type('text/javascript')
@@ -351,7 +362,7 @@ export class Router {
 				// SCSS
 			} else if (fileName.endsWith('.scss')) {
 				if (
-					!this._filecache[route.folder + fileName] ||
+					!this._filecache[route.folder + '/' + fileName] ||
 					process.env.NODE_ENV === 'development'
 				) {
 					const file = fs.readFileSync('/app' + route.folder + '/' + fileName).toString();
@@ -359,10 +370,7 @@ export class Router {
 						data: file,
 						outputStyle: 'compressed',
 					});
-					this._filecache[route.folder + fileName] = compiled.css.toString();
-					setTimeout(() => {
-						delete this._filecache[route.folder + '/' + fileName];
-					}, 1000 * 60 * 60 * 24);
+					this._filecache[route.folder + '/' + fileName] = compiled.css.toString();
 					res.type('text/css')
 						.header('from-server-cache', 'false')
 						.send(compiled.css.toString());
@@ -388,7 +396,10 @@ export class Router {
 		};
 	} = {};
 	private checklimit(req: express.Request, res: express.Response, route: StaticRoute | APIRoute) {
-		const token = req.header('token')?.split(' ') || req.header('authorization')?.split(' ');
+		const token =
+			req.cookies.token?.split(' ') ||
+			req.header('token')?.split(' ') ||
+			req.header('authorization')?.split(' ');
 
 		if (token && token.length === 2 && token[0] !== 'Bearer') {
 			res.status(401).send('Invalid token');
@@ -410,8 +421,13 @@ export class Router {
 			if (!route.groupsAllowed.includes('all')) {
 				if (route.groupsAllowed.includes('admin')) {
 					if (!(token && token.length === 2 && token[1] === config.api.adminToken)) {
-						res.status(401).send('Unauthorized');
-						return false;
+						if (route.path.startsWith('/admin') && route.type === 'STATIC') {
+							res.sendFile('/app/app/admin/login.html');
+							return false;
+						} else {
+							res.status(401).send('Unauthorized');
+							return false;
+						}
 					}
 				}
 			}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Admin</title>
+		<link rel="stylesheet" href="/default.scss" />
+		<link rel="stylesheet" href="/admin/style.scss" />
+		<script src="/admin/script.ts"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	</head>
+	<body>
+		<header>
+			<h1>Admin</h1>
+		</header>
+		<main>
+			<h2>Anayltics:</h2>
+			<div id="anayltics">
+				<input type="date" name="" class="date-input" />
+				Germany only: <input type="checkbox" name="" id="germanyOnly" />
+				<select name="" id="chart-type">
+					<option value="clicks-per-country">Clicks per Country</option>
+					<option value="clicks-per-page">Clicks per Page</option>
+					<option value="clicks-per-referer">Clicks per Referer</option>
+				</select>
+				<button onclick="updateAnalytics()">Update</button>
+				<div id="analyticsChart">
+					<canvas id="analyticsChartCanvas"></canvas>
+				</div>
+			</div>
+			<br />
+			<h2>Websockets Connected:</h2>
+			<div>
+				<ul id="wsList"></ul>
+			</div>
+		</main>
+		<script>
+			setupDateInputs();
+		</script>
+	</body>
+</html>
