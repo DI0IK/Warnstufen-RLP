@@ -81,6 +81,14 @@ const routes: Route[] = [
 		listInSitemap: false,
 		groupsAllowed: ['all'],
 	},
+	{
+		path: '/admin',
+		type: 'STATIC',
+		folder: '/app/admin',
+		apilimit: 0,
+		listInSitemap: false,
+		groupsAllowed: ['admin'],
+	},
 
 	//---------------------
 	// API Routes
@@ -303,42 +311,45 @@ export class Router {
 				res.header('from-server-cache', 'true').send(this._filecache[route.folder]);
 			}
 		});
-		this._router.get(route.path + 'script.ts', (req: express.Request, res: express.Response) => {
+		this._router.get(route.path + ':file', (req: express.Request, res: express.Response) => {
+			const file = req.params.file;
 			if (!this.checklimit(req, res, route)) return;
-			if (!this._filecache[route.folder + '/script.ts']) {
-				const file = fs.readFileSync('/app' + route.folder + '/script.ts').toString();
-				const compiled = typescript.transpile(file, {
-					module: typescript.ModuleKind.CommonJS,
-					target: typescript.ScriptTarget.ES5,
-				});
-				this._filecache[route.folder + '/script.ts'] = compiled;
-				setTimeout(() => {
-					delete this._filecache[route.folder + '/script.ts'];
-				}, 1000 * 60 * 60 * 24);
-				res.type('text/javascript').header('from-server-cache', 'false').send(compiled);
-			} else {
-				res.type('text/javascript')
-					.header('from-server-cache', 'true')
-					.send(this._filecache[route.folder + '/script.ts']);
-			}
-		});
-		this._router.get(route.path + 'style.scss', (req: express.Request, res: express.Response) => {
-			if (!this.checklimit(req, res, route)) return;
-			if (!this._filecache[route.folder + '/style.scss']) {
-				const file = fs.readFileSync('/app' + route.folder + '/style.scss').toString();
-				const compiled = sass.renderSync({
-					data: file,
-					outputStyle: 'compressed',
-				});
-				this._filecache[route.folder + '/style.scss'] = compiled.css.toString();
-				setTimeout(() => {
-					delete this._filecache[route.folder + '/style.scss'];
-				}, 1000 * 60 * 60 * 24);
-				res.type('text/css').header('from-server-cache', 'false').send(compiled.css.toString());
-			} else {
-				res.type('text/css')
-					.header('from-server-cache', 'true')
-					.send(this._filecache[route.folder + '/style.scss']);
+			if (file.endsWith('.ts')) {
+				if (!this._filecache[route.folder + '/script.ts']) {
+					const file = fs.readFileSync('/app' + route.folder + '/script.ts').toString();
+					const compiled = typescript.transpile(file, {
+						module: typescript.ModuleKind.CommonJS,
+						target: typescript.ScriptTarget.ES5,
+					});
+					this._filecache[route.folder + '/script.ts'] = compiled;
+					setTimeout(() => {
+						delete this._filecache[route.folder + '/script.ts'];
+					}, 1000 * 60 * 60 * 24);
+					res.type('text/javascript').header('from-server-cache', 'false').send(compiled);
+				} else {
+					res.type('text/javascript')
+						.header('from-server-cache', 'true')
+						.send(this._filecache[route.folder + '/script.ts']);
+				}
+			} else if (file.endsWith('.scss')) {
+				if (!this._filecache[route.folder + '/style.scss']) {
+					const file = fs.readFileSync('/app' + route.folder + '/style.scss').toString();
+					const compiled = sass.renderSync({
+						data: file,
+						outputStyle: 'compressed',
+					});
+					this._filecache[route.folder + '/style.scss'] = compiled.css.toString();
+					setTimeout(() => {
+						delete this._filecache[route.folder + '/style.scss'];
+					}, 1000 * 60 * 60 * 24);
+					res.type('text/css')
+						.header('from-server-cache', 'false')
+						.send(compiled.css.toString());
+				} else {
+					res.type('text/css')
+						.header('from-server-cache', 'true')
+						.send(this._filecache[route.folder + '/style.scss']);
+				}
 			}
 		});
 	}
@@ -356,15 +367,19 @@ export class Router {
 		};
 	} = {};
 	private checklimit(req: express.Request, res: express.Response, route: StaticRoute | APIRoute) {
-		const token =
-			req.header('token')?.split(' ')[1] || req.header('authorization')?.split(' ')[1];
+		const token = req.header('token')?.split(' ') || req.header('authorization')?.split(' ');
+
+		if (token && token.length === 2 && token[0] !== 'Bearer') {
+			res.status(401).send('Invalid token');
+			return false;
+		}
 
 		if (this._ipcache[route.path] === undefined) this._ipcache[route.path] = {};
 		if (this._ipcache[route.path][req.ip] === undefined) this._ipcache[route.path][req.ip] = 0;
 		if (
 			this._ipcache[route.path][req.ip] >= route.apilimit &&
 			route.apilimit > 0 &&
-			!(token && token === config.api.adminToken)
+			!(token && token.length === 2 && token[1] === config.api.adminToken)
 		) {
 			res.status(429)
 				.header('Retry-After', '60')
@@ -373,7 +388,7 @@ export class Router {
 		} else {
 			if (!route.groupsAllowed.includes('all')) {
 				if (route.groupsAllowed.includes('admin')) {
-					if (!(token && token === config.api.adminToken)) {
+					if (!(token && token.length === 2 && token[1] === config.api.adminToken)) {
 						res.status(401).send('Unauthorized');
 						return false;
 					}
