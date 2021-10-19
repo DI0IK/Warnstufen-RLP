@@ -93,10 +93,10 @@ export class Reader {
 	private calculateWarnstufe() {
 		if (!this._data) return;
 
+		let VersorgungsgebietHospitalisierung7Tage = 0;
 		for (let districtName in this._data.data) {
 			const district = this._data.data[districtName as District];
 			let temp = [1, 1];
-			let VersorgungsgebietHospitalisierung7Tage = 0;
 			for (let date in district) {
 				if (
 					VersorgungsgebieteDistricts.includes(districtName as District) ||
