@@ -28,6 +28,7 @@ export class Analytics {
 			method: req.method,
 			ip: req.ip,
 			headers: req.headers,
+			body: req.body,
 			query: req.query,
 			geoip: await this.getGeoIPData(req.ip),
 			time: new Date().toISOString(),
@@ -116,6 +117,7 @@ interface data {
 	url?: string;
 	method?: string;
 	headers?: any;
+	body?: any;
 	query?: any;
 	time: string;
 	disconnectTime?: string;

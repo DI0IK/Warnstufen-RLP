@@ -7,36 +7,35 @@
 		<title>Admin</title>
 		<link rel="stylesheet" href="/default.scss" />
 		<link rel="stylesheet" href="/admin/style.scss" />
-		<script src="/admin/script.ts"></script>
 		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script src="/admin/script.ts"></script>
 	</head>
 	<body>
-		<header>
-			<h1>Admin</h1>
-		</header>
 		<main>
-			<h2>Anayltics:</h2>
-			<div id="anayltics">
-				<input type="date" name="" class="date-input" />
-				Germany only: <input type="checkbox" name="" id="germanyOnly" />
-				<select name="" id="chart-type">
-					<option value="clicks-per-country">Clicks per Country</option>
-					<option value="clicks-per-page">Clicks per Page</option>
-					<option value="clicks-per-referer">Clicks per Referer</option>
-				</select>
-				<button onclick="updateAnalytics()">Update</button>
-				<div id="analyticsChart">
-					<canvas id="analyticsChartCanvas"></canvas>
-				</div>
-			</div>
-			<br />
-			<h2>Websockets Connected:</h2>
 			<div>
-				<ul id="wsList"></ul>
+				<span>
+					Gruppen:
+					<select name="" id="dataType" onchange="loadChart()">
+						<option value="url">URL</option>
+						<option value="country">Land</option>
+						<option value="referrer">Referrer</option>
+					</select>
+				</span>
+				<span>
+					Nur Deutschland:
+					<input type="checkbox" name="" id="onlyGermany" onchange="loadChart()" />
+				</span>
+				<span>
+					Datum:
+					<input type="date" name="" id="date" onchange="loadChart()" />
+				</span>
+			</div>
+			<div>
+				<canvas id="chart"></canvas>
 			</div>
 		</main>
 		<script>
-			setupDateInputs();
+			loadChart();
 		</script>
 	</body>
 </html>

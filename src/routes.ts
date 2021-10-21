@@ -50,6 +50,16 @@ const routes: Route[] = [
 		groupsAllowed: ['all'],
 	},
 	{
+		path: '/favicon.ico',
+		type: 'API',
+		method: 'get',
+		apilimit: 0,
+		groupsAllowed: ['all'],
+		handler: (req, res, reader) => {
+			res.sendFile('/app/app/favicon.ico');
+		},
+	},
+	{
 		path: '/docs/',
 		type: 'STATIC',
 		folder: '/app/docs',
@@ -220,7 +230,9 @@ const routes: Route[] = [
 
 			const filepath = '/data/analytics-' + date + '.json';
 			if (!fs.existsSync(filepath)) {
-				res.status(404).send('File not found');
+				res.status(404).json({
+					error: 'File not found',
+				});
 				return;
 			}
 
@@ -348,10 +360,12 @@ export class Router {
 					process.env.NODE_ENV === 'development'
 				) {
 					const file = fs.readFileSync('/app' + route.folder + '/' + fileName).toString();
-					const compiled = typescript.transpile(file, {
-						module: typescript.ModuleKind.CommonJS,
-						target: typescript.ScriptTarget.ES5,
-					});
+					const compiled = typescript
+						.transpile(file, {
+							module: typescript.ModuleKind.ESNext,
+							target: typescript.ScriptTarget.ES5,
+						})
+						.replace(/export \{\};?/g, '');
 					this._filecache[route.folder + '/' + fileName] = compiled;
 					res.type('text/javascript').header('from-server-cache', 'false').send(compiled);
 				} else {

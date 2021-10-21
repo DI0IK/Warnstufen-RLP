@@ -7,12 +7,12 @@
 		<title>Login</title>
 	</head>
 	<body>
-		<input type="text" />
+		<input type="password" />
 		<button onclick="setToken()">SetToken</button>
 		<script>
 			function setToken() {
 				const token = document.querySelector('input').value;
-				document.cookie = `token=Bearer ${token}; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT`;
+				document.cookie = `token=Bearer ${token}; path=/; expires=Fri, 31 Dec 9999 23:59:59 GMT; SameSite=Strict; Secure`;
 				location.reload();
 			}
 		</script>

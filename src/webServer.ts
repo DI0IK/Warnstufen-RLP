@@ -7,6 +7,7 @@ import { Reader } from './sheetReader';
 import { Analytics } from './analytics';
 import { Router } from './routes';
 import cookieParser from 'cookie-parser';
+import { BanHandler } from './banlist';
 
 export class WebServer {
 	private _app: express.Application = express();
@@ -22,6 +23,7 @@ export class WebServer {
 
 	private _reader: Reader;
 	private _analytics: Analytics;
+	private _banHandler: BanHandler = new BanHandler();
 
 	constructor(reader: Reader) {
 		this.init();
@@ -34,9 +36,15 @@ export class WebServer {
 		this._app.use(express.json());
 		this._app.use(express.urlencoded({ extended: false }));
 		this._app.use(cookieParser());
-		this._app.use((req, res, next) => {
-			this._analytics.routeCalled(req, res);
-			this._router(req, res, next);
+		this._app.use(async (req, res, next) => {
+			if (req.protocol !== 'https') return res.redirect(`https://www.${req.hostname}${req.url}`);
+			if (!req.subdomains[0]) return res.redirect(`https://www.${req.hostname}${req.url}`);
+			if (await this._banHandler.check(req.ip, req.url)) {
+				this._banHandler.respond(req, res);
+			} else {
+				this._analytics.routeCalled(req, res);
+				this._router(req, res, next);
+			}
 		});
 	}
 
