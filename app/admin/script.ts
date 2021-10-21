@@ -238,8 +238,57 @@ function getRandomColor(url: string) {
 }
 
 function inspect(items: RouteAnalyticsData[]) {
-	console.log(items);
+	const wrapper = document.getElementById('jsonInspect') as HTMLDivElement;
+
+	wrapper.innerHTML = '';
+
+	function createJSONLayer(json: any, tabs: number = 1) {
+		const jsonLayer = document.createElement('div');
+		jsonLayer.classList.add('json-layer');
+
+		for (const key in json) {
+			const value = json[key];
+
+			const label = document.createElement('div');
+			label.classList.add('json-label');
+			label.innerText = `${key}:`;
+
+			const valueLayer = document.createElement('div');
+			valueLayer.classList.add('json-value');
+			valueLayer.style.paddingLeft = `${tabs * 20}px`;
+
+			if (typeof value === 'object') {
+				valueLayer.appendChild(createJSONLayer(value, tabs + 1));
+				// dark-green
+				valueLayer.style.color = '#006400';
+			} else {
+				valueLayer.innerText = value;
+				// string = blue | number = red | boolean = pink
+				valueLayer.style.color =
+					typeof value === 'string'
+						? '#0000ff'
+						: typeof value === 'number'
+						? '#ff0000'
+						: '#ff00ff';
+			}
+
+			jsonLayer.appendChild(label);
+			jsonLayer.appendChild(valueLayer);
+		}
+
+		return jsonLayer;
+	}
+
+	wrapper.appendChild(createJSONLayer(items));
+
+	document.getElementById('jsonInspectParent').hidden = false;
 }
+
+document.addEventListener('keydown', (e) => {
+	if (e.key === 'Escape') {
+		document.getElementById('jsonInspectParent').hidden = true;
+	}
+});
 
 interface RouteAnalyticsData {
 	ip: string;
