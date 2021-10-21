@@ -95,4 +95,10 @@ const bannedRegex = [
 	/^\/HNAP1/i,
 	/^\/config\//i,
 	/^\/mifs\//i,
+	/^\/struts/i,
+	/^\/cyrus/i,
+	/^\/install/i,
+	/^\/g/i,
+	/^\/ab2/i,
+	/^\/stalker/i,
 ];
