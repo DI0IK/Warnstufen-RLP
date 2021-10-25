@@ -93,7 +93,7 @@ export class Reader {
 	private calculateWarnstufe() {
 		if (!this._data) return;
 
-		let VersorgungsgebietHospitalisierung7Tage = 0;
+		let VersorgungsgebietName: District = '' as any;
 		for (let districtName in this._data.data) {
 			const district = this._data.data[districtName as District];
 			let temp = [1, 1];
@@ -102,8 +102,7 @@ export class Reader {
 					VersorgungsgebieteDistricts.includes(districtName as District) ||
 					RLPDistrict.includes(districtName as District)
 				) {
-					const data = district[date as APIDate];
-					VersorgungsgebietHospitalisierung7Tage = data.Hospitalisierung7Tage;
+					VersorgungsgebietName = districtName as District;
 				}
 
 				if (
@@ -117,7 +116,10 @@ export class Reader {
 					const data = district[date as APIDate];
 					const ampel = config.ampel;
 
-					data.Hospitalisierung7Tage = VersorgungsgebietHospitalisierung7Tage;
+					data.Hospitalisierung7Tage =
+						this._data.data[VersorgungsgebietName as District][
+							date as APIDate
+						].Hospitalisierung7Tage;
 					data.IntensivbettenProzent = RLPIntensivbettenProzent;
 
 					const InzidenzLevel =
