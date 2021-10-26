@@ -19,13 +19,21 @@ export default function Kontakt({ kontakt }) {
 }
 
 export async function getStaticProps() {
-	const kontakt = fs.readFileSync(path.resolve(process.cwd(), 'pages/kontakt.md'), 'utf8');
+	if (fs.existsSync(path.resolve(process.cwd(), 'pages/kontakt.md'))) {
+		const kontakt = fs.readFileSync(path.resolve(process.cwd(), 'pages/kontakt.md'), 'utf8');
 
-	const html = await remark().use(remarkHtml).process(kontakt);
+		const html = await remark().use(remarkHtml).process(kontakt);
 
-	return {
-		props: {
-			kontakt: html.toString(),
-		},
-	};
+		return {
+			props: {
+				kontakt: html.toString(),
+			},
+		};
+	} else {
+		return {
+			props: {
+				kontakt: '!Dev Build!',
+			},
+		};
+	}
 }
