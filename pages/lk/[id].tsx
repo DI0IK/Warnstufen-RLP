@@ -55,35 +55,37 @@ export default function Lk({ lk, id }) {
 				/>
 			</Head>
 			<h1>Warnstufe {id}</h1>
-			<table className={tableStyles.table}>
-				<tr>
-					<th>Datum</th>
-					<th>Inzidenz letzte 7 Tage pro 100.000 Einwohner</th>
-					<th>Hospitalisierung letzte 7 Tage pro 100.000 Einwohner</th>
-					<th>Intensivbetten belegt in Prozent</th>
-					<th>
-						<Link href="/coronaverordnung">
-							<a className={styles.link}>Warnstufe</a>
-						</Link>
-					</th>
-				</tr>
-				{Object.keys(lk).map((key) => {
-					const data = lk[key] as APIRawData;
-					return (
-						<tr key={key}>
-							<td>{key}</td>
-							<td>{data.Inzidenz7Tage}</td>
-							<td>{data.Hospitalisierung7Tage}</td>
-							<td>{data.IntensivbettenProzent}</td>
-							<td className={'ws-' + data.Warnstufe}>
-								<Link href="/coronaverordnung">
-									<a className={styles.link}>{data.Warnstufe}</a>
-								</Link>
-							</td>
-						</tr>
-					);
-				})}
-			</table>
+			<div className={tableStyles.table}>
+				<table>
+					<tr>
+						<th>Datum</th>
+						<th>Inzidenz letzte 7 Tage pro 100.000 Einwohner</th>
+						<th>Hospitalisierung letzte 7 Tage pro 100.000 Einwohner</th>
+						<th>Intensivbetten belegt in Prozent</th>
+						<th>
+							<Link href="/coronaverordnung">
+								<a className={styles.link}>Warnstufe</a>
+							</Link>
+						</th>
+					</tr>
+					{Object.keys(lk).map((key) => {
+						const data = lk[key] as APIRawData;
+						return (
+							<tr key={key}>
+								<td>{key}</td>
+								<td>{data.Inzidenz7Tage}</td>
+								<td>{data.Hospitalisierung7Tage}</td>
+								<td>{data.IntensivbettenProzent}</td>
+								<td className={'ws-' + data.Warnstufe}>
+									<Link href="/coronaverordnung">
+										<a className={styles.link}>{data.Warnstufe}</a>
+									</Link>
+								</td>
+							</tr>
+						);
+					})}
+				</table>
+			</div>
 		</Layout>
 	);
 }

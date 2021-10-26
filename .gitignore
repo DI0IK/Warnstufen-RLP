@@ -36,3 +36,5 @@ yarn-error.log*
 /pages/kontakt.md
 /**/*.crt
 /**/*.key
+
+/logs/*.log
