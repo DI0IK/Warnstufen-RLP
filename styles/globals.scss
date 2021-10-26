@@ -1,0 +1,89 @@
+$lightblue: #008fb3;
+$lightgreen: #50ccad;
+$red: #ff5b57;
+
+html,
+body {
+	padding: 0;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
+		Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+h1 {
+	text-align: center;
+	display: flex;
+	justify-content: center;
+}
+
+div.layout-item footer {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	min-height: 50px;
+	height: auto;
+	background-color: #dadada;
+	display: flex;
+	align-items: center;
+
+	flex-wrap: wrap;
+
+	* {
+		margin: 0 20px;
+		padding: 3px;
+		background-color: #aaaaaa;
+	}
+}
+
+div.main-page footer {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	min-height: 50px;
+	height: auto;
+	background-color: #dadada;
+	display: flex;
+	align-items: center;
+
+	flex-wrap: wrap;
+
+	* {
+		margin: 0 20px;
+		padding: 3px;
+		background-color: #aaaaaa;
+	}
+}
+
+.layout-item,
+.main-page {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	padding-top: 50px;
+}
+
+* {
+	&.ws-1 {
+		background-color: darken(yellow, 5%);
+	}
+	&.ws-2 {
+		background-color: orange;
+	}
+	&.ws-3 {
+		background-color: red;
+	}
+	&.ws-undefined {
+		background-color: #979797;
+	}
+}
