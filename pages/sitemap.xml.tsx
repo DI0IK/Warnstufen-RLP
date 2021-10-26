@@ -1,4 +1,4 @@
-import { APIDistrict } from '../api/definitions/districts';
+import { APIDistrict } from '../sheetReader/definitions/districts';
 
 export default function SitemapPage() {}
 
