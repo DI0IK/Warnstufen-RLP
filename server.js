@@ -12,8 +12,8 @@ app.prepare().then(() => {
 	https
 		.createServer(
 			{
-				key: fs.readFileSync('./cert/server.key'),
-				cert: fs.readFileSync('./cert/server.crt'),
+				key: fs.readFileSync('./certs/server.key'),
+				cert: fs.readFileSync('./certs/server.crt'),
 			},
 			(req, res) => {
 				const parsedUrl = parse(req.url, true);
