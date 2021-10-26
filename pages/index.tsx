@@ -90,7 +90,7 @@ export default function Home({ lk }) {
 	);
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
 	const lk = await getLkData();
 	return {
 		props: {

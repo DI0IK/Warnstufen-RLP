@@ -5,6 +5,7 @@ import Layout from '../../components/layout';
 import { APIRawData } from '../../sheetReader/definitions/data';
 import tableStyles from '../../styles/table.module.scss';
 import styles from '../../styles/coronaverordnung.module.scss';
+import { APIDistrict } from '../../sheetReader/definitions/districts';
 
 export default function Lk({ lk, id }) {
 	return (
@@ -87,21 +88,9 @@ export default function Lk({ lk, id }) {
 	);
 }
 
-export async function getStaticPaths() {
-	const paths = getAllLk();
-	return {
-		paths: paths.map(({ params }) => {
-			return {
-				params: {
-					id: params.id.replace(/ /g, '_'),
-				},
-			};
-		}),
-		fallback: false,
-	};
-}
-
-export async function getStaticProps({ params }) {
+export async function getServerSideProps({ params, res }) {
+	if (!APIDistrict.includes(params.id.replace(/_/g, ' ')))
+		return { props: { id: 'Landkreis Nicht Gefunden', lk: {} } };
 	const lk = await getLkData(params.id.replace(/_/g, ' '));
 	let newerThan7Days = {};
 	for (let key in lk) {
