@@ -18,13 +18,13 @@ export async function getLkData(id?: APIDistrict) {
 
 	return new Promise<any>((resolve, reject) => {
 		const timer = setInterval(() => {
-			if (reader.data && id) {
+			if (reader.data.v2 && id) {
 				clearInterval(timer);
 				const lk = APIDistrict.find((d) => {
 					return d === id;
 				});
 				resolve(reader.data.v2.data[lk]);
-			} else if (reader.data) {
+			} else if (reader.data.v2) {
 				clearInterval(timer);
 				resolve(reader.data.v2.data);
 			}
