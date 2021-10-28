@@ -46,46 +46,47 @@ export class Reader {
 	}
 
 	public get data(): { v2: APIData; v1: any } | undefined {
-		let dataToSend: {
-			Gebiet: APIDistrict;
-			Inzidenz7Tage: number;
-			Hospitalisierung7Tage: number;
-			IntensivbettenProzent: number;
-			Date: string;
-			Warnstufe: number;
-		}[] = [];
+		if (this._data) {
+			let dataToSend: {
+				Gebiet: APIDistrict;
+				Inzidenz7Tage: number;
+				Hospitalisierung7Tage: number;
+				IntensivbettenProzent: number;
+				Date: string;
+				Warnstufe: number;
+			}[] = [];
 
-		for (const district of APIDistrict) {
-			if (!this._data[district as District]) continue;
+			for (const district of APIDistrict) {
+				if (!this._data[district as District]) continue;
 
-			const districtData = this._data[district as District];
+				const districtData = this._data[district as District];
 
-			for (const date of Object.keys(districtData)) {
-				const data = districtData[date as APIDate];
+				for (const date of Object.keys(districtData)) {
+					const data = districtData[date as APIDate];
 
-				dataToSend.push({
-					Gebiet: district as APIDistrict,
-					Inzidenz7Tage: data.Inzidenz7Tage,
-					Hospitalisierung7Tage: data.Hospitalisierung7Tage,
-					IntensivbettenProzent: data.IntensivbettenProzent,
-					Date: new Date(
-						Number.parseInt(date.split('.')[2]),
-						Number.parseInt(date.split('.')[1]) - 1,
-						Number.parseInt(date.split('.')[0])
-					).toLocaleDateString(),
-					Warnstufe: data.Warnstufe,
-				});
+					dataToSend.push({
+						Gebiet: district as APIDistrict,
+						Inzidenz7Tage: data.Inzidenz7Tage,
+						Hospitalisierung7Tage: data.Hospitalisierung7Tage,
+						IntensivbettenProzent: data.IntensivbettenProzent,
+						Date: new Date(
+							Number.parseInt(date.split('.')[2]),
+							Number.parseInt(date.split('.')[1]) - 1,
+							Number.parseInt(date.split('.')[0])
+						).toLocaleDateString(),
+						Warnstufe: data.Warnstufe,
+					});
+				}
 			}
+
+			dataToSend.sort((a, b) => {
+				return new Date(a.Date).getTime() - new Date(b.Date).getTime();
+			});
+			return {
+				v2: this._data,
+				v1: dataToSend,
+			};
 		}
-
-		dataToSend.sort((a, b) => {
-			return new Date(a.Date).getTime() - new Date(b.Date).getTime();
-		});
-
-		return {
-			v2: this._data,
-			v1: dataToSend,
-		};
 	}
 
 	public get districs(): string[] {
