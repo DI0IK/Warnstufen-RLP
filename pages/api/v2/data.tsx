@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Reader } from '../../sheetReader/sheetReader';
+import { Reader } from '../../../sheetReader/sheetReader';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
 	const reader = Reader.getInstance(10 * 60 * 1000, () => {});
