@@ -40,7 +40,7 @@ export default function Lk({ lk, id }) {
 				<meta property="og:url" content={'https://warnstufe.de/' + id} />
 				<meta
 					property="og:image"
-					content={'https://warnstufe.de/api/image/' + id.replace(/ /g, '_')}
+					content={'https://warnstufe-rlp.de/api/image/' + id.replace(/ /g, '_')}
 				/>
 
 				<meta name="twitter:card" content="summary_large_image" />
@@ -51,7 +51,7 @@ export default function Lk({ lk, id }) {
 				/>
 				<meta
 					name="twitter:image"
-					content={'https://warnstufe.de/api/image/' + id.replace(/ /g, '_')}
+					content={'https://warnstufe-rlp.de/api/image/' + id.replace(/ /g, '_')}
 				/>
 			</Head>
 			<h1>Warnstufe {id}</h1>
