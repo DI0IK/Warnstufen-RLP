@@ -45,7 +45,7 @@ export class Reader {
 		});
 	}
 
-	public get data(): APIData | undefined {
+	public get data(): { v2: APIData; v1: any } | undefined {
 		let dataToSend: {
 			Gebiet: APIDistrict;
 			Inzidenz7Tage: number;
