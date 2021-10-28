@@ -23,10 +23,10 @@ export async function getLkData(id?: APIDistrict) {
 				const lk = APIDistrict.find((d) => {
 					return d === id;
 				});
-				resolve(reader.data.data[lk]);
+				resolve(reader.data.v2.data[lk]);
 			} else if (reader.data) {
 				clearInterval(timer);
-				resolve(reader.data.data);
+				resolve(reader.data.v2.data);
 			}
 		}, 100);
 	});
