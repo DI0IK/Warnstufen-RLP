@@ -38,10 +38,7 @@ export default function Lk({ lk, id }) {
 				/>
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content={'https://warnstufe.de/' + id} />
-				<meta
-					property="og:image"
-					content={'https://warnstufe-rlp.de/api/image/' + id.replace(/ /g, '_')}
-				/>
+				<meta property="og:image" content={'/api/image/' + id.replace(/ /g, '_')} />
 
 				<meta name="twitter:card" content="summary_large_image" />
 				<meta name="twitter:title" content={'Warnstufe ' + id} />
@@ -49,10 +46,7 @@ export default function Lk({ lk, id }) {
 					name="twitter:description"
 					content={'Warnstufe vom ' + new Date().toLocaleDateString('de-DE') + ' für ' + id}
 				/>
-				<meta
-					name="twitter:image"
-					content={'https://warnstufe-rlp.de/api/image/' + id.replace(/ /g, '_')}
-				/>
+				<meta name="twitter:image" content={'/api/image/' + id.replace(/ /g, '_')} />
 			</Head>
 			<h1>Warnstufe {id}</h1>
 			<div className={tableStyles.table}>
