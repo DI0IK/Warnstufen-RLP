@@ -9,11 +9,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	const todayDate = new Date().toLocaleDateString('de-DE');
 	const todayData = lkData[todayDate] as APIRawData;
 
-	// Genearate an image with the data, expires tomorrow
-	res.setHeader('Content-Type', 'image/png');
-	res.setHeader('Cache-Control', 'public, max-age=86400');
-	res.setHeader('Expires', new Date(Date.now() + 86400 * 1000).toUTCString());
-
 	if (!process.env.VERCEL_URL) {
 		import('canvas').then((canvas) => {
 			const c = canvas.createCanvas(1200, 600);
@@ -49,6 +44,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 			ctx.font = 'bold 20px Arial' as any;
 			ctx.fillText(new Date().toLocaleDateString('de-DE'), 50, 550);
 
+			// Genearate an image with the data, expires tomorrow
+			res.setHeader('Content-Type', 'image/png');
+			res.setHeader('Cache-Control', 'public, max-age=86400');
+			res.setHeader('Expires', new Date(Date.now() + 86400 * 1000).toUTCString());
 			res.statusCode = 200;
 			res.end(c.toBuffer('image/png'));
 		});
