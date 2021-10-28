@@ -1,7 +1,7 @@
 import { getLkData } from '../../../lib/lk';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { APIDistrict } from '../../../sheetReader/definitions/districts';
-import canvas from 'pureimage';
+import canvas from '@napi-rs/canvas';
 import { APIRawData } from '../../../sheetReader/definitions/data';
 import { Stream } from 'stream';
 
@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	res.setHeader('Cache-Control', 'public, max-age=86400');
 	res.setHeader('Expires', new Date(Date.now() + 86400 * 1000).toUTCString());
 
-	const c = canvas.make(1200, 600, {});
+	const c = canvas.createCanvas(1200, 600);
 	const ctx = c.getContext('2d');
 
 	// Warnstufe 1 = yellow; Warnstufe 2 = orange; Warnstufe 3 = red
@@ -46,8 +46,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	ctx.fillText(new Date().toLocaleDateString('de-DE'), 50, 550);
 
 	res.statusCode = 200;
-	const stream = new Stream();
-	canvas.encodePNGToStream(c, stream).then(() => {
-		res.end(stream);
-	});
+	res.end(c.toBuffer('image/png'));
 }
