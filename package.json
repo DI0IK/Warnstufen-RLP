@@ -12,7 +12,7 @@
 	},
 	"dependencies": {
 		"axios": "^0.23.0",
-		"canvas": "^2.8.0",
+		"canvas": "^2.6.0",
 		"exceljs": "^4.3.0",
 		"next": "11.1.2",
 		"react": "17.0.2",
