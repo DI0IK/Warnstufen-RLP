@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Reader } from '../../../sheetReader/sheetReader';
-import { APIDistrict } from '../../../sheetReader/definitions/district';
+import { APIDistrict } from '../../../sheetReader/definitions/districts';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
 	const reader = Reader.getInstance(10 * 60 * 1000, () => {});
