@@ -8,13 +8,13 @@
 		"start:prod": "sudo npm run build && sudo NODE_ENV=production pm2 start server.js",
 		"stop:prod": "sudo pm2 stop all && sudo pm2 delete all",
 		"lint": "next lint",
-		"vercel-build": "yum install libuuid-devel libmount-devel zlib && cp /lib64/{libuuid,libmount,libblkid,libz}.so.1 node_modules/canvas/build/Release/ && npm run build"
+		"vercel-build": "npm run build"
 	},
 	"dependencies": {
 		"axios": "^0.23.0",
-		"canvas": "^2.6.0",
 		"exceljs": "^4.3.0",
 		"next": "11.1.2",
+		"pureimage": "^0.3.5",
 		"react": "17.0.2",
 		"react-dom": "17.0.2",
 		"remark": "^13.0.0",

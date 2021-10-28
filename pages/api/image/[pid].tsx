@@ -1,8 +1,9 @@
 import { getLkData } from '../../../lib/lk';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { APIDistrict } from '../../../sheetReader/definitions/districts';
-import canvas from 'canvas';
+import canvas from 'pureimage';
 import { APIRawData } from '../../../sheetReader/definitions/data';
+import { Stream } from 'stream';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	const lkName = (req.query.pid as string).replace(/_/g, ' ') as APIDistrict;
@@ -15,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	res.setHeader('Cache-Control', 'public, max-age=86400');
 	res.setHeader('Expires', new Date(Date.now() + 86400 * 1000).toUTCString());
 
-	const c = canvas.createCanvas(1200, 600);
+	const c = canvas.make(1200, 600, {});
 	const ctx = c.getContext('2d');
 
 	// Warnstufe 1 = yellow; Warnstufe 2 = orange; Warnstufe 3 = red
@@ -25,10 +26,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	ctx.fillRect(0, 0, 1200, 600);
 
 	ctx.fillStyle = '#000';
-	ctx.font = 'bold 60px Arial';
+	ctx.font = 'bold 60px Arial' as any;
 	ctx.fillText(lkName.replace('KS', 'Kreisstadt'), 50, 100);
 
-	ctx.font = 'bold 40px Arial';
+	ctx.font = 'bold 40px Arial' as any;
 	ctx.fillText('Warnstufe: ' + todayData.Warnstufe, 50, 200);
 	ctx.fillText('7 Tage Inzidenz pro 100.000: ' + todayData.Inzidenz7Tage, 50, 250);
 	ctx.fillText(
@@ -41,9 +42,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	// Footer with date
 
 	ctx.fillStyle = '#000';
-	ctx.font = 'bold 20px Arial';
+	ctx.font = 'bold 20px Arial' as any;
 	ctx.fillText(new Date().toLocaleDateString('de-DE'), 50, 550);
 
 	res.statusCode = 200;
-	res.end(c.toBuffer());
+	const stream = new Stream();
+	canvas.encodePNGToStream(c, stream).then(() => {
+		res.end(stream);
+	});
 }
