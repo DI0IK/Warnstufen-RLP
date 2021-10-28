@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Reader } from '../../../sheetReader/sheetReader';
-import { APIDistrict } from "./../../sheetReader/definitions/data"
+import { APIDistrict } from '../../../sheetReader/definitions/data';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
 	const reader = Reader.getInstance(10 * 60 * 1000, () => {});
@@ -19,7 +19,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 							new Date(d.Date).getTime()
 					);
 				}
-	
+
 				if (district) {
 					data = data.filter((d) => d.Gebiet === (district as APIDistrict));
 				}
