@@ -7,7 +7,8 @@
 		"start:dev": "sudo NODE_ENV=development node server.js",
 		"start:prod": "sudo npm run build && sudo NODE_ENV=production pm2 start server.js",
 		"stop:prod": "sudo pm2 stop all && sudo pm2 delete all",
-		"lint": "next lint"
+		"lint": "next lint",
+		"vercel-build": "yum install libuuid-devel libmount-devel zlib && cp /lib64/{libuuid,libmount,libblkid,libz}.so.1 node_modules/canvas/build/Release/ && npm run build"
 	},
 	"dependencies": {
 		"axios": "^0.23.0",

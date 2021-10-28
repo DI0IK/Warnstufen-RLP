@@ -42,7 +42,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 	ctx.fillStyle = '#000';
 	ctx.font = 'bold 20px Arial';
-
 	ctx.fillText(new Date().toLocaleDateString('de-DE'), 50, 550);
 
 	res.statusCode = 200;
