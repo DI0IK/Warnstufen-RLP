@@ -8,7 +8,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 			if (reader.data) {
 				clearInterval(timer);
 				resolve(reader.data);
-				res.status(200).json(reader.data);
+				res.status(200).json(reader.data.v2);
 			}
 		}, 100);
 	});
