@@ -16,7 +16,7 @@ export default function Docs() {
 				<ul>
 					<li>
 						<Link href="/api/districts">
-							<a>/api/districts</a>
+							<a>/api/v2/districts</a>
 						</Link>
 						<div>
 							Response:
@@ -27,7 +27,7 @@ export default function Docs() {
 					</li>
 					<li>
 						<Link href="/api/data">
-							<a>/api/data</a>
+							<a>/api/v2/data</a>
 						</Link>
 						<div>
 							Response:
