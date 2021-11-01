@@ -12,7 +12,7 @@ export default function Layout({ children }) {
 					<a>API Dokumentation</a>
 				</Link>
 				<Link href="/kontakt">
-					<a>Kontakt</a>
+					<a>Kontakt/Datenschutz</a>
 				</Link>
 				<Link href="/coronaverordnung">
 					<a>Coronaverordnung</a>

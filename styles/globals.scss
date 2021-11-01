@@ -25,31 +25,13 @@ h1 {
 	justify-content: center;
 }
 
-div.layout-item footer {
+div footer {
 	position: fixed;
 	top: 0;
 	width: 100%;
 	min-height: 50px;
 	height: auto;
-	background-color: #dadada;
-	display: flex;
-	align-items: center;
-
-	flex-wrap: wrap;
-
-	* {
-		margin: 0 20px;
-		padding: 3px;
-		background-color: #aaaaaa;
-	}
-}
-
-div.main-page footer {
-	position: fixed;
-	bottom: 0;
-	width: 100%;
-	min-height: 50px;
-	height: auto;
+	max-height: 100px;
 	background-color: #dadada;
 	display: flex;
 	align-items: center;
@@ -69,8 +51,9 @@ div.main-page footer {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	height: 100%;
-	padding-top: 50px;
+	overflow: scroll;
+
+	padding-top: 100px;
 }
 
 * {
