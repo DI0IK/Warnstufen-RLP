@@ -57,9 +57,8 @@ export class Reader {
 			}[] = [];
 
 			for (const district of APIDistrict) {
-				if (!this._data[district as District]) continue;
-
-				const districtData = this._data[district as District];
+				const districtData = this._data.data[district as District];
+				if (!districtData) continue;
 
 				for (const date of Object.keys(districtData)) {
 					const data = districtData[date as APIDate];
