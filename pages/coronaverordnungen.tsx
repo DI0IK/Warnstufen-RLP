@@ -44,23 +44,26 @@ export default function Coronaverordnung() {
 						<a className={styles.link}>27. Corona-Bekämpfungsverordnung</a>
 					</Link>
 					<br />
-					<Link href="https://corona.rlp.de/fileadmin/corona/Verordnungen/AEnderung_26.CoBeVo/211008_26_CoBeLVO_2_AEndVO.pdf">
-						<a className={styles.link}>
-							Zweite Landesverordung zur Änderung der 26. Corona-Bekämpfungsverordnung
-							(08.10.2021)
-						</a>
-					</Link>
 					<br />
-					<Link href="https://corona.rlp.de/fileadmin/rlp-stk/pdf-Dateien/Corona/26._CoBeLVO/210921_26_CoBeLVO_1_AEndVO_001.pdf">
-						<a className={styles.link}>
-							Erste Landesverordung zur Änderung der 26. Corona-Bekämpfungsverordnung
-							(21.09.2021)
-						</a>
-					</Link>
-					<br />
-					<Link href="https://corona.rlp.de/fileadmin/rlp-stk/pdf-Dateien/Corona/26._CoBeLVO/210908_26_CoBeLVO.pdf">
-						<a className={styles.link}>26. Corona-Bekämpfungsverordnung</a>
-					</Link>
+					<div>
+						<Link href="https://corona.rlp.de/fileadmin/rlp-stk/pdf-Dateien/Corona/26._CoBeLVO/210908_26_CoBeLVO.pdf">
+							<a className={styles.link}>26. Corona-Bekämpfungsverordnung</a>
+						</Link>
+						<br />
+						<Link href="https://corona.rlp.de/fileadmin/rlp-stk/pdf-Dateien/Corona/26._CoBeLVO/210921_26_CoBeLVO_1_AEndVO_001.pdf">
+							<a className={styles.link}>
+								Erste Landesverordung zur Änderung der 26. Corona-Bekämpfungsverordnung
+								(21.09.2021)
+							</a>
+						</Link>
+						<br />
+						<Link href="https://corona.rlp.de/fileadmin/corona/Verordnungen/AEnderung_26.CoBeVo/211008_26_CoBeLVO_2_AEndVO.pdf">
+							<a className={styles.link}>
+								Zweite Landesverordung zur Änderung der 26. Corona-Bekämpfungsverordnung
+								(08.10.2021)
+							</a>
+						</Link>
+					</div>
 					<br />
 					<Link href="https://corona.rlp.de/de/aktuelles/corona-regeln-im-ueberblick/">
 						<a className={styles.link}>Überblick</a>
