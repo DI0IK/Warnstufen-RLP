@@ -6,8 +6,14 @@ import { APIRawData } from '../../../sheetReader/definitions/data';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	const lkName = (req.query.pid as string).replace(/_/g, ' ') as APIDistrict;
 	const lkData = await getLkData(lkName);
-	const todayDate = new Date().toLocaleDateString('de-DE');
+	const todayDate = new Date().toLocaleDateString('de-DE', {
+		year: 'numeric',
+		month: '2-digit',
+		day: '2-digit',
+	});
 	const todayData = lkData[todayDate] as APIRawData;
+
+	console.log(lkData, todayDate);
 
 	if (!process.env.VERCEL_URL) {
 		import('canvas').then((canvas) => {
@@ -42,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 			ctx.fillStyle = '#000';
 			ctx.font = 'bold 20px Arial' as any;
-			ctx.fillText(new Date().toLocaleDateString('de-DE'), 50, 550);
+			ctx.fillText(todayDate, 50, 550);
 
 			// Genearate an image with the data, expires tomorrow
 			res.setHeader('Content-Type', 'image/png');
