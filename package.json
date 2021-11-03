@@ -5,7 +5,7 @@
 	"scripts": {
 		"build": "next build",
 		"start:dev": "sudo NODE_ENV=development node server.js",
-		"start:prod": "sudo npm run build && sudo NODE_ENV=production pm2 start server.js",
+		"start:prod": "sudo NODE_ENV=production pm2 start server.js",
 		"stop:prod": "sudo pm2 stop all && sudo pm2 delete all",
 		"lint": "next lint",
 		"vercel-build": "npm run build"
