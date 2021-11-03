@@ -22,8 +22,6 @@ if (!onVercel) {
 				(req, res) => {
 					const parsedUrl = parse(req.url, true);
 
-					log(req, res, parsedUrl);
-
 					handle(req, res, parsedUrl);
 				}
 			)
@@ -59,27 +57,4 @@ if (!onVercel) {
 				console.log(`> Ready on https://${process.env.VERCEL_HOSTNAME}`);
 			});
 	});
-}
-
-function log(req, res, parsedUrl) {
-	const data = {
-		method: req.method,
-		url: parsedUrl.pathname,
-		'headers.user-agent': req.headers['user-agent'],
-		'headers.referer': req.headers.referer,
-		'headers.host': req.headers.host,
-
-		ip: req.socket.remoteAddress.replace('::ffff:', ''),
-		hasBody: !!req.body,
-		time: new Date().getTime(),
-	};
-
-	const header = Object.keys(data).join('\t');
-	const item = Object.values(data).join('\t');
-
-	if (!fs.existsSync('./logs/log.txt')) {
-		fs.writeFileSync('./logs/log.txt', header + '\n');
-	}
-
-	fs.appendFileSync('./logs/log.txt', item + '\n');
 }
