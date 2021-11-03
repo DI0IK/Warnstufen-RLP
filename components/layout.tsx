@@ -14,8 +14,8 @@ export default function Layout({ children }) {
 				<Link href="/kontakt">
 					<a>Kontakt/Datenschutz</a>
 				</Link>
-				<Link href="/coronaverordnung">
-					<a>Coronaverordnung</a>
+				<Link href="/coronaverordnungen">
+					<a>Coronaverordnungen</a>
 				</Link>
 			</footer>
 		</div>

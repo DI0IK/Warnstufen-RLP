@@ -7,9 +7,9 @@ export default function Coronaverordnung() {
 	return (
 		<Layout>
 			<Head>
-				<title>26. Coronaverordnung</title>
+				<title>Coronaverordnungen</title>
 			</Head>
-			<h1>26. Coronaverordnung</h1>
+			<h1>Coronaverordnungen</h1>
 			<div id="warnstufen">
 				<table className={styles.table}>
 					<tr>
@@ -40,8 +40,15 @@ export default function Coronaverordnung() {
 				<span>
 					Weiter Informationen:
 					<br />
-					<Link href="https://corona.rlp.de/fileadmin/rlp-stk/pdf-Dateien/Corona/26._CoBeLVO/210908_26_CoBeLVO.pdf">
-						<a className={styles.link}>26. Corona-Bekämpfungsverordnung</a>
+					<Link href="https://corona.rlp.de/de/aktuelles/detail/news/News/detail/ministerpraesidentin-malu-dreyergesundheitsminister-clemens-hoch-mehr-schutz-fuer-alten-und-pfleghe/">
+						<a className={styles.link}>27. Corona-Bekämpfungsverordnung</a>
+					</Link>
+					<br />
+					<Link href="https://corona.rlp.de/fileadmin/corona/Verordnungen/AEnderung_26.CoBeVo/211008_26_CoBeLVO_2_AEndVO.pdf">
+						<a className={styles.link}>
+							Zweite Landesverordung zur Änderung der 26. Corona-Bekämpfungsverordnung
+							(08.10.2021)
+						</a>
 					</Link>
 					<br />
 					<Link href="https://corona.rlp.de/fileadmin/rlp-stk/pdf-Dateien/Corona/26._CoBeLVO/210921_26_CoBeLVO_1_AEndVO_001.pdf">
@@ -51,8 +58,12 @@ export default function Coronaverordnung() {
 						</a>
 					</Link>
 					<br />
+					<Link href="https://corona.rlp.de/fileadmin/rlp-stk/pdf-Dateien/Corona/26._CoBeLVO/210908_26_CoBeLVO.pdf">
+						<a className={styles.link}>26. Corona-Bekämpfungsverordnung</a>
+					</Link>
+					<br />
 					<Link href="https://corona.rlp.de/de/aktuelles/corona-regeln-im-ueberblick/">
-						<a className={styles.link}>Übersicht</a>
+						<a className={styles.link}>Überblick</a>
 					</Link>
 				</span>
 			</div>
