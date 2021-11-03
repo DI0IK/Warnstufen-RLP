@@ -1,2 +1,2 @@
 sudo npm run build
-sudo npm run start:prod
+sudo NODE_ENV=production npm run start:prod
