@@ -13,8 +13,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 	});
 	const todayData = lkData[todayDate] as APIRawData;
 
-	console.log(lkData, todayDate);
-
 	if (!process.env.VERCEL_URL) {
 		import('canvas').then((canvas) => {
 			const c = canvas.createCanvas(1200, 600);
