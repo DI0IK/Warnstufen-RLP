@@ -101,6 +101,12 @@ export default function Home({ lk }) {
 				<Link href="/coronaverordnungen">
 					<a>Coronaverordnungen</a>
 				</Link>
+				<div>
+					Angaben ohne Gewähr. Datenquellen:{' '}
+					<Link href="https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Listen/Leitindikatoren_Corona-Warnstufen.xlsx">
+						<a>LUA Rheinland-Pfalz</a>
+					</Link>
+				</div>
 			</footer>
 		</div>
 	);
