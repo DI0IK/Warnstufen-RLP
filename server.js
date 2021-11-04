@@ -25,6 +25,7 @@ if (!onVercel) {
 
 					cors({
 						methods: ['GET', 'HEAD'],
+						origin: '*',
 					})(req, res, (err) => {
 						if (err) {
 							res.statusCode = 500;
