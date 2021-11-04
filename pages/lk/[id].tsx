@@ -57,7 +57,7 @@ export default function Lk({ lk, id }) {
 						<th>Hospitalisierung letzte 7 Tage pro 100.000 Einwohner</th>
 						<th>Intensivbetten belegt in Prozent</th>
 						<th>
-							<Link href="/coronaverordnung">
+							<Link href="/coronaverordnungen">
 								<a className={styles.link}>Warnstufe</a>
 							</Link>
 						</th>
