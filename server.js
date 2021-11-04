@@ -3,6 +3,7 @@ const https = require('https');
 const http = require('http');
 const { parse } = require('url');
 const next = require('next');
+const cors = require('cors');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -22,7 +23,16 @@ if (!onVercel) {
 				(req, res) => {
 					const parsedUrl = parse(req.url, true);
 
-					handle(req, res, parsedUrl);
+					cors({
+						methods: ['GET', 'HEAD'],
+					})(req, res, (err) => {
+						if (err) {
+							res.statusCode = 500;
+							res.end('Internal Server Error');
+						} else {
+							handle(req, res, parsedUrl);
+						}
+					});
 				}
 			)
 			.listen(dev ? 3000 : 443, (err) => {
