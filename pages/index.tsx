@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { getAllLk, getLkData } from '../lib/lk';
 import linkList from '../styles/linkList.module.scss';
 import indexPage from '../styles/index.module.scss';
+import { APIRawData } from '../sheetReader/definitions/data';
 
 export default function Home({ lk }) {
 	return (
@@ -64,13 +65,19 @@ export default function Home({ lk }) {
 								day: '2-digit',
 							});
 
-							const data = lk[params.id][date] || lk[params.id][dateYesterday];
+							const data = (lk[params.id][date] ||
+								lk[params.id][dateYesterday]) as APIRawData;
 
 							return (
 								<div key={params.id}>
 									<Link href="/lk/[id]" as={`/lk/${params.id.replace(/ /g, '_')}`}>
-										<a className={'ws-' + data?.Warnstufe}>{params.id}</a>
+										<a className={'ws-' + data?.Warnstufe + ' hoverable'}>{params.id}</a>
 									</Link>
+									<span className="ws-hover">
+										<span>Inzidenz: {data.Inzidenz7Tage}</span>
+										<span>Hospitalisierung: {data.Hospitalisierung7Tage}</span>
+										<span>Intensivbetten: {data.IntensivbettenProzent}%</span>
+									</span>
 								</div>
 							);
 						})}
@@ -91,7 +98,7 @@ export default function Home({ lk }) {
 				</div>
 			</main>
 
-			<footer>
+			<header>
 				<Link href="/docs">
 					<a>API-Dokumentation</a>
 				</Link>
@@ -102,12 +109,18 @@ export default function Home({ lk }) {
 					<a>Coronaverordnungen</a>
 				</Link>
 				<div>
-					Angaben ohne Gewähr. Datenquellen:{' '}
 					<Link href="https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Listen/Leitindikatoren_Corona-Warnstufen.xlsx">
-						<a>LUA Rheinland-Pfalz</a>
+						<a>Angaben ohne Gewähr. Datenquelle: LUA Rheinland-Pfalz</a>
 					</Link>
 				</div>
-			</footer>
+				<button
+					onClick={() => {
+						document.querySelector('html')!.classList.toggle('dark');
+					}}
+				>
+					Design umschalten
+				</button>
+			</header>
 		</div>
 	);
 }
