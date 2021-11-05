@@ -99,27 +99,28 @@ export default function Home({ lk }) {
 			</main>
 
 			<header>
-				<Link href="/docs">
-					<a>API-Dokumentation</a>
-				</Link>
-				<Link href="/kontakt">
-					<a>Kontakt/Datenschutz</a>
-				</Link>
-				<Link href="/coronaverordnungen">
-					<a>Coronaverordnungen</a>
-				</Link>
-				<div>
-					<Link href="https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Listen/Leitindikatoren_Corona-Warnstufen.xlsx">
-						<a>Angaben ohne Gewähr. Datenquelle: LUA Rheinland-Pfalz</a>
+				<button className="menuButton"></button>
+				<div className="menuEntry">
+					<Link href="/docs">
+						<a>API-Dokumentation</a>
 					</Link>
+					<Link href="/kontakt">
+						<a>Kontakt/Datenschutz</a>
+					</Link>
+					<Link href="/coronaverordnungen">
+						<a>Coronaverordnungen</a>
+					</Link>
+					<Link href="https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Listen/Leitindikatoren_Corona-Warnstufen.xlsx">
+						<a>Datenquelle</a>
+					</Link>
+					<button
+						onClick={() => {
+							document.querySelector('html')!.classList.toggle('dark');
+						}}
+					>
+						Design umschalten
+					</button>
 				</div>
-				<button
-					onClick={() => {
-						document.querySelector('html')!.classList.toggle('dark');
-					}}
-				>
-					Design umschalten
-				</button>
 			</header>
 		</div>
 	);
