@@ -80,15 +80,27 @@ div header {
 * {
 	&.ws-1 {
 		background-color: darken(yellow, 5%);
+		html.dark & {
+			color: #333;
+		}
 	}
 	&.ws-2 {
 		background-color: orange;
+		html.dark & {
+			color: #333;
+		}
 	}
 	&.ws-3 {
 		background-color: red;
+		html.dark & {
+			color: #333;
+		}
 	}
 	&.ws-undefined {
 		background-color: #979797;
+		html.dark & {
+			color: #333;
+		}
 	}
 }
 
