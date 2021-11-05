@@ -8,6 +8,10 @@ body {
 	margin: 0;
 	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
 		Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+
+	html.dark & {
+		background-color: #1d1d1d;
+	}
 }
 
 a {
@@ -17,6 +21,10 @@ a {
 
 * {
 	box-sizing: border-box;
+
+	html.dark & {
+		color: #cdcdcd;
+	}
 }
 
 h1 {
@@ -25,23 +33,36 @@ h1 {
 	justify-content: center;
 }
 
-div footer {
+div header {
 	position: fixed;
 	top: 0;
 	width: 100%;
 	min-height: 50px;
 	height: auto;
-	max-height: 100px;
+	max-height: 120px;
 	background-color: #dadada;
 	display: flex;
 	align-items: center;
 
 	flex-wrap: wrap;
 
-	* {
+	html.dark & {
+		background-color: #333;
+	}
+
+	& > * {
 		margin: 0 20px;
 		padding: 3px;
+		border-radius: 5px;
 		background-color: #aaaaaa;
+
+		html.dark & {
+			background-color: #555;
+		}
+	}
+
+	button {
+		border: none;
 	}
 }
 
@@ -68,5 +89,47 @@ div footer {
 	}
 	&.ws-undefined {
 		background-color: #979797;
+	}
+}
+
+a.hoverable {
+	position: relative;
+	& + *[class$='-hover'] {
+		display: none;
+		position: absolute;
+		z-index: 1;
+		background-color: #fff;
+		padding: 10px;
+		border-radius: 5px;
+		box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+		margin: 0 auto;
+		width: max-content;
+		text-align: center;
+		font-size: 0.8em;
+		font-weight: bold;
+		color: #000;
+
+		html.dark & {
+			background-color: #000;
+			color: #fff;
+		}
+
+		span {
+			display: block;
+			margin: 0 auto;
+			width: max-content;
+			text-align: center;
+			font-weight: bold;
+			color: #000;
+
+			html.dark & {
+				background-color: #000;
+				color: #fff;
+			}
+		}
+	}
+
+	&:hover + *[class$='-hover'] {
+		display: block;
 	}
 }

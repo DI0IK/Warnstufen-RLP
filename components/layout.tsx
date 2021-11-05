@@ -4,7 +4,7 @@ export default function Layout({ children }) {
 	return (
 		<div className="layout-item">
 			{children}
-			<footer>
+			<header>
 				<Link href="/">
 					<a>Zurück zur Landkreis Auswahl</a>
 				</Link>
@@ -23,7 +23,7 @@ export default function Layout({ children }) {
 						<a>LUA Rheinland-Pfalz</a>
 					</Link>
 				</div>
-			</footer>
+			</header>
 		</div>
 	);
 }
