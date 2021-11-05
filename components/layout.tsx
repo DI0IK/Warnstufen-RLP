@@ -5,23 +5,30 @@ export default function Layout({ children }) {
 		<div className="layout-item">
 			{children}
 			<header>
-				<Link href="/">
-					<a>Zurück zur Landkreis Auswahl</a>
-				</Link>
-				<Link href="/docs">
-					<a>API Dokumentation</a>
-				</Link>
-				<Link href="/kontakt">
-					<a>Kontakt/Datenschutz</a>
-				</Link>
-				<Link href="/coronaverordnungen">
-					<a>Coronaverordnungen</a>
-				</Link>
-				<div>
-					Angaben ohne Gewähr. Datenquellen:{' '}
-					<Link href="https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Listen/Leitindikatoren_Corona-Warnstufen.xlsx">
-						<a>LUA Rheinland-Pfalz</a>
+				<button className="menuButton"></button>
+				<div className="menuEntry">
+					<Link href="/">
+						<a>Zurück zur Landkreis Auswahl</a>
 					</Link>
+					<Link href="/docs">
+						<a>API Dokumentation</a>
+					</Link>
+					<Link href="/kontakt">
+						<a>Kontakt/Datenschutz</a>
+					</Link>
+					<Link href="/coronaverordnungen">
+						<a>Coronaverordnungen</a>
+					</Link>
+					<Link href="https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Listen/Leitindikatoren_Corona-Warnstufen.xlsx">
+						<a>Datenquelle</a>
+					</Link>
+					<button
+						onClick={() => {
+							document.querySelector('html')!.classList.toggle('dark');
+						}}
+					>
+						Design umschalten
+					</button>
 				</div>
 			</header>
 		</div>
