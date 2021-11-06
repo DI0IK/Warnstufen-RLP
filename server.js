@@ -17,7 +17,9 @@ if (!onVercel) {
 			.createServer(
 				{
 					key: fs.readFileSync('./certs/server.key'),
-					cert: fs.readFileSync('./certs/server.crt'),
+					cert:
+						fs.readFileSync('./certs/server.crt') +
+						fs.readFileSync('./certs/intermediate.crt'),
 				},
 				(req, res) => {
 					const parsedUrl = parse(req.url, true);
