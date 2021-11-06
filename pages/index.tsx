@@ -113,6 +113,9 @@ export default function Home({ lk }) {
 					<Link href="https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Listen/Leitindikatoren_Corona-Warnstufen.xlsx">
 						<a>Datenquelle</a>
 					</Link>
+					<Link href="https://github.com/DI0IK/Warnstufen-RLP">
+						<a>Github</a>
+					</Link>
 					<button
 						onClick={() => {
 							document.querySelector('html')!.classList.toggle('dark');
