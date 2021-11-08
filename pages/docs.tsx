@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { APIDistrict } from '../sheetReader/definitions/districts';
 import Layout from '../components/layout';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Docs() {
 	return (
@@ -64,7 +65,7 @@ export default function Docs() {
 										/&gt;
 									</code>
 								</pre>
-								<img src="/api/image/KS_Landau_i.d.Pf." alt="LK Landau i.d.Pf." />
+								<Image src="/api/image/KS_Landau_i.d.Pf." alt="LK Landau i.d.Pf." />
 							</div>
 						</div>
 					</li>
