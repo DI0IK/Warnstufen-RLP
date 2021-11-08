@@ -171,23 +171,23 @@ export class Reader {
 					data.Versorgungsgebiet = VersorgungsgebietName;
 
 					const InzidenzLevel =
-						data.Inzidenz7Tage > ampel.Inzidenz7Tage[0]
-							? 1
+						data.Inzidenz7Tage > ampel.Inzidenz7Tage[2]
+							? 3
 							: data.Inzidenz7Tage > ampel.Inzidenz7Tage[1]
 							? 2
-							: 3;
+							: 1;
 
 					const HospitalisierungLevel =
-						data.Hospitalisierung7Tage > ampel.Hospitalisierung7Tage[0]
+						data.Hospitalisierung7Tage > ampel.Hospitalisierung7Tage[2]
 							? 1
-							: data.Hospitalisierung7Tage > ampel.Hospitalisierung7Tage[1]
+							: data.Hospitalisierung7Tage >= ampel.Hospitalisierung7Tage[1]
 							? 2
 							: 3;
 
 					const IntensivbettenLevel =
 						data.IntensivbettenProzent > ampel.IntensivbettenProzent[0]
 							? 1
-							: data.IntensivbettenProzent > ampel.IntensivbettenProzent[1]
+							: data.IntensivbettenProzent >= ampel.IntensivbettenProzent[1]
 							? 2
 							: 3;
 

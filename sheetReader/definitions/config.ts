@@ -24,7 +24,7 @@ export const config: config = {
 	},
 	ampel: {
 		Inzidenz7Tage: [0, 100, 200],
-		Hospitalisierung7Tage: [0, 4.99, 10],
+		Hospitalisierung7Tage: [0, 5, 10],
 		IntensivbettenProzent: [0, 6, 12],
 		needed: 2,
 	},
