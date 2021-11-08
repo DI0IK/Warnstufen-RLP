@@ -57,12 +57,8 @@ export default function Docs() {
 							<a>/api/image/[district]</a>
 						</Link>
 						<div>
-							Response example:
-							<div>
-								src=/api/image/KS_Landau_i.d.Pf.
-								<br />
-								<Image src="/api/image/KS_Landau_i.d.Pf." alt="LK Landau i.d.Pf." />
-							</div>
+							Example:
+							<div>src=/api/image/KS_Landau_i.d.Pf.</div>
 						</div>
 					</li>
 				</ul>
