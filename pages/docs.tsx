@@ -58,12 +58,8 @@ export default function Docs() {
 						<div>
 							Response example:
 							<div>
-								<pre>
-									<code>
-										&lt;img src="/api/image/KS_Landau_i.d.Pf." alt="LK Landau i.d.Pf."
-										/&gt;
-									</code>
-								</pre>
+								src="/api/image/KS_Landau_i.d.Pf."
+								<br />
 								<img src="/api/image/KS_Landau_i.d.Pf." alt="LK Landau i.d.Pf." />
 							</div>
 						</div>
