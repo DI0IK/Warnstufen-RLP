@@ -59,7 +59,7 @@ export default function Docs() {
 						<div>
 							Response example:
 							<div>
-								src="/api/image/KS_Landau_i.d.Pf."
+								src=/api/image/KS_Landau_i.d.Pf.
 								<br />
 								<Image src="/api/image/KS_Landau_i.d.Pf." alt="LK Landau i.d.Pf." />
 							</div>
