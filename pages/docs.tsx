@@ -59,6 +59,11 @@ export default function Docs() {
 						<div>
 							Example:
 							<div>src=/api/image/KS_Landau_i.d.Pf.</div>
+							<Image
+								src="https://www.warnzahl-rlp.de/api/image/KS_Landau_i.d.Pf."
+								width={600}
+								height={300}
+							/>
 						</div>
 					</li>
 				</ul>

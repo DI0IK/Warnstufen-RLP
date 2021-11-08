@@ -12,11 +12,6 @@ body {
 	}
 }
 
-a {
-	text-decoration: none;
-	color: inherit;
-}
-
 * {
 	box-sizing: border-box;
 	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
@@ -24,6 +19,16 @@ a {
 
 	html.dark & {
 		color: #cdcdcd;
+	}
+}
+
+a,
+button {
+	text-decoration: underline;
+	color: #f33;
+
+	html.dark & {
+		color: #f33;
 	}
 }
 
@@ -55,9 +60,12 @@ div header {
 		border-radius: 5px;
 		background-color: #aaaaaa;
 		font-size: medium;
+		color: #000;
+		text-decoration: none;
 
 		html.dark & {
 			background-color: #555;
+			color: #fff;
 		}
 	}
 
