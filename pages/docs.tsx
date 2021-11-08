@@ -51,6 +51,23 @@ export default function Docs() {
 							</pre>
 						</div>
 					</li>
+					<li>
+						<Link href="/api/image/[district]">
+							<a>/api/image/[district]</a>
+						</Link>
+						<div>
+							Response example:
+							<div>
+								<pre>
+									<code>
+										&lt;img src="/api/image/KS_Landau_i.d.Pf." alt="LK Landau i.d.Pf."
+										/&gt;
+									</code>
+								</pre>
+								<img src="/api/image/KS_Landau_i.d.Pf." alt="LK Landau i.d.Pf." />
+							</div>
+						</div>
+					</li>
 				</ul>
 				<br />
 			</div>

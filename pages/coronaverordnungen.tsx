@@ -11,36 +11,42 @@ export default function Coronaverordnung() {
 			</Head>
 			<h1>Coronaverordnungen</h1>
 			<div id="warnstufen">
-				<table className={styles.table}>
-					<tr>
-						<th>Leitindikator</th>
-						<th className="ws-1">Warnstufe 1</th>
-						<th className="ws-2">Warnstufe 2</th>
-						<th className="ws-3">Warnstufe 3</th>
-					</tr>
-					<tr>
-						<td>7 Tage Inzidenz</td>
-						<td className="ws-1">bis höchstens 100</td>
-						<td className="ws-2">über 100 bis 200</td>
-						<td className="ws-3">mehr als 200</td>
-					</tr>
-					<tr>
-						<td>7 Tage Hospitalisierungs Inzidenz</td>
-						<td className="ws-1">kleiner 5</td>
-						<td className="ws-2">5 bis 10</td>
-						<td className="ws-3">größer 10</td>
-					</tr>
-					<tr>
-						<td>Anteil Intensivbetten</td>
-						<td className="ws-1">bis höchstens 6%</td>
-						<td className="ws-2">mehr als 6% bis 12%</td>
-						<td className="ws-3">mehr als 12%</td>
-					</tr>
-				</table>
+				<div
+					style={{
+						overflowX: 'scroll',
+					}}
+				>
+					<table className={styles.table}>
+						<tr>
+							<th>Leitindikator</th>
+							<th className="ws-1">Warnstufe 1</th>
+							<th className="ws-2">Warnstufe 2</th>
+							<th className="ws-3">Warnstufe 3</th>
+						</tr>
+						<tr>
+							<td>7 Tage Inzidenz</td>
+							<td className="ws-1">bis höchstens 100</td>
+							<td className="ws-2">über 100 bis 200</td>
+							<td className="ws-3">mehr als 200</td>
+						</tr>
+						<tr>
+							<td>7 Tage Hospitalisierungs Inzidenz</td>
+							<td className="ws-1">kleiner 5</td>
+							<td className="ws-2">5 bis 10</td>
+							<td className="ws-3">größer 10</td>
+						</tr>
+						<tr>
+							<td>Anteil Intensivbetten</td>
+							<td className="ws-1">bis höchstens 6%</td>
+							<td className="ws-2">mehr als 6% bis 12%</td>
+							<td className="ws-3">mehr als 12%</td>
+						</tr>
+					</table>
+				</div>
 				<span>
 					Weiter Informationen:
 					<br />
-					<Link href="https://corona.rlp.de/de/aktuelles/detail/news/News/detail/ministerpraesidentin-malu-dreyergesundheitsminister-clemens-hoch-mehr-schutz-fuer-alten-und-pfleghe/">
+					<Link href="https://corona.rlp.de/fileadmin/corona/Verordnungen/27._CoBeLVO.pdf">
 						<a className={styles.link}>27. Corona-Bekämpfungsverordnung</a>
 					</Link>
 					<br />
