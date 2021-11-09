@@ -6,12 +6,6 @@ export interface config {
 		endRow: number;
 		startColumn: number;
 	};
-	ampel: {
-		Inzidenz7Tage: number[];
-		Hospitalisierung7Tage: number[];
-		IntensivbettenProzent: number[];
-		needed: number;
-	};
 }
 
 export const config: config = {
@@ -21,11 +15,5 @@ export const config: config = {
 		startRow: 4,
 		endRow: 45,
 		startColumn: 2,
-	},
-	ampel: {
-		Inzidenz7Tage: [0, 100, 200],
-		Hospitalisierung7Tage: [0, 5, 10],
-		IntensivbettenProzent: [0, 6, 12],
-		needed: 2,
 	},
 };
