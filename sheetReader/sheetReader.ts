@@ -179,17 +179,17 @@ export class Reader {
 
 					const HospitalisierungLevel =
 						data.Hospitalisierung7Tage > ampel.Hospitalisierung7Tage[2]
-							? 1
+							? 3
 							: data.Hospitalisierung7Tage >= ampel.Hospitalisierung7Tage[1]
 							? 2
-							: 3;
+							: 1;
 
 					const IntensivbettenLevel =
 						data.IntensivbettenProzent > ampel.IntensivbettenProzent[0]
-							? 1
+							? 3
 							: data.IntensivbettenProzent >= ampel.IntensivbettenProzent[1]
 							? 2
-							: 3;
+							: 1;
 
 					let dayLevel = 1;
 
