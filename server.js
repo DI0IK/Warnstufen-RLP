@@ -45,6 +45,7 @@ if (!onVercel) {
 								Location: '/',
 							});
 							res.end();
+							return;
 						}
 					}
 
