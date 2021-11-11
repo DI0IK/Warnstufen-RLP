@@ -25,7 +25,7 @@ if (!onVercel) {
 					const parsedUrl = parse(req.url, true);
 
 					// Check if url is /#[lk] then redirect to /lk/[lk]
-					if (parsedUrl.hash.startsWith('#')) {
+					if (parsedUrl.hash && parsedUrl.hash.startsWith('#')) {
 						res.writeHead(301, {
 							Location: '/lk/' + parsedUrl.hash.substring(1),
 						});
