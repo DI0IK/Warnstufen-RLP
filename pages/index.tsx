@@ -28,6 +28,16 @@ export default function Home({ lk }) {
 				<meta name="og:type" content="website" />
 				<meta name="twitter:card" content="summary" />
 				<link rel="icon" href="/favicon.ico" />
+
+				<script
+					dangerouslySetInnerHTML={{
+						__html: `if(location.hash.length) {
+							const hash = location.hash.substr(1);
+							// redirect to /lk/<hash>
+							location.href = '/lk/' + hash;
+						}`,
+					}}
+				/>
 			</Head>
 
 			<main>
