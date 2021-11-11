@@ -145,6 +145,7 @@ export class Reader {
 		for (let districtName in this._data.data) {
 			const district = this._data.data[districtName as District];
 			let temp = [1, 1];
+			let lastDate: Date;
 			for (let date in district) {
 				if (
 					VersorgungsgebieteDistricts.includes(districtName as District) ||
@@ -190,8 +191,34 @@ export class Reader {
 
 					temp.push(dayLevel);
 
+					const dateObj = new Date(date.split('.').reverse().join('-') + 'T00:00:00.000Z');
+
+					if (!lastDate) lastDate = dateObj;
+					if (lastDate.getTime() < dateObj.getTime()) lastDate = dateObj;
+
 					data.Warnstufe = temp.shift() || 1;
 				}
+			}
+
+			for (const Warnstufe of temp) {
+				if (!lastDate) continue;
+				lastDate.setDate(lastDate.getDate() + 1);
+				const newDate = lastDate.toLocaleDateString('de-DE', {
+					year: 'numeric',
+					month: '2-digit',
+					day: '2-digit',
+				});
+
+				this._data.data[districtName as District] = {
+					[newDate as APIDate]: {
+						Inzidenz7Tage: null,
+						Hospitalisierung7Tage: null,
+						IntensivbettenProzent: null,
+						Warnstufe,
+						Versorgungsgebiet: VersorgungsgebietName,
+					},
+					...this._data.data[districtName as District],
+				};
 			}
 		}
 

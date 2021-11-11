@@ -73,9 +73,9 @@ export default function Lk({ lk, id }) {
 						return (
 							<tr key={key}>
 								<td>{key}</td>
-								<td>{data.Inzidenz7Tage}</td>
-								<td>{data.Hospitalisierung7Tage}</td>
-								<td>{data.IntensivbettenProzent}</td>
+								<td>{data.Inzidenz7Tage || '---'}</td>
+								<td>{data.Hospitalisierung7Tage || '---'}</td>
+								<td>{data.IntensivbettenProzent || '---'}</td>
 								<td className={'ws-' + data.Warnstufe}>
 									<Link href="/coronaverordnungen">
 										<a>{data.Warnstufe}</a>
