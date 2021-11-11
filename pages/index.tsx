@@ -75,8 +75,11 @@ export default function Home({ lk }) {
 								day: '2-digit',
 							});
 
-							const data = (lk[params.id][date] ||
-								lk[params.id][dateYesterday]) as APIRawData;
+							const data = (
+								lk[params.id][date]?.Inzidenz7Tage
+									? lk[params.id][date]
+									: lk[params.id][dateYesterday]
+							) as APIRawData;
 
 							return (
 								<div key={params.id}>
