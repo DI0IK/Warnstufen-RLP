@@ -24,6 +24,31 @@ if (!onVercel) {
 				(req, res) => {
 					const parsedUrl = parse(req.url, true);
 
+					// Check if url is /#[lk] then redirect to /lk/[lk]
+					if (parsedUrl.hash.startsWith('#')) {
+						res.writeHead(301, {
+							Location: '/lk/' + parsedUrl.hash.substring(1),
+						});
+						res.end();
+						return;
+					}
+					// Check if url is /iframe?district=[lk] redirect to /api/image/[lk]
+					if (parsedUrl.pathname === '/iframe') {
+						if (parsedUrl.query.district) {
+							res.writeHead(301, {
+								Location: '/api/image/' + parsedUrl.query.district,
+							});
+							res.end();
+							return;
+						} else {
+							res.writeHead(301, {
+								Location: '/',
+							});
+							res.end();
+							return;
+						}
+					}
+
 					res.setHeader('Access-Control-Allow-Origin', '*');
 					res.setHeader(
 						'Access-Control-Allow-Methods',
