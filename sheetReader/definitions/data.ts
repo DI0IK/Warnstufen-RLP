@@ -8,6 +8,7 @@ export interface APIData {
 				Hospitalisierung7Tage: number;
 				IntensivbettenProzent: number;
 				Warnstufe: number;
+				WarnstufeNurEinTag: number;
 				Versorgungsgebiet: string;
 			};
 		};
@@ -21,5 +22,6 @@ export type APIRawData = {
 	Hospitalisierung7Tage: number;
 	IntensivbettenProzent: number;
 	Warnstufe: number;
+	WarnstufeNurEinTag: number;
 	Versorgungsgebiet: string;
 };

@@ -30,6 +30,7 @@ Response:
 				"Hospitalisierung7Tage": "number",
 				"IntensivbettenProzent": "number",
 				"Warnstufe": "1|2|3",
+				"WarnstufeNurEinTag": "1|2|3",
 				"Versorgungsgebiet": "string"
 			}
 		}
@@ -44,10 +45,10 @@ GET https://www.warnzahl-rlp.de/api/v2/districts
 
 ```json
 [
-    "**districtName1**",
-    "**districtName2**",
-    ...
-
+   "**districtName1**",
+   "**districtName2**",
+   "**districtName3**",
+   ...
 ]
 ```
 
