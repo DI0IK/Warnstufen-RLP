@@ -146,7 +146,13 @@ export class Reader {
 		for (let districtName in this._data.data) {
 			const district = this._data.data[districtName as District];
 			let lastDate: Date;
-			for (let date in district) {
+			const dates = Object.keys(district).sort((a, b) => {
+				const dateObjA = new Date(a.split('.').reverse().join('-') + 'T00:00:00.000Z');
+				const dateObjB = new Date(b.split('.').reverse().join('-') + 'T00:00:00.000Z');
+				return dateObjA.getTime() - dateObjB.getTime();
+			});
+			for (let date of dates) {
+				console.log(date);
 				if (
 					VersorgungsgebieteDistricts.includes(districtName as District) ||
 					RLPDistrict.includes(districtName as District)
