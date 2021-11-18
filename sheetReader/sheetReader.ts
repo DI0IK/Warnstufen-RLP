@@ -132,6 +132,7 @@ export class Reader {
 					Hospitalisierung7Tage,
 					IntensivbettenProzent,
 					Warnstufe: 0,
+					WarnstufeNurEinTag: 0,
 					Versorgungsgebiet: '',
 				};
 			}
@@ -144,7 +145,6 @@ export class Reader {
 		let VersorgungsgebietName: VersorgungsgebieteDistricts = '' as any;
 		for (let districtName in this._data.data) {
 			const district = this._data.data[districtName as District];
-			let temp = [1, 1];
 			let lastDate: Date;
 			for (let date in district) {
 				if (
@@ -189,42 +189,43 @@ export class Reader {
 						if (count >= 2) dayLevel = level;
 					}
 
-					temp.push(dayLevel);
-
 					const dateObj = new Date(date.split('.').reverse().join('-') + 'T00:00:00.000Z');
 
 					if (!lastDate) lastDate = dateObj;
 					if (lastDate.getTime() < dateObj.getTime()) lastDate = dateObj;
 
-					data.Warnstufe = temp.shift() || 1;
+					data.Warnstufe = dayLevel;
 				}
-			}
-
-			for (const Warnstufe of temp) {
-				if (!lastDate) continue;
-				lastDate.setDate(lastDate.getDate() + 1);
-				const newDate = lastDate.toLocaleDateString('de-DE', {
-					year: 'numeric',
-					month: '2-digit',
-					day: '2-digit',
-				});
-
-				this._data.data[districtName as District] = {
-					[newDate as APIDate]: {
-						Inzidenz7Tage: null,
-						Hospitalisierung7Tage: null,
-						IntensivbettenProzent: null,
-						Warnstufe,
-						Versorgungsgebiet: VersorgungsgebietName,
-					},
-					...this._data.data[districtName as District],
-				};
 			}
 		}
 
 		for (let districtName in this._data.data) {
 			if (VersorgungsgebieteDistricts.includes(districtName as District)) {
 				delete this._data.data[districtName as District];
+			}
+		}
+
+		for (let districtName in this._data.data) {
+			let currentWarnstufe = 1;
+			let newWarnstufe = 1;
+			let sameWarnstufeCount = 0;
+
+			for (let date in this._data.data[districtName as District]) {
+				const item = this._data.data[districtName as District][date as APIDate];
+
+				if (item.Warnstufe === currentWarnstufe) {
+					sameWarnstufeCount++;
+				} else {
+					currentWarnstufe = item.Warnstufe;
+					sameWarnstufeCount = 0;
+				}
+
+				if (sameWarnstufeCount >= 3) {
+					newWarnstufe = currentWarnstufe;
+				}
+
+				item.WarnstufeNurEinTag = item.Warnstufe;
+				item.Warnstufe = newWarnstufe;
 			}
 		}
 	}
