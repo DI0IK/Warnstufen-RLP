@@ -221,7 +221,7 @@ export class Reader {
 				return dateObjA.getTime() - dateObjB.getTime();
 			});
 
-			for (let date in dates) {
+			for (let date of dates) {
 				const item = this._data.data[districtName as District][date as APIDate];
 
 				if (item.Warnstufe === currentWarnstufe) {
