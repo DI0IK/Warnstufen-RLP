@@ -152,7 +152,6 @@ export class Reader {
 				return dateObjA.getTime() - dateObjB.getTime();
 			});
 			for (let date of dates) {
-				console.log(date);
 				if (
 					VersorgungsgebieteDistricts.includes(districtName as District) ||
 					RLPDistrict.includes(districtName as District)
@@ -214,9 +213,15 @@ export class Reader {
 		for (let districtName in this._data.data) {
 			let currentWarnstufe = 1;
 			let newWarnstufe = 1;
-			let sameWarnstufeCount = 1;
+			let sameWarnstufeCount = 0;
 
-			for (let date in this._data.data[districtName as District]) {
+			const dates = Object.keys(this._data.data[districtName as District]).sort((a, b) => {
+				const dateObjA = new Date(a.split('.').reverse().join('-') + 'T00:00:00.000Z');
+				const dateObjB = new Date(b.split('.').reverse().join('-') + 'T00:00:00.000Z');
+				return dateObjA.getTime() - dateObjB.getTime();
+			});
+
+			for (let date in dates) {
 				const item = this._data.data[districtName as District][date as APIDate];
 
 				if (item.Warnstufe === currentWarnstufe) {
