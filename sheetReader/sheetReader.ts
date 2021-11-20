@@ -214,7 +214,7 @@ export class Reader {
 		for (let districtName in this._data.data) {
 			let currentWarnstufe = 1;
 			let newWarnstufe = 1;
-			let sameWarnstufeCount = 0;
+			let sameWarnstufeCount = 1;
 
 			for (let date in this._data.data[districtName as District]) {
 				const item = this._data.data[districtName as District][date as APIDate];
@@ -223,7 +223,7 @@ export class Reader {
 					sameWarnstufeCount++;
 				} else {
 					currentWarnstufe = item.Warnstufe;
-					sameWarnstufeCount = 0;
+					sameWarnstufeCount = 1;
 				}
 
 				if (sameWarnstufeCount >= 3) {
