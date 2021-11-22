@@ -64,7 +64,18 @@ export default function Lk({ lk, id }) {
 						<th>Intensivbetten belegt in Prozent</th>
 						<th>
 							<Link href="/coronaverordnungen">
+<<<<<<< Updated upstream
 								<a>Warnstufe</a>
+=======
+								<a
+									style={{
+										color: '#f33',
+										textDecoration: 'underline',
+									}}
+								>
+									Warnstufe
+								</a>
+>>>>>>> Stashed changes
 							</Link>
 						</th>
 					</tr>
@@ -78,7 +89,18 @@ export default function Lk({ lk, id }) {
 								<td>{data.IntensivbettenProzent || '---'}</td>
 								<td className={'ws-' + data.Warnstufe}>
 									<Link href="/coronaverordnungen">
+<<<<<<< Updated upstream
 										<a>{data.Warnstufe}</a>
+=======
+										<a
+											style={{
+												color: '#f33',
+												textDecoration: 'underline',
+											}}
+										>
+											{data.Warnstufe}
+										</a>
+>>>>>>> Stashed changes
 									</Link>
 								</td>
 							</tr>
