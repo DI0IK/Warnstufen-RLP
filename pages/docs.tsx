@@ -56,7 +56,6 @@ export default function Docs() {
 							<a>/api/image/[district]</a>
 						</Link>
 						<div>
-<<<<<<< Updated upstream
 							Example:
 							<pre>
 								<code>
@@ -70,24 +69,6 @@ export default function Docs() {
 								width={600}
 								height={300}
 							/>
-=======
-							Response example:
-							<div>
-<<<<<<< HEAD
-								<pre>
-									<code>
-										&lt;img src="/api/image/KS_Landau_i.d.Pf." alt="LK Landau i.d.Pf."
-										/&gt;
-									</code>
-								</pre>
-								<Image src="/api/image/KS_Landau_i.d.Pf." alt="LK Landau i.d.Pf." />
-=======
-								src="/api/image/KS_Landau_i.d.Pf."
-								<br />
-								<img src="/api/image/KS_Landau_i.d.Pf." alt="LK Landau i.d.Pf." />
->>>>>>> 1d3799fbf1d118858b409b13ff5b74ef34896e7a
-							</div>
->>>>>>> Stashed changes
 						</div>
 					</li>
 				</ul>
