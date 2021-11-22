@@ -35,14 +35,19 @@ export class Reader {
 	}
 
 	public update() {
-		axios.get(this._url, { responseType: 'arraybuffer' }).then((response) => {
-			this._workbook.xlsx.load(response.data as any).then(() => {
-				if (this._data && this._data.data) this._data.data = {} as any;
-				this.sheetToData();
-				this.calculateWarnstufe();
-				this.onupdate(this._data as APIData);
+		axios
+			.get(this._url, { responseType: 'arraybuffer' })
+			.then((response) => {
+				this._workbook.xlsx.load(response.data as any).then(() => {
+					if (this._data && this._data.data) this._data.data = {} as any;
+					this.sheetToData();
+					this.calculateWarnstufe();
+					this.onupdate(this._data as APIData);
+				});
+			})
+			.catch((error) => {
+				console.log('Unable to fetch Sheet (Code: ' + error.response.status + ')');
 			});
-		});
 	}
 
 	public get data(): { v2: APIData; v1: any } | undefined {
