@@ -70,7 +70,7 @@ GET https://www.warnzahl-rlp.de/api/v2/districts
 
 ## License
 
-    <Warnstufen RLP>
+    Warnstufen RLP
     Copyright (C) 2021 Dominik Stahl
 
     This program is free software: you can redistribute it and/or modify
