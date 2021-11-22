@@ -1,6 +1,6 @@
 module.exports = {
 	reactStrictMode: true,
 	images: {
-		domains: ['www.warnzahl-rlp.de'],
+		domains: ['upload.wikimedia.org'],
 	},
 };

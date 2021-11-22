@@ -1,8 +1,10 @@
 import Link from 'next/link';
+import Warning from './warning';
 
 export default function Layout({ children }) {
 	return (
 		<div className="layout-item">
+			<Warning />
 			{children}
 			<header>
 				<button className="menuButton"></button>

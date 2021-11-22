@@ -4,6 +4,7 @@ import { getAllLk, getLkData } from '../lib/lk';
 import linkList from '../styles/linkList.module.scss';
 import indexPage from '../styles/index.module.scss';
 import { APIRawData } from '../sheetReader/definitions/data';
+import Warning from '../components/warning';
 
 export default function Home({ lk }) {
 	return (
@@ -41,6 +42,7 @@ export default function Home({ lk }) {
 			</Head>
 
 			<main>
+				<Warning />
 				<h1>Warnstufen Rheinland Pfalz</h1>
 				<div className={linkList.linkList}>
 					{getAllLk()
