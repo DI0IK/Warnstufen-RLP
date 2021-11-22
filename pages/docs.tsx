@@ -2,7 +2,6 @@ import Head from 'next/head';
 import { APIDistrict } from '../sheetReader/definitions/districts';
 import Layout from '../components/layout';
 import Link from 'next/link';
-import Image from 'next/image';
 
 export default function Docs() {
 	return (
@@ -58,8 +57,14 @@ export default function Docs() {
 						</Link>
 						<div>
 							Example:
-							<div>src=/api/image/KS_Landau_i.d.Pf.</div>
-							<Image
+							<pre>
+								<code>
+									&lt;img
+									src=&quot;https://www.warnzahl-rlp.de/api/image/Westerwaldkreis&quot;
+									width=&quot;600&quot; height=&quot;300&quot; /&gt;
+								</code>
+							</pre>
+							<img
 								src="https://www.warnzahl-rlp.de/api/image/KS_Landau_i.d.Pf."
 								width={600}
 								height={300}

@@ -35,14 +35,19 @@ export class Reader {
 	}
 
 	public update() {
-		axios.get(this._url, { responseType: 'arraybuffer' }).then((response) => {
-			this._workbook.xlsx.load(response.data as any).then(() => {
-				if (this._data && this._data.data) this._data.data = {} as any;
-				this.sheetToData();
-				this.calculateWarnstufe();
-				this.onupdate(this._data as APIData);
+		axios
+			.get(this._url, { responseType: 'arraybuffer' })
+			.then((response) => {
+				this._workbook.xlsx.load(response.data as any).then(() => {
+					if (this._data && this._data.data) this._data.data = {} as any;
+					this.sheetToData();
+					this.calculateWarnstufe();
+					this.onupdate(this._data as APIData);
+				});
+			})
+			.catch((error) => {
+				console.log('Unable to fetch Sheet (Code: ' + error.response.status + ')');
 			});
-		});
 	}
 
 	public get data(): { v2: APIData; v1: any } | undefined {
@@ -215,6 +220,9 @@ export class Reader {
 			let newWarnstufe = 1;
 			let sameWarnstufeCount = 0;
 
+			let lastDate: Date;
+			let dayshift = [1];
+
 			const dates = Object.keys(this._data.data[districtName as District]).sort((a, b) => {
 				const dateObjA = new Date(a.split('.').reverse().join('-') + 'T00:00:00.000Z');
 				const dateObjB = new Date(b.split('.').reverse().join('-') + 'T00:00:00.000Z');
@@ -222,6 +230,8 @@ export class Reader {
 			});
 
 			for (let date of dates) {
+				lastDate = new Date(date.split('.').reverse().join('-') + 'T00:00:00.000Z');
+
 				const item = this._data.data[districtName as District][date as APIDate];
 
 				if (item.Warnstufe === currentWarnstufe) {
@@ -236,7 +246,42 @@ export class Reader {
 				}
 
 				item.WarnstufeNurEinTag = item.Warnstufe;
-				item.Warnstufe = newWarnstufe;
+				dayshift.push(newWarnstufe);
+				item.Warnstufe = dayshift.shift();
+			}
+
+			let nextDate = new Date(lastDate.getTime() + 24 * 60 * 60 * 1000).toLocaleDateString(
+				'de-DE',
+				{
+					year: 'numeric',
+					month: '2-digit',
+					day: '2-digit',
+				}
+			);
+
+			this._data.data[districtName as District] = {
+				[nextDate]: {
+					Inzidenz7Tage: null,
+					Hospitalisierung7Tage: null,
+					IntensivbettenProzent: null,
+					Versorgungsgebiet: districtName as VersorgungsgebieteDistricts,
+					Warnstufe: dayshift.shift(),
+					WarnstufeNurEinTag: null,
+				},
+				...this._data.data[districtName as District],
+			};
+		}
+
+		if (config.ganzRlpEineWarnstufe) {
+			for (let districtName in this._data.data) {
+				if (APIDistrict.includes(districtName as District)) {
+					for (let date in this._data.data[districtName as District]) {
+						this._data.data[districtName as District][date as APIDate].Warnstufe =
+							this._data.data['Rheinland-Pfalz'][date as APIDate].Warnstufe;
+						this._data.data[districtName as District][date as APIDate].WarnstufeNurEinTag =
+							this._data.data['Rheinland-Pfalz'][date as APIDate].WarnstufeNurEinTag;
+					}
+				}
 			}
 		}
 	}

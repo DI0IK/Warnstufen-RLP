@@ -6,6 +6,7 @@ export interface config {
 		endRow: number;
 		startColumn: number;
 	};
+	ganzRlpEineWarnstufe: boolean;
 }
 
 export const config: config = {
@@ -16,4 +17,5 @@ export const config: config = {
 		endRow: 45,
 		startColumn: 2,
 	},
+	ganzRlpEineWarnstufe: true,
 };

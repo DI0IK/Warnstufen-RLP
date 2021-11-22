@@ -12,7 +12,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		month: '2-digit',
 		day: '2-digit',
 	});
-	const todayData = lkData[todayDate] as APIRawData;
+	const yesterdayDate = new Date(new Date().getTime() - 24 * 60 * 60 * 1000).toLocaleDateString(
+		'de-DE',
+		{
+			year: 'numeric',
+			month: '2-digit',
+			day: '2-digit',
+		}
+	);
+	const todayData = (lkData[todayDate] || lkData[yesterdayDate]) as APIRawData;
 
 	if (!process.env.VERCEL_URL) {
 		import('canvas').then((canvas) => {
