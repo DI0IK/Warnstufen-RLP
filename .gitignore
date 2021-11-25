@@ -33,8 +33,5 @@ yarn-error.log*
 # vercel
 .vercel
 
-/pages/kontakt.md
-/**/*.crt
-/**/*.key
-
-/logs/*
+# typescript
+*.tsbuildinfo

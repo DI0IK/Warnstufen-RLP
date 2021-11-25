@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Layout from '../components/layout';
 import fs from 'fs';
 import path from 'path';
-import remark from 'remark';
+import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 
 export default function Kontakt({ kontakt }) {
