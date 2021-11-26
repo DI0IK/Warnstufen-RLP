@@ -16,7 +16,7 @@ import { useRouter } from 'next/router';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-export default function ({
+export default function LK({
 	props,
 }: {
 	props: {
