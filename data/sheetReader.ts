@@ -1,40 +1,23 @@
 import axios from 'axios';
-import EventEmitter from 'events';
-import excel from 'exceljs';
+import excel, { Worksheet } from 'exceljs';
+import fs from 'fs';
 
-export default class SheetReader extends EventEmitter {
-	private _url: string;
-	private _sheet: excel.Worksheet;
-
-	constructor(url: string) {
-		super();
-		this._url = url;
-
-		this.updateSheet();
-	}
-
-	public updateSheet() {
-		axios
-			.get(this._url, {
+export default async function getSheet(url: string, sheetName: string): Promise<Worksheet> {
+	let sheet: Worksheet;
+	if (!fs.existsSync('cache/' + url.split('/').pop())) {
+		try {
+			const data = await axios.get(url, {
 				responseType: 'arraybuffer',
-			})
-			.then((response) => {
-				const workbook = new excel.Workbook();
-				workbook.xlsx.load(response.data);
-				this._sheet = workbook.getWorksheet(1);
-				this.emit('sheet-updated', this._sheet);
 			});
+			fs.writeFileSync('cache/' + url.split('/').pop(), data.data);
+		} catch (error) {
+			console.log(`Failed to download ${url}`);
+		}
 	}
-
-	public get sheet(): excel.Worksheet {
-		return this._sheet;
-	}
-
-	public get url(): string {
-		return this._url;
-	}
-}
-
-export default interface SheetReader {
-	on(event: 'sheet-updated', listener: (sheet: excel.Worksheet) => void): this;
+	const data = fs.readFileSync('cache/' + url.split('/').pop());
+	if (!data) throw new Error('No data');
+	const workbook = new excel.Workbook();
+	await workbook.xlsx.load(data);
+	sheet = workbook.getWorksheet(sheetName);
+	return sheet;
 }

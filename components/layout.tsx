@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Layout({ children }) {
 	if (process.env.WARTUNG === 'true') {
 		return (
@@ -16,9 +18,23 @@ export default function Layout({ children }) {
 	}
 	return (
 		<div className="layout">
-			<header></header>
+			<header>
+				<nav>
+					<ul>
+						<li>
+							<Link href="/">
+								<a>Home</a>
+							</Link>
+						</li>
+						<li>
+							<Link href="/kontakt">
+								<a>Kontakt</a>
+							</Link>
+						</li>
+					</ul>
+				</nav>
+			</header>
 			<main>{children}</main>
-			<footer></footer>
 		</div>
 	);
 }

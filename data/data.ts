@@ -1,5 +1,6 @@
-import sheetReader from './sheetReader';
+import getSheet from './sheetReader';
 import parseDayTable, { DayTable, DistrictData } from './dayTableParser';
+import EventEmitter from 'events';
 
 export default class DataFetcher {
 	private _dayTables: {
@@ -10,10 +11,14 @@ export default class DataFetcher {
 		// 1st of August 2021
 		2021,
 		7,
-		1
+		1,
+		12,
+		0,
+		0
 	);
 
 	private constructor() {
+		this.init();
 		setInterval(() => {
 			this.update();
 		}, 10 * 60 * 1000);
@@ -29,28 +34,54 @@ export default class DataFetcher {
 		return DataFetcher._instance;
 	}
 
-	private update() {
+	private async init() {
 		for (let i = Date.now(); i > this._startDate.getTime(); i -= 24 * 60 * 60 * 1000) {
 			const date = new Date(i);
 
 			// Dateformat: YYYY-MM-DD
-			const reader = new sheetReader(
+			const sheet = await getSheet(
 				`https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Rohdaten_2021/Corona-Fallmeldungen-RLP-${
+					date.toISOString().split('T')[0]
+				}.xlsx`,
+				'Tabelle1'
+			);
+
+			console.log(
+				`Fetching data from https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Rohdaten_2021/Corona-Fallmeldungen-RLP-${
 					date.toISOString().split('T')[0]
 				}.xlsx`
 			);
 
-			reader.on('sheet-updated', (sheet) => {
-				const dayTable = parseDayTable(sheet);
-				this._dayTables[
-					date.toLocaleDateString('de-DE', {
-						year: 'numeric',
-						month: '2-digit',
-						day: '2-digit',
-					})
-				] = dayTable;
-			});
+			const dayTable = parseDayTable(sheet);
+			this._dayTables[
+				date.toLocaleDateString('de-DE', {
+					year: 'numeric',
+					month: '2-digit',
+					day: '2-digit',
+					timeZone: 'UTC',
+				})
+			] = dayTable;
 		}
+	}
+
+	private async update() {
+		const date = new Date();
+		const sheet = await getSheet(
+			`https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Rohdaten_2021/Corona-Fallmeldungen-RLP-${
+				date.toISOString().split('T')[0]
+			}.xlsx`,
+			'Tabelle1'
+		);
+
+		const dayTable = parseDayTable(sheet);
+		this._dayTables[
+			date.toLocaleDateString('de-DE', {
+				year: 'numeric',
+				month: '2-digit',
+				day: '2-digit',
+				timeZone: 'UTC',
+			})
+		] = dayTable;
 	}
 
 	public getDayTable(date: Date): DayTable {
@@ -59,6 +90,7 @@ export default class DataFetcher {
 				year: 'numeric',
 				month: '2-digit',
 				day: '2-digit',
+				timeZone: 'UTC',
 			})
 		];
 	}
@@ -77,16 +109,34 @@ export default class DataFetcher {
 				});
 			}
 		});
-		return returnData;
+		return returnData.sort((a, b) => {
+			return (
+				new Date(a.date.split('.').reverse().join('-')).getTime() -
+				new Date(b.date.split('.').reverse().join('-')).getTime()
+			);
+		});
 	}
 
 	public getDistricts(): string[] {
-		return Object.values(this._dayTables).reduce((districts, dayTable) => {
-			return [...districts, ...Object.keys(dayTable)];
-		}, []);
+		return Object.values(this._dayTables)
+			.reduce((districts, dayTable) => {
+				return [...districts, ...Object.keys(dayTable)];
+			}, [])
+			.filter((district, index, array) => {
+				return array.indexOf(district) === index;
+			});
 	}
 
 	public get isReady(): boolean {
-		return Object.keys(this._dayTables).length > 0;
+		return (
+			this._dayTables[
+				this._startDate.toLocaleDateString('de-DE', {
+					year: 'numeric',
+					month: '2-digit',
+					day: '2-digit',
+					timeZone: 'UTC',
+				})
+			] !== undefined
+		);
 	}
 }

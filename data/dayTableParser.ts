@@ -2,7 +2,11 @@ import { Worksheet } from 'exceljs';
 
 export default function parseDayTable(input: Worksheet): DayTable {
 	const districts: DayTable = {};
-	for (let rowNum = 4; rowNum < input.rowCount; rowNum++) {
+	let startRow = 4;
+	if (input.getRow(4).getCell('A').value.toString().includes('Kreis, Stand')) {
+		startRow = 5;
+	}
+	for (let rowNum = startRow; rowNum < input.rowCount; rowNum++) {
 		const row = input.getRow(rowNum);
 		const districtName = String(row.getCell('A').value);
 		const data: DistrictData = {
@@ -24,7 +28,7 @@ export default function parseDayTable(input: Worksheet): DayTable {
 					gt60y: Number(row.getCell('M').value),
 				},
 				IntensivHospitalisierungRLP:
-					row.getCell('N').value !== districtName ? Number(row.getCell('N').value) : undefined,
+					row.getCell('N').value !== districtName ? Number(row.getCell('N').value) : null,
 			},
 		};
 

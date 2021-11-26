@@ -5,8 +5,8 @@ body {
 	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
 		Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 
-	background-color: #111;
-	color: #fff;
+	background-color: #fff;
+	color: #111;
 }
 
 a {
@@ -38,15 +38,46 @@ a {
 	This is the header.
 	It is always at the top of the page.
   */
-	& header {
+	header {
 		grid-area: header;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		height: 75px;
 		width: 100%;
-		background-color: #111;
-		box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+		background-color: #fff;
+		border-bottom: 1px solid #e0e0e0;
+
+		nav ul {
+			height: 100%;
+			width: 100%;
+			padding: 0 1rem;
+			margin: 0;
+			list-style: none;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			grid-template-rows: 1fr;
+
+			a {
+				color: #111;
+				text-decoration: none;
+				font-size: 1.2rem;
+				font-weight: bold;
+				padding: 0.5rem 1rem;
+				margin: 1rem;
+				border-radius: 5px;
+				border: 1px solid #111;
+				background-color: #fff;
+
+				&:hover,
+				&:focus {
+					background-color: #111;
+					color: #fff;
+				}
+
+				transition: all 0.3s ease-in-out;
+			}
+		}
 	}
 
 	/*
@@ -55,26 +86,42 @@ a {
 	All children of this container are centered within this container.
 	It isn't hidden by the header.
   */
-	& main {
+	main {
 		grid-area: main;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		flex-direction: column;
-		height: calc(100vh - 150px);
+		height: calc(100vh - 75px);
+		max-height: calc(100vh - 75px);
 		width: 100%;
-		background-color: #111;
-		box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+		background-color: #fff;
+		overflow-y: scroll;
 
-		& pre {
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			display: block;
+			margin: 0 auto;
+			max-width: calc(100vw - 10%);
+			width: min-content;
+			white-space: nowrap;
+		}
+
+		canvas {
+			display: block;
+			margin: 0 auto;
+			max-width: calc(100vw - 10%);
+		}
+
+		pre {
 			margin: 0;
 			padding: 0;
 			overflow: scroll;
 			white-space: pre-wrap;
-			max-height: calc(100vh - 150px);
-			max-width: calc(100vw - 150px);
+			max-height: calc(100vh - 75px);
+			max-width: calc(100vw - 75px);
 			background-color: #333;
-			color: #fafafa;
+			color: #111;
 			border-radius: 4px;
 			border-color: #fafafa;
 			border-style: solid;
@@ -90,26 +137,14 @@ a {
 			}
 		}
 
-		& h1 {
+		div {
+			margin-bottom: 2em;
+			margin-top: 2em;
+		}
+
+		h1 {
 			font-size: 2em;
 			font-weight: bold;
-			margin: 0;
-			padding: 0;
 		}
-	}
-
-	/*
-	This is the footer.
-	It is always at the bottom of the page.
-  */
-	& footer {
-		grid-area: footer;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		height: 75px;
-		width: 100%;
-		background-color: #111;
-		box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 	}
 }
