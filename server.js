@@ -34,7 +34,7 @@ if (!onVercel) {
 					handle(req, res, parsedUrl);
 				}
 			)
-			.listen(dev ? 443, (err) => {
+			.listen(443, (err) => {
 				if (err) throw err;
 				console.log('> Ready on https://localhost:443');
 			});
