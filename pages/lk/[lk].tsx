@@ -87,7 +87,7 @@ export default function LK({
 			<h1>{(lk as string).replace(/_/g, ' ')}</h1>
 			<div className={'lk-inzidenz-rlp-hist'}>
 				<h2>7 Tage Inzidenzen:</h2>
-				<h3>{props.data[0].data.siebenTage.Inzidenz.RLP}</h3>
+				<h3>{props.data.slice().reverse()[0].data.siebenTage.Inzidenz.RLP}</h3>
 				<Chart
 					type="line"
 					data={{
