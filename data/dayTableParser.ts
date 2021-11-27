@@ -2,6 +2,7 @@ import { Worksheet } from 'exceljs';
 
 export default function parseDayTable(input: Worksheet): DayTable {
 	const districts: DayTable = {};
+	if (!input) return;
 	let startRow = 4;
 	if (input.getRow(4).getCell('A').value.toString().includes('Kreis, Stand')) {
 		startRow = 5;

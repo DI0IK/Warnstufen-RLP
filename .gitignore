@@ -44,3 +44,6 @@ cache
 
 # Certs
 certs
+
+# Env
+.env

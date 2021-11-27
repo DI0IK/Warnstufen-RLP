@@ -7,15 +7,7 @@ export default class DataFetcher {
 		[key: string]: DayTable;
 	} = {};
 
-	private _startDate: Date = new Date(
-		// 1st of August 2021
-		2021,
-		7,
-		1,
-		12,
-		0,
-		0
-	);
+	private _startDate = new Date('2021-08-01T00:00:00.000Z');
 
 	private constructor() {
 		this.init();
@@ -35,9 +27,24 @@ export default class DataFetcher {
 	}
 
 	private async init() {
-		for (let i = Date.now(); i > this._startDate.getTime(); i -= 24 * 60 * 60 * 1000) {
-			const date = new Date(i);
-
+		const datesBetween = (start: Date, end: Date) => {
+			const dates = [];
+			let currentDate = start;
+			while (currentDate <= end) {
+				dates.push(new Date(currentDate));
+				currentDate.setDate(currentDate.getDate() + 1);
+			}
+			return dates;
+		};
+		const nowDate = new Date(
+			new Date().getFullYear() +
+				'-' +
+				(new Date().getMonth() + 1) +
+				'-' +
+				new Date().getDate() +
+				'T00:00:00.000Z'
+		);
+		for (const date of datesBetween(this._startDate, nowDate)) {
 			// Dateformat: YYYY-MM-DD
 			const sheet = await getSheet(
 				`https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Rohdaten_2021/Corona-Fallmeldungen-RLP-${
@@ -46,13 +53,8 @@ export default class DataFetcher {
 				'Tabelle1'
 			);
 
-			console.log(
-				`Fetching data from https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Rohdaten_2021/Corona-Fallmeldungen-RLP-${
-					date.toISOString().split('T')[0]
-				}.xlsx`
-			);
-
 			const dayTable = parseDayTable(sheet);
+			if (!dayTable) continue;
 			this._dayTables[
 				date.toLocaleDateString('de-DE', {
 					year: 'numeric',
@@ -74,6 +76,7 @@ export default class DataFetcher {
 		);
 
 		const dayTable = parseDayTable(sheet);
+		if (!dayTable) return;
 		this._dayTables[
 			date.toLocaleDateString('de-DE', {
 				year: 'numeric',
@@ -128,15 +131,31 @@ export default class DataFetcher {
 	}
 
 	public get isReady(): boolean {
+		const nowDate = new Date(
+			new Date().getFullYear() +
+				'-' +
+				(new Date().getMonth() + 1) +
+				'-' +
+				new Date().getDate() +
+				'T00:00:00.000Z'
+		);
 		return (
-			this._dayTables[
-				this._startDate.toLocaleDateString('de-DE', {
+			Object.keys(this._dayTables).includes(
+				nowDate.toLocaleDateString('de-DE', {
 					year: 'numeric',
 					month: '2-digit',
 					day: '2-digit',
 					timeZone: 'UTC',
 				})
-			] !== undefined
+			) ||
+			Object.keys(this._dayTables).includes(
+				new Date(nowDate.setDate(nowDate.getDate() - 1)).toLocaleDateString('de-DE', {
+					year: 'numeric',
+					month: '2-digit',
+					day: '2-digit',
+					timeZone: 'UTC',
+				})
+			)
 		);
 	}
 }
