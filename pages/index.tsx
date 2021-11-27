@@ -2,10 +2,19 @@ import Layout from '../components/layout';
 import DataFetcher from '../data/data';
 import Link from 'next/link';
 import lkListStyles from '../styles/lkList.module.scss';
+import Head from 'next/head';
 
 export default function Index({ props }) {
 	return (
 		<Layout>
+			<Head>
+				<title>Warnzahlen RLP</title>
+				<meta name="description" content="Warnzahlen für alle Landkreise in RLP" />
+				<meta name="keywords" content="Warnzahlen RLP" />
+				<meta name="robots" content="index, follow" />
+				<meta name="og:title" content="Warnzahlen RLP" />
+				<meta name="og:description" content="Warnzahlen für alle Landkreise in RLP" />
+			</Head>
 			<h1>Warnzahlen RLP</h1>
 			<div>
 				<h2>Landkreise:</h2>

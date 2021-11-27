@@ -30,6 +30,7 @@ import {
 } from 'chart.js';
 import { DistrictData } from '../../data/dayTableParser';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 ChartJS.register(
 	ArcElement,
@@ -72,6 +73,17 @@ export default function LK({
 	const { lk } = router.query;
 	return (
 		<Layout>
+			<Head>
+				<title>Warnzahlen {lk}</title>
+				<meta name="description" content={'Warnzahlen ' + lk} />
+				<meta
+					name="keywords"
+					content={`Warnzahl,Warnzahlen,Inzidenz,Hospitalisierung,${lk},Warnzahl ${lk}, ${lk} Warnzahlen, Inzidenz ${lk}, Hospitalisierung ${lk}, ${lk} Inzidenz, ${lk} Hospitalisierung`}
+				/>
+				<meta name="robots" content="index, follow" />
+				<meta name="og:title" content={'Warnzahlen ' + lk} />
+				<meta name="og:description" content={'Warnzahlen für ' + lk} />
+			</Head>
 			<h1>{(lk as string).replace(/_/g, ' ')}</h1>
 			<div className={'lk-inzidenz-rlp-hist'}>
 				<h2>7 Tage Inzidenzen:</h2>

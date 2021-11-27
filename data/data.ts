@@ -1,6 +1,5 @@
 import getSheet from './sheetReader';
 import parseDayTable, { DayTable, DistrictData } from './dayTableParser';
-import EventEmitter from 'events';
 
 export default class DataFetcher {
 	private _dayTables: {
