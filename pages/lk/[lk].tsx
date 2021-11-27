@@ -3,18 +3,60 @@ import DataFetcher from '../../data/data';
 import { Chart } from 'react-chartjs-2';
 import {
 	Chart as ChartJS,
+	ArcElement,
+	LineElement,
+	BarElement,
+	PointElement,
+	BarController,
+	BubbleController,
+	DoughnutController,
+	LineController,
+	PieController,
+	PolarAreaController,
+	RadarController,
+	ScatterController,
 	CategoryScale,
 	LinearScale,
-	PointElement,
-	LineElement,
+	LogarithmicScale,
+	RadialLinearScale,
+	TimeScale,
+	TimeSeriesScale,
+	Decimation,
+	Filler,
+	Legend,
 	Title,
 	Tooltip,
-	Legend,
+	SubTitle,
 } from 'chart.js';
 import { DistrictData } from '../../data/dayTableParser';
 import { useRouter } from 'next/router';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(
+	ArcElement,
+	LineElement,
+	BarElement,
+	PointElement,
+	BarController,
+	BubbleController,
+	DoughnutController,
+	LineController,
+	PieController,
+	PolarAreaController,
+	RadarController,
+	ScatterController,
+	CategoryScale,
+	LinearScale,
+	LogarithmicScale,
+	RadialLinearScale,
+	TimeScale,
+	TimeSeriesScale,
+	Decimation,
+	Filler,
+	Legend,
+	Title,
+	Tooltip,
+	SubTitle
+);
 
 export default function LK({
 	props,
