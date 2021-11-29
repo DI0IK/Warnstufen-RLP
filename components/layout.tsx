@@ -16,6 +16,11 @@ export default function Layout({ children }) {
 								<a>Kontakt</a>
 							</Link>
 						</li>
+						<li>
+							<Link href="/api-docs">
+								<a>API</a>
+							</Link>
+						</li>
 					</ul>
 				</nav>
 			</header>

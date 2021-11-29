@@ -55,7 +55,7 @@ a {
 			margin: 0;
 			list-style: none;
 			display: grid;
-			grid-template-columns: 1fr 1fr;
+			grid-template-columns: 1fr 1fr 1fr;
 			grid-template-rows: 1fr;
 
 			a {
@@ -64,10 +64,13 @@ a {
 				font-size: 1.2rem;
 				font-weight: bold;
 				padding: 0.5rem 1rem;
-				margin: 1rem;
+				margin: 0.3rem;
 				border-radius: 5px;
 				border: 1px solid #111;
 				background-color: #fff;
+				display: flex;
+				justify-content: center;
+				align-items: center;
 
 				&:hover,
 				&:focus {
@@ -133,7 +136,117 @@ a {
 				line-height: 1.5;
 				padding: 0.5em 0;
 				border-radius: 3px;
-				box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+				color: #fafafa;
+			}
+		}
+
+		.iframe-wrapper {
+			display: block;
+			max-width: 100%;
+			width: 100%;
+			height: 100%;
+
+			// center the iframe
+			margin: 0 auto;
+
+			iframe {
+				margin: 0 auto;
+				width: 100%;
+				min-width: 100%;
+				max-width: 100%;
+				height: calc(50vw);
+				min-height: calc(50vw);
+				max-height: calc(50vw);
+
+				border: none;
+			}
+
+			@media (min-width: 1200px) {
+				width: 80%;
+
+				iframe {
+					width: 80%;
+					min-width: 80%;
+					max-width: 80%;
+					height: calc(40vw);
+					min-height: calc(40vw);
+					max-height: calc(40vw);
+				}
+			}
+		}
+
+		.order {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			white-space: nowrap;
+			position: relative;
+
+			.trenner {
+				display: block;
+				border: none;
+				border-top: 5px solid #000000;
+				width: 150px;
+				height: 5px;
+				margin: 12px 0;
+				padding: 0;
+
+				&::after {
+					content: 'Unsichtbar';
+					position: relative;
+					display: block;
+					width: max-content;
+					height: 0;
+					margin: 0 auto;
+					top: -21px;
+				}
+
+				&::before {
+					content: 'Sichtbar';
+					position: relative;
+					display: block;
+					width: max-content;
+					height: 0;
+					margin: 0 auto;
+					top: -1px;
+				}
+			}
+
+			div:not([class='trenner']) {
+				margin: 0;
+				padding: 0;
+				width: min-content;
+				margin-bottom: 0.3rem;
+				margin-top: 0.3rem;
+				border: 1px solid #111;
+				padding: 0.5rem;
+
+				// Arrow up
+				&::before {
+					content: '';
+					position: relative;
+					display: block;
+					width: 0;
+					height: 0;
+					border-left: 7px solid transparent;
+					border-right: 7px solid transparent;
+					border-bottom: 7px solid #111;
+					margin: 0 auto;
+				}
+
+				// Arrow down
+				&::after {
+					content: '';
+					position: relative;
+					display: block;
+					width: 0;
+					height: 0;
+					border-left: 7px solid transparent;
+					border-right: 7px solid transparent;
+					border-top: 7px solid #111;
+					margin: 0 auto;
+				}
 			}
 		}
 

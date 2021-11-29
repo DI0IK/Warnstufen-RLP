@@ -7,7 +7,7 @@ export default function parseDayTable(input: Worksheet): DayTable {
 	if (input.getRow(4).getCell('A').value.toString().includes('Kreis, Stand')) {
 		startRow = 5;
 	}
-	for (let rowNum = startRow; rowNum < input.rowCount; rowNum++) {
+	for (let rowNum = startRow; rowNum < input.rowCount + 1; rowNum++) {
 		const row = input.getRow(rowNum);
 		const districtName = String(row.getCell('A').value);
 		const data: DistrictData = {

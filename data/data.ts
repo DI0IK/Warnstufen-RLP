@@ -33,6 +33,7 @@ export default class DataFetcher {
 				dates.push(new Date(currentDate));
 				currentDate.setDate(currentDate.getDate() + 1);
 			}
+			dates.push(end);
 			return dates;
 		};
 		const nowDate = new Date(
