@@ -2,10 +2,23 @@ import Layout from '../../../components/layout';
 import DataFetcher from '../../../data/data';
 import { useRouter } from 'next/dist/client/router';
 import Head from 'next/head';
+import React from 'react';
 
 export default function LK() {
 	const router = useRouter();
 	const { lk } = router.query as { lk: string };
+
+	React.useEffect(() => {
+		//@ts-ignore
+		typeof load === 'function'
+			? //@ts-ignore
+			  load()
+			: (() => {
+					const script = document.createElement('script');
+					script.src = '/scripts/lk.iframes.js';
+					document.body.appendChild(script);
+			  })();
+	});
 
 	return (
 		<Layout>
@@ -31,7 +44,6 @@ export default function LK() {
 				<iframe src={`/lk/${lk}/MomentanErkrankt`} id={'MomentanErkrankt'}></iframe>
 			</div>
 			<div id={'iframes'} className={'iframe-wrapper'}></div>
-			<script src="/scripts/lk.iframes.js" />
 		</Layout>
 	);
 }
