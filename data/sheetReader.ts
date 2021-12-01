@@ -11,6 +11,7 @@ export default async function getSheet(url: string, sheetName: string): Promise<
 			});
 			console.log('Downloading... ' + url);
 			fs.writeFileSync('cache/' + url.split('/').pop(), data.data);
+			fs.chmodSync('cache/' + url.split('/').pop(), 0o666);
 		} catch (error) {
 			console.log(`Failed to download ${url}`);
 		}

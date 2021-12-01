@@ -1,8 +1,9 @@
 import Layout from '../../../components/layout';
 import DataFetcher from '../../../data/data';
-import { useRouter } from 'next/dist/client/router';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import React from 'react';
+import Link from 'next/link';
 
 export default function LK() {
 	const router = useRouter();
@@ -35,9 +36,25 @@ export default function LK() {
 			</Head>
 			<h1>{(lk as string).replace(/_/g, ' ')}</h1>
 			<div>
-				<h3>Positionen der Diagramme</h3>
-				<div className={'order'}></div>
+				<h3
+					onClick={(e) => {
+						e.currentTarget.parentElement
+							.getElementsByClassName('order')[0]
+							.classList.toggle('collapsed');
+						e.currentTarget.classList.toggle('collapsed');
+					}}
+				>
+					Positionen der Diagramme bearbeiten
+					<br />
+					(Klicken zum Ein-/Ausblenden)
+				</h3>
+				<div className={'order collapsed'}></div>
 			</div>
+			<h3>
+				<Link href={`/lk/${lk}/table`}>
+					<a>Tabellen Version</a>
+				</Link>
+			</h3>
 			<div id={'pre-js-wrapper'} className={'iframe-wrapper'}>
 				<iframe src={`/lk/${lk}/Inzidenz`} id={'Inzidenz'}></iframe>
 				<iframe src={`/lk/${lk}/Hospitalisierung`} id={'Hospitalisierung'}></iframe>

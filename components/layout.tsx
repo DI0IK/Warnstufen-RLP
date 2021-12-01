@@ -21,6 +21,11 @@ export default function Layout({ children }) {
 								<a>API</a>
 							</Link>
 						</li>
+						<li>
+							<Link href="https://corona.rlp.de/de/service/rechtsgrundlagen/">
+								<a>Coronaverordnungen</a>
+							</Link>
+						</li>
 					</ul>
 				</nav>
 			</header>

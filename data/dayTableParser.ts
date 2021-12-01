@@ -16,7 +16,7 @@ export default function parseDayTable(input: Worksheet): DayTable {
 				Diff: Number(row.getCell('C').value),
 				Hospitalisierung: Number(row.getCell('D').value),
 				Verstorben: Number(row.getCell('E').value),
-				Genesen: Number(row.getCell('F').value),
+				Genesen: Number(row.getCell('F').value.toString().replace('#', '').trim()),
 				aktuelleFaelle: Number(row.getCell('G').value),
 			},
 			siebenTage: {
