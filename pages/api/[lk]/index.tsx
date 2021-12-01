@@ -16,5 +16,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		}, 100);
 	});
 
-	res.json(data.getTablesForDistrict(lk));
+	res.json(data.getTablesForDistrict(lk.replace(/_/g, ' ')));
 }
