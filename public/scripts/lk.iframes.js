@@ -88,7 +88,7 @@ function load() {
 	}
 
 	if (document.getElementById('pre-js-wrapper'))
-		document.getElementById('pre-js-wrapper').outerHTML = '';
+		document.getElementById('pre-js-wrapper').style.display = 'none';
 }
 
 setTimeout(() => {
