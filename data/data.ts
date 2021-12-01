@@ -39,9 +39,9 @@ export default class DataFetcher {
 		const nowDate = new Date(
 			new Date().getFullYear() +
 				'-' +
-				(new Date().getMonth() + 1) +
+				('0' + (new Date().getMonth() + 1).toString()).slice(-2) +
 				'-' +
-				new Date().getDate() +
+				('0' + new Date().getDate()).slice(-2) +
 				'T00:00:00.000Z'
 		);
 		for (const date of datesBetween(this._startDate, nowDate)) {
@@ -134,9 +134,9 @@ export default class DataFetcher {
 		const nowDate = new Date(
 			new Date().getFullYear() +
 				'-' +
-				(new Date().getMonth() + 1) +
+				('0' + (new Date().getMonth() + 1).toString()).slice(-2) +
 				'-' +
-				new Date().getDate() +
+				('0' + new Date().getDate()).slice(-2) +
 				'T00:00:00.000Z'
 		);
 		return (
