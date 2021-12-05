@@ -150,7 +150,7 @@ a {
 			display: block;
 			max-width: 100%;
 			width: 100%;
-			height: 100%;
+			height: calc(100vh - 250px);
 
 			// center the iframe
 			margin: 0 auto;

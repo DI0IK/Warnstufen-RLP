@@ -14,6 +14,14 @@ export default function Index({ props }) {
 				<meta name="robots" content="index, follow" />
 				<meta name="og:title" content="Warnzahlen RLP" />
 				<meta name="og:description" content="Warnzahlen für alle Landkreise in RLP" />
+				<script>
+					{`
+						if(location.hash.length > 1) {
+							const hash = location.hash.substring(1);
+							location.href = \`/lk/\${hash}\`;
+						}
+					`}
+				</script>
 			</Head>
 			<h1>Warnzahlen RLP</h1>
 			<div>
