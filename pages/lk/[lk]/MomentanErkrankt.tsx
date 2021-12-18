@@ -74,36 +74,43 @@ export default function SiebenTageGesamt({
 		},
 	};
 	return (
-		<Chart
-			type="line"
-			data={{
-				datasets: [
-					{
-						data: props.data.map((entry) => entry.data.siebenTage.Gesamt),
-						label: 'Erkrankt in den letzten 7 Tage',
-						borderColor: '#ff0000',
-						backgroundColor: '#ff0000',
-						fill: false,
-					},
-					{
-						data: props.data.map((entry) => entry.data.seitBeginn.aktuelleFaelle),
-						label: 'aktuell Erkrankt',
-						borderColor: '#00ff00',
-						backgroundColor: '#00ff00',
-						fill: false,
-					},
-					{
-						data: props.data.map((entry) => entry.data.seitBeginn.Diff),
-						label: 'Neue Fälle',
-						borderColor: '#0000ff',
-						backgroundColor: '#0000ff',
-						fill: false,
-					},
-				],
-				labels: props.data.map((entry) => entry.date),
-			}}
-			options={options}
-		/>
+		<div>
+			<div>
+				<h2>
+					Neu Erkrankt: <span>{props.data[props.data.length - 1].data.seitBeginn.Diff}</span>
+				</h2>
+			</div>
+			<Chart
+				type="line"
+				data={{
+					datasets: [
+						{
+							data: props.data.map((entry) => entry.data.siebenTage.Gesamt),
+							label: 'Erkrankt in den letzten 7 Tage',
+							borderColor: '#ff0000',
+							backgroundColor: '#ff0000',
+							fill: false,
+						},
+						{
+							data: props.data.map((entry) => entry.data.seitBeginn.aktuelleFaelle),
+							label: 'aktuell Erkrankt',
+							borderColor: '#00ff00',
+							backgroundColor: '#00ff00',
+							fill: false,
+						},
+						{
+							data: props.data.map((entry) => entry.data.seitBeginn.Diff),
+							label: 'Neue Fälle',
+							borderColor: '#0000ff',
+							backgroundColor: '#0000ff',
+							fill: false,
+						},
+					],
+					labels: props.data.map((entry) => entry.date),
+				}}
+				options={options}
+			/>
+		</div>
 	);
 }
 

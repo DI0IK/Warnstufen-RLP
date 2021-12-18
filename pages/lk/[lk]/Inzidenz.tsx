@@ -74,43 +74,51 @@ export default function Inzidenz({
 		},
 	};
 	return (
-		<Chart
-			type="line"
-			data={{
-				datasets: [
-					{
-						data: props.data.map((entry) => entry.data.siebenTage.Inzidenz.RLP),
-						label: 'Alle',
-						borderColor: '#ff0000',
-						backgroundColor: '#ff0000',
-						fill: false,
-					},
-					{
-						data: props.data.map((entry) => entry.data.siebenTage.Inzidenz.gt60y),
-						label: 'über 60 jahre',
-						borderColor: '#00ff00',
-						backgroundColor: '#00ff00',
-						fill: false,
-					},
-					{
-						data: props.data.map((entry) => entry.data.siebenTage.Inzidenz.lt60y),
-						label: 'zwischen 20 und 60 jahre',
-						borderColor: '#0000ff',
-						backgroundColor: '#0000ff',
-						fill: false,
-					},
-					{
-						data: props.data.map((entry) => entry.data.siebenTage.Inzidenz.lt20y),
-						label: 'unter 20 jahre',
-						borderColor: '#ff00ff',
-						backgroundColor: '#ff00ff',
-						fill: false,
-					},
-				],
-				labels: props.data.map((entry) => entry.date),
-			}}
-			options={options}
-		/>
+		<div>
+			<div>
+				<h2>
+					Inzidenz:{' '}
+					<span>{props.data[props.data.length - 1].data.siebenTage.Inzidenz.RLP}</span>
+				</h2>
+			</div>
+			<Chart
+				type="line"
+				data={{
+					datasets: [
+						{
+							data: props.data.map((entry) => entry.data.siebenTage.Inzidenz.RLP),
+							label: 'Alle',
+							borderColor: '#ff0000',
+							backgroundColor: '#ff0000',
+							fill: false,
+						},
+						{
+							data: props.data.map((entry) => entry.data.siebenTage.Inzidenz.gt60y),
+							label: 'über 60 jahre',
+							borderColor: '#00ff00',
+							backgroundColor: '#00ff00',
+							fill: false,
+						},
+						{
+							data: props.data.map((entry) => entry.data.siebenTage.Inzidenz.lt60y),
+							label: 'zwischen 20 und 60 jahre',
+							borderColor: '#0000ff',
+							backgroundColor: '#0000ff',
+							fill: false,
+						},
+						{
+							data: props.data.map((entry) => entry.data.siebenTage.Inzidenz.lt20y),
+							label: 'unter 20 jahre',
+							borderColor: '#ff00ff',
+							backgroundColor: '#ff00ff',
+							fill: false,
+						},
+					],
+					labels: props.data.map((entry) => entry.date),
+				}}
+				options={options}
+			/>
+		</div>
 	);
 }
 

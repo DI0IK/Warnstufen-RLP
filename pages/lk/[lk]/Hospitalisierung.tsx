@@ -74,26 +74,36 @@ export default function Hospitalisierung({
 		},
 	};
 	return (
-		<Chart
-			type="line"
-			data={{
-				datasets: [
-					{
-						data: props.data
-							.filter((entry) => entry.data.siebenTage.IntensivHospitalisierungRLP)
-							.map((entry) => entry.data.siebenTage.IntensivHospitalisierungRLP),
-						label: 'Hospitalisierung',
-						borderColor: '#ff0000',
-						backgroundColor: '#ff0000',
-						fill: false,
-					},
-				],
-				labels: props.data
-					.filter((entry) => entry.data.siebenTage.IntensivHospitalisierungRLP)
-					.map((entry) => entry.date),
-			}}
-			options={options}
-		/>
+		<div>
+			<div>
+				<h2>
+					Hospitalisierung:{' '}
+					<span>
+						{props.data[props.data.length - 1].data.siebenTage.IntensivHospitalisierungRLP}
+					</span>
+				</h2>
+			</div>
+			<Chart
+				type="line"
+				data={{
+					datasets: [
+						{
+							data: props.data
+								.filter((entry) => entry.data.siebenTage.IntensivHospitalisierungRLP)
+								.map((entry) => entry.data.siebenTage.IntensivHospitalisierungRLP),
+							label: 'Hospitalisierung',
+							borderColor: '#ff0000',
+							backgroundColor: '#ff0000',
+							fill: false,
+						},
+					],
+					labels: props.data
+						.filter((entry) => entry.data.siebenTage.IntensivHospitalisierungRLP)
+						.map((entry) => entry.date),
+				}}
+				options={options}
+			/>
+		</div>
 	);
 }
 
