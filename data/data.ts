@@ -44,14 +44,15 @@ export default class DataFetcher {
 				('0' + new Date().getDate()).slice(-2) +
 				'T00:00:00.000Z'
 		);
-		for (const date of datesBetween(this._startDate, nowDate)) {
+		for (const date of datesBetween(this._startDate, nowDate) as Date[]) {
+			const url = `https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Rohdaten_${
+				date.getFullYear() === 2021
+					? '2021'
+					: this.getMonthName(date.getMonth()) + '_' + date.getFullYear()
+			}/Corona-Fallmeldungen-RLP-${date.toISOString().split('T')[0]}.xlsx`;
+
 			// Dateformat: YYYY-MM-DD
-			const sheet = await getSheet(
-				`https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Rohdaten_2021/Corona-Fallmeldungen-RLP-${
-					date.toISOString().split('T')[0]
-				}.xlsx`,
-				'Tabelle1'
-			);
+			const sheet = await getSheet(url, 'Tabelle1');
 
 			const dayTable = parseDayTable(sheet);
 			if (!dayTable) continue;
@@ -68,12 +69,14 @@ export default class DataFetcher {
 
 	private async update() {
 		const date = new Date();
-		const sheet = await getSheet(
-			`https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Rohdaten_2021/Corona-Fallmeldungen-RLP-${
-				date.toISOString().split('T')[0]
-			}.xlsx`,
-			'Tabelle1'
-		);
+
+		const url = `https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Rohdaten_${
+			date.getFullYear() === 2021
+				? '2021'
+				: this.getMonthName(date.getMonth()) + '_' + date.getFullYear()
+		}/Corona-Fallmeldungen-RLP-${date.toISOString().split('T')[0]}.xlsx`;
+
+		const sheet = await getSheet(url, 'Tabelle1');
 
 		const dayTable = parseDayTable(sheet);
 		if (!dayTable) return;
@@ -157,5 +160,22 @@ export default class DataFetcher {
 				})
 			)
 		);
+	}
+
+	private getMonthName(month: number): string {
+		return [
+			'Januar',
+			'Februar',
+			'März',
+			'April',
+			'Mai',
+			'Juni',
+			'Juli',
+			'August',
+			'September',
+			'Oktober',
+			'November',
+			'Dezember',
+		][month];
 	}
 }
