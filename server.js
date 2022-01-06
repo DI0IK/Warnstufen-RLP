@@ -68,6 +68,8 @@ if (!onVercel) {
 			.listen(443, (err) => {
 				if (err) throw err;
 				console.log('> Ready on https://localhost:443');
+
+				console.log(`API Key: ${process.env.API_KEY}`);
 			});
 	});
 
