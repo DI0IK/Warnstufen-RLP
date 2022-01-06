@@ -73,7 +73,12 @@ if (!onVercel) {
 				console.log('> Ready on https://localhost:443');
 
 				if (!process.env.API_KEY) {
-					process.env.API_KEY = crypto.randomBytes(32).toString('hex');
+					if (!fs.existsSync('./certs/api')) {
+						process.env.API_KEY = crypto.randomBytes(32).toString('hex');
+						fs.writeFileSync('./certs/api', process.env.API_KEY);
+					} else {
+						process.env.API_KEY = fs.readFileSync('./certs/api').toString();
+					}
 				}
 
 				console.log(`API Key: ${process.env.API_KEY}`);
