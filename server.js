@@ -2,6 +2,7 @@ const https = require('https');
 const http = require('http');
 const { parse } = require('url');
 const next = require('next');
+const crypto = require('crypto');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -68,6 +69,10 @@ if (!onVercel) {
 			.listen(443, (err) => {
 				if (err) throw err;
 				console.log('> Ready on https://localhost:443');
+
+				if (!process.env.API_KEY) {
+					process.env.API_KEY = crypto.randomBytes(32).toString('hex');
+				}
 
 				console.log(`API Key: ${process.env.API_KEY}`);
 			});
