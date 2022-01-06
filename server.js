@@ -59,8 +59,10 @@ if (!onVercel) {
 					}
 
 					handle(req, res, parsedUrl).then(() => {
-						// skip _next/static
-						if (req.url.startsWith('/_next/static/')) return;
+						// skip some requests
+						if (req.url.startsWith('/_next/')) return;
+						if (req.url.startsWith('/admin/')) return;
+						if (req.url.match(/^\/lk\/[a-zA-Z_-]+\/[a-zA-Z]+$/)) return;
 
 						log(req, res, startTime);
 					});
