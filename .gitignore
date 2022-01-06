@@ -47,3 +47,6 @@ certs
 
 # Env
 .env
+
+# Logs
+logs
