@@ -11,6 +11,8 @@ const fs = require('fs');
 
 const onVercel = process.env.VERCEL_URL !== undefined;
 
+let bannedIPs = undefined;
+
 if (!onVercel) {
 	app.prepare().then(() => {
 		https
@@ -34,6 +36,16 @@ if (!onVercel) {
 						'X-Requested-With,content-type,content-length'
 					);
 					res.setHeader('Access-Control-Allow-Credentials', true);
+
+					if (bannedIPs === undefined) {
+						bannedIPs = fs.readFileSync('./bannedIPs.txt', 'utf8').split('\n');
+					}
+
+					if (bannedIPs.includes(req.socket.remoteAddress.replace('::ffff:', ''))) {
+						res.statusCode = 403;
+						res.end('Forbidden');
+						return;
+					}
 
 					const startTime = Date.now();
 
@@ -64,11 +76,77 @@ if (!onVercel) {
 						}
 					}
 
+					if (parsedUrl.pathname.startsWith('/admin/ban/add')) {
+						if (
+							req.headers['x-api-key'] !== process.env.API_KEY &&
+							parsedUrl.query?.apiKey !== process.env.API_KEY
+						) {
+							res.statusCode = 403;
+							res.end('Invalid/Missing API key');
+						} else {
+							const { ip } = parsedUrl.query;
+							try {
+								fs.appendFileSync('./bannedIPs.txt', `${ip}\n`);
+								bannedIPs.push(ip);
+								res.statusCode = 200;
+								res.end('Success');
+								return;
+							} catch (err) {
+								res.statusCode = 500;
+								res.end('Failed');
+								return;
+							}
+						}
+					}
+					if (parsedUrl.pathname.startsWith('/admin/ban/remove')) {
+						if (
+							req.headers['x-api-key'] !== process.env.API_KEY &&
+							parsedUrl.query?.apiKey !== process.env.API_KEY
+						) {
+							res.statusCode = 403;
+							res.end('Invalid/Missing API key');
+						} else {
+							const { ip } = parsedUrl.query;
+							try {
+								const newBannedIPs = bannedIPs.filter((x) => x !== ip);
+								fs.writeFileSync('./bannedIPs.txt', newBannedIPs.join('\n'));
+								bannedIPs = newBannedIPs;
+								res.statusCode = 200;
+								res.end('Success');
+								return;
+							} catch (err) {
+								res.statusCode = 500;
+								res.end('Failed');
+								return;
+							}
+						}
+					}
+					if (parsedUrl.pathname.startsWith('/admin/ban/list')) {
+						if (
+							req.headers['x-api-key'] !== process.env.API_KEY &&
+							parsedUrl.query?.apiKey !== process.env.API_KEY
+						) {
+							res.statusCode = 403;
+							res.end('Invalid/Missing API key');
+						} else {
+							try {
+								res.statusCode = 200;
+								res.setHeader('Content-Type', 'application/json');
+								res.end(JSON.stringify(bannedIPs));
+								return;
+							} catch (err) {
+								res.statusCode = 500;
+								res.end('Failed');
+								return;
+							}
+						}
+					}
+
 					handle(req, res, parsedUrl).then(() => {
 						// skip some requests
 						if (req.url.startsWith('/_next')) return;
 						if (req.url.startsWith('/admin')) return;
-						if (req.url.startsWith('/scripts/admin')) return;
+						if (req.url.startsWith('/scripts')) return;
 						if (req.url.match(/^\/lk\/[a-zA-Z_.-]+\/[a-zA-Z]+$/)) return;
 
 						log(req, res, startTime, 'https');
@@ -114,7 +192,10 @@ if (!onVercel) {
 
 				handle(req, res, parsedUrl).then(() => {
 					// skip _next/static
-					if (req.url.startsWith('/_next/static/')) return;
+					if (req.url.startsWith('/_next')) return;
+					if (req.url.startsWith('/admin')) return;
+					if (req.url.startsWith('/scripts')) return;
+					if (req.url.match(/^\/lk\/[a-zA-Z_.-]+\/[a-zA-Z]+$/)) return;
 
 					log(req, res, startTime, 'http');
 				});

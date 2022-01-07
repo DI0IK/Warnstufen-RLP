@@ -2,6 +2,7 @@ const key = document.getElementById('key');
 const date = document.getElementById('date');
 const updateBTN = document.getElementById('update');
 const dataTable = document.getElementById('data');
+const banList = document.getElementById('banList');
 
 function loadData() {
 	fetch(`/admin/data.tsv?apiKey=${key.value}&date=${date.value}`)
@@ -40,6 +41,14 @@ function loadData() {
 						td.innerHTML = row[j];
 						tr.appendChild(td);
 					}
+					tr.onclick = () => {
+						const confirmed = confirm('Ip will be banned');
+
+						if (confirmed) {
+							banIP(rows[i].split('\t')[1]);
+							loadBanList();
+						}
+					};
 					dataTable.appendChild(tr);
 				}
 			}
@@ -50,6 +59,66 @@ function loadData() {
 		});
 }
 
+function banIP(ip) {
+	fetch(`/admin/ban/add?apiKey=${key.value}&ip=${ip}`)
+		.then((response) => {
+			return response.text();
+		})
+		.then((text) => {
+			console.log(text);
+		})
+		.catch((error) => {
+			console.log(error);
+		});
+}
+
+function unbanIP(ip) {
+	fetch(`/admin/ban/remove?apiKey=${key.value}&ip=${ip}`)
+		.then((response) => {
+			return response.text();
+		})
+		.then((text) => {
+			console.log(text);
+		})
+		.catch((error) => {
+			console.log(error);
+		});
+}
+
+function loadBanList() {
+	fetch(`/admin/ban/list?apiKey=${key.value}`)
+		.then((response) => {
+			return response.json();
+		})
+		.then((array) => {
+			console.log(array);
+			array = array.sort((a, b) => {
+				if (a > b) return 1;
+				if (a < b) return -1;
+				return 0;
+			});
+
+			banList.innerHTML = '';
+			for (let i = 0; i < array.length; i++) {
+				if (!array[i]) continue;
+				const li = document.createElement('li');
+				li.innerText = `${array[i]}`;
+				console.log(array[i]);
+				li.onclick = () => {
+					const confirmed = confirm('Ip will be unbanned');
+					if (confirmed) {
+						unbanIP(array[i]);
+						loadBanList();
+					}
+				};
+				banList.appendChild(li);
+			}
+		});
+}
+
 key.addEventListener('change', loadData);
 date.addEventListener('change', loadData);
-updateBTN.addEventListener('click', loadData);
+updateBTN.addEventListener('click', () => {
+	loadData();
+	loadBanList();
+});

@@ -50,3 +50,4 @@ certs
 
 # Logs
 logs
+bannedIPs.txt
