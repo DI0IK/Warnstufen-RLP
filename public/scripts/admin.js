@@ -4,6 +4,8 @@ const updateBTN = document.getElementById('update');
 const dataTable = document.getElementById('data');
 const banList = document.getElementById('banList');
 
+let bannedIPs = [];
+
 function loadData() {
 	fetch(`/admin/data.tsv?apiKey=${key.value}&date=${date.value}`)
 		.then((response) => {
@@ -35,10 +37,14 @@ function loadData() {
 				} else {
 					const row = rows[i].split('\t');
 					if (!row[0]) continue;
+					const hasBeenBanned = bannedIPs.includes(row[1]);
 					const tr = document.createElement('tr');
 					for (let j = 0; j < row.length; j++) {
 						const td = document.createElement('td');
 						td.innerHTML = row[j];
+						if (hasBeenBanned) {
+							td.style.textDecoration = 'line-through';
+						}
 						tr.appendChild(td);
 					}
 					tr.onclick = () => {
@@ -47,6 +53,7 @@ function loadData() {
 						if (confirmed) {
 							banIP(rows[i].split('\t')[1]);
 							loadBanList();
+							loadData();
 						}
 					};
 					dataTable.appendChild(tr);
@@ -109,15 +116,24 @@ function loadBanList() {
 					if (confirmed) {
 						unbanIP(array[i]);
 						loadBanList();
+						loadData();
 					}
 				};
 				banList.appendChild(li);
 			}
+
+			bannedIPs = array;
 		});
 }
 
-key.addEventListener('change', loadData);
-date.addEventListener('change', loadData);
+key.addEventListener('change', () => {
+	loadData();
+	loadBanList();
+});
+date.addEventListener('change', () => {
+	loadData();
+	loadBanList();
+});
 updateBTN.addEventListener('click', () => {
 	loadData();
 	loadBanList();
