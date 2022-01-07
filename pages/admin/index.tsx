@@ -35,7 +35,7 @@ export default function admin({ props }) {
 					'table#data th { background-color: #333; color: white; }' +
 					'#banList { list-style-type: none; }' +
 					'#banList li { display: inline; border: 1px solid black; padding: 5px; margin: 5px; }' +
-					'main { display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 5fr; }' +
+					'main { display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 8fr; }' +
 					'#inputs { grid-column: 1; grid-row: 1; }' +
 					'#dataOutputs { grid-column: 1; grid-row: 2; }' +
 					'#banListOutputs { grid-column: 2; grid-row: 2; }' +
