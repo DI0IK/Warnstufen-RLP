@@ -46,25 +46,32 @@ if (!onVercel) {
 							res.end('Invalid/Missing API key');
 						} else {
 							const { date } = parsedUrl.query;
-							const data = fs.readFileSync(
-								`./logs/${date || new Date().toISOString().split('T')[0]}.tsv`
-							);
-							res.writeHead(200, {
-								'Content-Type': 'text/tab-separated-values',
-								'Content-Length': data.length,
-							});
-							res.end(data);
-							return;
+							try {
+								const data = fs.readFileSync(
+									`./logs/${date || new Date().toISOString().split('T')[0]}.tsv`
+								);
+								res.writeHead(200, {
+									'Content-Type': 'text/tab-separated-values',
+									'Content-Length': data.length,
+								});
+								res.end(data);
+								return;
+							} catch (err) {
+								res.statusCode = 404;
+								res.end('No data found');
+								return;
+							}
 						}
 					}
 
 					handle(req, res, parsedUrl).then(() => {
 						// skip some requests
-						if (req.url.startsWith('/_next/')) return;
-						if (req.url.startsWith('/admin/')) return;
-						if (req.url.match(/^\/lk\/[a-zA-Z_-]+\/[a-zA-Z]+$/)) return;
+						if (req.url.startsWith('/_next')) return;
+						if (req.url.startsWith('/admin')) return;
+						if (req.url.startsWith('/scripts/admin')) return;
+						if (req.url.match(/^\/lk\/[a-zA-Z_.-]+\/[a-zA-Z]+$/)) return;
 
-						log(req, res, startTime);
+						log(req, res, startTime, 'https');
 					});
 				}
 			)
@@ -109,7 +116,7 @@ if (!onVercel) {
 					// skip _next/static
 					if (req.url.startsWith('/_next/static/')) return;
 
-					log(req, res, startTime);
+					log(req, res, startTime, 'http');
 				});
 			})
 			.listen(port, (err) => {
@@ -123,8 +130,9 @@ if (!onVercel) {
  * @param {http.IncomingMessage} req
  * @param {http.ServerResponse} res
  * @param {number} startTime
+ * @param {string} protocol
  */
-function log(req, res, startTime) {
+function log(req, res, startTime, protocol) {
 	const logfile = `./logs/${new Date().toISOString().split('T')[0]}.tsv`;
 
 	if (!fs.existsSync('./logs')) {
@@ -133,18 +141,18 @@ function log(req, res, startTime) {
 	if (!fs.existsSync(logfile)) {
 		fs.writeFileSync(
 			logfile,
-			`Time\tIP\tMethod\tPath\tUser-Agent\tReferer\tStatus\tResponse-Time\tResponse-Length\n`
+			`Time\tIP\tMethod\tPath\tUser-Agent\tReferer\tStatus\tResponse-Time\tResponse-Length\tProtocol\n`
 		);
 		fs.chmodSync(logfile, 0o666);
 	}
 
 	fs.appendFile(
 		logfile,
-		`${new Date().toISOString()}\t${req.socket.remoteAddress || ''}\t${req.method}\t${req.url}\t${
-			req.headers['user-agent']
-		}\t${req.headers.referer || ''}\t${res.statusCode}\t${Date.now() - startTime}\t${
-			res.getHeader('Content-Length') || 0
-		}\n`,
+		`${new Date().toISOString()}\t${req.socket.remoteAddress.replace('::ffff:', '') || ''}\t${
+			req.method
+		}\t${req.url}\t${req.headers['user-agent']}\t${req.headers.referer || ''}\t${
+			res.statusCode
+		}\t${Date.now() - startTime}\t${res.getHeader('Content-Length') || 0}\t${protocol || ''}\n`,
 		(err) => {
 			if (err) throw err;
 		}
