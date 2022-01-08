@@ -7,7 +7,7 @@ const banList = document.getElementById('banList');
 let bannedIPs = [];
 
 function loadData() {
-	fetch(`/admin/data.tsv?apiKey=${key.value}&date=${date.value}`)
+	return fetch(`/admin/data.tsv?apiKey=${key.value}&date=${date.value}`)
 		.then((response) => {
 			return response.text();
 		})
@@ -53,20 +53,32 @@ function loadData() {
 						} else {
 							td.innerHTML = row[j];
 						}
+						if (j === 1) {
+							td.onclick = () => {
+								if (hasBeenBanned) {
+									const confirmed = confirm(`Ip ${row[1]} will be unbanned`);
+									if (confirmed) {
+										unbanIP(row[1]).finally(() => {
+											loadBanList();
+											loadData();
+										});
+									}
+								} else {
+									const confirmed = confirm(`Ip ${row[1]} will be banned`);
+									if (confirmed) {
+										banIP(row[1]).finally(() => {
+											loadBanList();
+											loadData();
+										});
+									}
+								}
+							};
+						}
 						if (hasBeenBanned) {
 							td.style.textDecoration = 'line-through';
 						}
 						tr.appendChild(td);
 					}
-					tr.onclick = () => {
-						const confirmed = confirm(`Ip ${row[1]} will be banned`);
-
-						if (confirmed) {
-							banIP(rows[i].split('\t')[1]);
-							loadBanList();
-							loadData();
-						}
-					};
 					dataTable.appendChild(tr);
 				}
 			}
@@ -78,7 +90,7 @@ function loadData() {
 }
 
 function banIP(ip) {
-	fetch(`/admin/ban/add?apiKey=${key.value}&ip=${ip}`)
+	return fetch(`/admin/ban/add?apiKey=${key.value}&ip=${ip}`)
 		.then((response) => {
 			return response.text();
 		})
@@ -91,7 +103,7 @@ function banIP(ip) {
 }
 
 function unbanIP(ip) {
-	fetch(`/admin/ban/remove?apiKey=${key.value}&ip=${ip}`)
+	return fetch(`/admin/ban/remove?apiKey=${key.value}&ip=${ip}`)
 		.then((response) => {
 			return response.text();
 		})
@@ -104,7 +116,7 @@ function unbanIP(ip) {
 }
 
 function loadBanList() {
-	fetch(`/admin/ban/list?apiKey=${key.value}`)
+	return fetch(`/admin/ban/list?apiKey=${key.value}`)
 		.then((response) => {
 			return response.json();
 		})
@@ -125,9 +137,10 @@ function loadBanList() {
 				li.onclick = () => {
 					const confirmed = confirm(`Ip ${array[i]} will be unbanned`);
 					if (confirmed) {
-						unbanIP(array[i]);
-						loadBanList();
-						loadData();
+						unbanIP(array[i]).finally(() => {
+							loadBanList();
+							loadData();
+						});
 					}
 				};
 				banList.appendChild(li);
