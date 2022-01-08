@@ -24,8 +24,12 @@ function loadData() {
 					const tr = document.createElement('tr');
 					for (let j = 0; j < header.length; j++) {
 						if (j === 0) {
+							const num = document.createElement('th');
+							num.innerText = 'Nr.';
+							tr.appendChild(num);
+
 							const th = document.createElement('th');
-							th.innerText = new Date(header[j]).toLocaleString();
+							th.innerText = 'Date';
 							tr.appendChild(th);
 						} else {
 							const th = document.createElement('th');
@@ -41,14 +45,21 @@ function loadData() {
 					const tr = document.createElement('tr');
 					for (let j = 0; j < row.length; j++) {
 						const td = document.createElement('td');
-						td.innerHTML = row[j];
+						if (j === 0) {
+							const num = document.createElement('td');
+							num.innerText = i;
+							tr.appendChild(num);
+							td.innerText = new Date(row[j]).toLocaleString();
+						} else {
+							td.innerHTML = row[j];
+						}
 						if (hasBeenBanned) {
 							td.style.textDecoration = 'line-through';
 						}
 						tr.appendChild(td);
 					}
 					tr.onclick = () => {
-						const confirmed = confirm('Ip will be banned');
+						const confirmed = confirm(`Ip ${row[1]} will be banned`);
 
 						if (confirmed) {
 							banIP(rows[i].split('\t')[1]);
@@ -112,7 +123,7 @@ function loadBanList() {
 				li.innerText = `${array[i]}`;
 				console.log(array[i]);
 				li.onclick = () => {
-					const confirmed = confirm('Ip will be unbanned');
+					const confirmed = confirm(`Ip ${array[i]} will be unbanned`);
 					if (confirmed) {
 						unbanIP(array[i]);
 						loadBanList();

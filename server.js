@@ -86,8 +86,10 @@ if (!onVercel) {
 						} else {
 							const { ip } = parsedUrl.query;
 							try {
-								fs.appendFileSync('./bannedIPs.txt', `${ip}\n`);
-								bannedIPs.push(ip);
+								if (!bannedIPs.includes(ip)) {
+									fs.appendFileSync('./bannedIPs.txt', `${ip}\n`);
+									bannedIPs.push(ip);
+								}
 								res.statusCode = 200;
 								res.end('Success');
 								return;

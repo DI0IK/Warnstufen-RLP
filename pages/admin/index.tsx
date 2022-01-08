@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Layout from '../../components/layout';
+import LkList from '../../styles/lkList.module.scss';
 
 export default function admin({ props }) {
 	return (
@@ -15,7 +16,7 @@ export default function admin({ props }) {
 			</div>
 			<div id="banListOutputs">
 				<h2>Ban List</h2>
-				<div>
+				<div className={LkList.list}>
 					<ul id="banList"></ul>
 				</div>
 			</div>
@@ -33,9 +34,7 @@ export default function admin({ props }) {
 					'table#data tr:nth-child(even) { background-color: #eee; }' +
 					'table#data tr:nth-child(odd) { background-color: #fff; }' +
 					'table#data th { background-color: #333; color: white; }' +
-					'#banList { list-style-type: none; }' +
-					'#banList li { display: inline; border: 1px solid black; padding: 5px; margin: 5px; }' +
-					'main { display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 8fr; }' +
+					'main { display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 25fr; }' +
 					'#inputs { grid-column: 1; grid-row: 1; }' +
 					'#dataOutputs { grid-column: 1; grid-row: 2; }' +
 					'#banListOutputs { grid-column: 2; grid-row: 2; }' +
