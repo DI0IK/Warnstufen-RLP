@@ -87,8 +87,8 @@ if (!onVercel) {
 							const { ip } = parsedUrl.query;
 							try {
 								if (!bannedIPs.includes(ip)) {
-									fs.appendFileSync('./bannedIPs.txt', `${ip}\n`);
 									bannedIPs.push(ip);
+									fs.writeFileSync('./bannedIPs.txt', bannedIPs.join('\n'));
 								}
 								res.statusCode = 200;
 								res.end('Success');
@@ -111,8 +111,8 @@ if (!onVercel) {
 							const { ip } = parsedUrl.query;
 							try {
 								const newBannedIPs = bannedIPs.filter((x) => x !== ip);
-								fs.writeFileSync('./bannedIPs.txt', newBannedIPs.join('\n'));
 								bannedIPs = newBannedIPs;
+								fs.writeFileSync('./bannedIPs.txt', bannedIPs.join('\n'));
 								res.statusCode = 200;
 								res.end('Success');
 								return;
