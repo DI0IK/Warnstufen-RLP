@@ -77,7 +77,7 @@ function loadData() {
 									}
 								}
 							};
-							if (hasBeenBanned) {
+							if (row[10] === 'true') {
 								td.style.color = 'red';
 							}
 						}
