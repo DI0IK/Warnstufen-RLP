@@ -51,7 +51,7 @@ if (!onVercel) {
 						res.end(
 							'Forbidden. If you are not a bot, please contact the server owner at "mail [at] warnzahl-rlp.de" and tell them your IP address.'
 						);
-						return;
+						return log(req, res, Date.now(), 'https', true);
 					}
 
 					if (autoBanPaths.includes(parsedUrl.pathname)) {
@@ -257,7 +257,13 @@ if (!onVercel) {
 						if (req.url.startsWith('/scripts')) return;
 						if (req.url.match(/^\/lk\/[a-zA-Z_.-]+\/[a-zA-Z]+$/)) return;
 
-						log(req, res, startTime, 'https');
+						log(
+							req,
+							res,
+							startTime,
+							'https',
+							autoBanPathsRepetitions[parsedUrl.pathname] ?? false
+						);
 					});
 				}
 			)
@@ -284,6 +290,8 @@ if (!onVercel) {
 			res.writeHead(301, {
 				Location: `https://${host}${req.url}`,
 			}).end();
+
+			log(req, res, Date.now(), 'http', false);
 		})
 		.listen(80, () => {
 			console.log('> Ready on http://localhost:80');
@@ -305,7 +313,7 @@ if (!onVercel) {
 					if (req.url.startsWith('/scripts')) return;
 					if (req.url.match(/^\/lk\/[a-zA-Z_.-]+\/[a-zA-Z]+$/)) return;
 
-					log(req, res, startTime, 'http');
+					log(req, res, startTime, 'http', false);
 				});
 			})
 			.listen(port, (err) => {
@@ -320,8 +328,9 @@ if (!onVercel) {
  * @param {http.ServerResponse} res
  * @param {number} startTime
  * @param {string} protocol
+ * @param {boolean|number} banned
  */
-function log(req, res, startTime, protocol) {
+function log(req, res, startTime, protocol, banned) {
 	const logfile = `./logs/${new Date().toISOString().split('T')[0]}.tsv`;
 
 	if (!fs.existsSync('./logs')) {
@@ -330,7 +339,7 @@ function log(req, res, startTime, protocol) {
 	if (!fs.existsSync(logfile)) {
 		fs.writeFileSync(
 			logfile,
-			`Time\tIP\tMethod\tPath\tUser-Agent\tReferer\tStatus\tResponse-Time\tResponse-Length\tProtocol\n`
+			`Time\tIP\tMethod\tPath\tUser-Agent\tReferer\tStatus\tResponse-Time\tResponse-Length\tProtocol\tBanned\n`
 		);
 		fs.chmodSync(logfile, 0o666);
 	}
@@ -341,7 +350,9 @@ function log(req, res, startTime, protocol) {
 			req.method
 		}\t${req.url}\t${req.headers['user-agent']}\t${req.headers.referer || ''}\t${
 			res.statusCode
-		}\t${Date.now() - startTime}\t${res.getHeader('Content-Length') || 0}\t${protocol || ''}\n`,
+		}\t${Date.now() - startTime}\t${res.getHeader('Content-Length') || 0}\t${protocol || ''}\t${
+			banned.toString() || 'false'
+		}\n`,
 		(err) => {
 			if (err) throw err;
 		}

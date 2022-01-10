@@ -77,6 +77,9 @@ function loadData() {
 									}
 								}
 							};
+							if (hasBeenBanned) {
+								td.style.color = 'red';
+							}
 						}
 						if (j === 3) {
 							td.onclick = () => {
@@ -100,9 +103,9 @@ function loadData() {
 									}
 								}
 							};
-						}
-						if (hasBeenBanned) {
-							td.style.textDecoration = 'line-through';
+							if (bannedPaths.includes(row[3])) {
+								td.style.color = 'red';
+							}
 						}
 						tr.appendChild(td);
 					}
