@@ -51,3 +51,4 @@ certs
 # Logs
 logs
 bannedIPs.txt
+bannedPaths.txt

@@ -20,6 +20,12 @@ export default function admin({ props }) {
 					<ul id="banList"></ul>
 				</div>
 			</div>
+			<div id="autoBanListOutputs">
+				<h2>Paths Ban List</h2>
+				<div className={LkList.list}>
+					<ul id="autoBanList"></ul>
+				</div>
+			</div>
 			<div id="dataOutputs">
 				<h2>Logs</h2>
 				<div className="tableWrapper">
@@ -34,10 +40,11 @@ export default function admin({ props }) {
 					'table#data tr:nth-child(even) { background-color: #eee; }' +
 					'table#data tr:nth-child(odd) { background-color: #fff; }' +
 					'table#data th { background-color: #333; color: white; }' +
-					'main { display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 25fr; }' +
-					'#inputs { grid-column: 1; grid-row: 1; }' +
-					'#dataOutputs { grid-column: 1; grid-row: 2; }' +
+					'main { display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 13fr 13fr; }' +
+					'#inputs { grid-column: 1 / span 2; grid-row: 1; }' +
+					'#dataOutputs { grid-column: 1; grid-row: 2 / span 2; }' +
 					'#banListOutputs { grid-column: 2; grid-row: 2; }' +
+					'#autoBanListOutputs { grid-column: 2; grid-row: 3; }' +
 					'.tableWrapper { overflow: scroll; height: 95%; }' +
 					'.tableWrapper table { width: 100%; }' +
 					'table tr th { position: sticky; top: 0; background-color: #333; color: white; }' +

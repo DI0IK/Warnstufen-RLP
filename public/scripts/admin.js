@@ -3,8 +3,10 @@ const date = document.getElementById('date');
 const updateBTN = document.getElementById('update');
 const dataTable = document.getElementById('data');
 const banList = document.getElementById('banList');
+const autoBanList = document.getElementById('autoBanList');
 
 let bannedIPs = [];
+let bannedPaths = [];
 
 function loadData() {
 	return fetch(`/admin/data.tsv?apiKey=${key.value}&date=${date.value}`)
@@ -60,6 +62,7 @@ function loadData() {
 									if (confirmed) {
 										unbanIP(row[1]).finally(() => {
 											loadBanList();
+											loadAutoBanList();
 											loadData();
 										});
 									}
@@ -68,6 +71,30 @@ function loadData() {
 									if (confirmed) {
 										banIP(row[1]).finally(() => {
 											loadBanList();
+											loadAutoBanList();
+											loadData();
+										});
+									}
+								}
+							};
+						}
+						if (j === 3) {
+							td.onclick = () => {
+								if (bannedPaths.includes(row[3])) {
+									const confirmed = confirm(`Path ${row[3]} will be unbanned`);
+									if (confirmed) {
+										removeAutoBan(row[3]).finally(() => {
+											loadBanList();
+											loadAutoBanList();
+											loadData();
+										});
+									}
+								} else {
+									const confirmed = confirm(`Path ${row[3]} will be banned`);
+									if (confirmed) {
+										addAutoBan(row[3]).finally(() => {
+											loadBanList();
+											loadAutoBanList();
 											loadData();
 										});
 									}
@@ -139,6 +166,7 @@ function loadBanList() {
 					if (confirmed) {
 						unbanIP(array[i]).finally(() => {
 							loadBanList();
+							loadAutoBanList();
 							loadData();
 						});
 					}
@@ -150,15 +178,80 @@ function loadBanList() {
 		});
 }
 
+function addAutoBan(path) {
+	return fetch(`/admin/autoban/add?apiKey=${key.value}&path=${path}`)
+		.then((response) => {
+			return response.text();
+		})
+		.then((text) => {
+			console.log(text);
+		})
+		.catch((error) => {
+			console.log(error);
+		});
+}
+
+function removeAutoBan(path) {
+	return fetch(`/admin/autoban/remove?apiKey=${key.value}&path=${path}`)
+		.then((response) => {
+			return response.text();
+		})
+		.then((text) => {
+			console.log(text);
+		})
+		.catch((error) => {
+			console.log(error);
+		});
+}
+
+function loadAutoBanList() {
+	return fetch(`/admin/autoban/list?apiKey=${key.value}`)
+		.then((response) => {
+			return response.json();
+		})
+		.then((array) => {
+			console.log(array);
+			array = array.sort((a, b) => {
+				if (a > b) return 1;
+				if (a < b) return -1;
+				return 0;
+			});
+
+			autoBanList.innerHTML = '';
+			for (let i = 0; i < array.length; i++) {
+				if (!array[i]) continue;
+				const li = document.createElement('li');
+				li.innerText = `${array[i]}`;
+				console.log(array[i]);
+				li.onclick = () => {
+					const confirmed = confirm(`Path ${array[i]} will be unbanned`);
+					if (confirmed) {
+						removeAutoBan(array[i]).finally(() => {
+							loadAutoBanList();
+							loadBanList();
+							loadData();
+						});
+					}
+				};
+				autoBanList.appendChild(li);
+			}
+
+			bannedPaths = array;
+		});
+}
+
 key.addEventListener('change', () => {
 	loadData();
 	loadBanList();
+	loadAutoBanList();
 });
 date.addEventListener('change', () => {
 	loadData();
 	loadBanList();
+	loadAutoBanList();
 });
 updateBTN.addEventListener('click', () => {
 	loadData();
 	loadBanList();
+	loadAutoBanList();
 });
