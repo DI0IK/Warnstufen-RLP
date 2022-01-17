@@ -69,6 +69,8 @@ export default function Inzidenz({
 				beginAtZero: true,
 			},
 		},
+		aspectRatio: 1.5,
+		responsive: true,
 	};
 	return (
 		<div>

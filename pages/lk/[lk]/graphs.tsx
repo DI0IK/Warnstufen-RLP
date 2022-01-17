@@ -21,6 +21,20 @@ export default function Graphs({
 			<div className="graphs__hospitalisierung">
 				<Hospitalisierung data={props.data} />
 			</div>
+			<style>
+				{
+					// Display both graphs next to each other
+					'.graphs { display: grid; grid-template-columns: 1fr 1fr; }' +
+						'.graphs__inzidenz { grid-column: 1 / 2; }' +
+						'.graphs__hospitalisierung { grid-column: 2 / 3; }' +
+						// If the screen size is less than 1200px, display the graphs in a single column
+						'@media screen and (max-width: 1199px) {' +
+						'.graphs { display: block; }' +
+						'.graphs__inzidenz { margin-bottom: 1em; }' +
+						'.graphs__hospitalisierung { margin-top: 1em; }' +
+						'}'
+				}
+			</style>
 		</div>
 	);
 }
