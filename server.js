@@ -72,7 +72,13 @@ if (!onVercel) {
 
 						res.statusCode = 200;
 						res.end('OK');
-						return;
+						return log(
+							req,
+							res,
+							Date.now(),
+							'https',
+							autoBanPathsRepetitions[req.socket.remoteAddress.replace('::ffff:', '')]
+						);
 					}
 
 					const startTime = Date.now();
@@ -262,7 +268,9 @@ if (!onVercel) {
 							res,
 							startTime,
 							'https',
-							autoBanPathsRepetitions[parsedUrl.pathname] ?? false
+							autoBanPathsRepetitions[parsedUrl.pathname]
+								? autoBanPathsRepetitions[parsedUrl.pathname]
+								: 0
 						);
 					});
 				}
