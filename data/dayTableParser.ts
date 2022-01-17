@@ -7,7 +7,8 @@ export default function parseDayTable(input: Worksheet, date: Date): DayTable {
 	if (input.getRow(4).getCell('A').value.toString().includes('Kreis, Stand')) {
 		startRow = 5;
 	}
-	if (date.getFullYear() >= 2022 && date.getMonth() >= 0 && date.getDate() >= 17) {
+	if (date.getUTCFullYear() >= 2022 && date.getUTCMonth() >= 0 && date.getUTCDate() >= 17) {
+		console.log('Using new format');
 		for (let rowNum = startRow; rowNum < input.rowCount + 1; rowNum++) {
 			const row = input.getRow(rowNum);
 			const districtName = String(row.getCell('A').value);

@@ -23,7 +23,15 @@ export default function LK() {
 				<meta name="og:description" content={'Warnzahlen für ' + lk} />
 			</Head>
 			<h1>{(lk as string).replace(/_/g, ' ')}</h1>
-			<iframe src={`/lk/${lk}/graphs`} id={'Graphs'}></iframe>
+			<br />
+			<h3>
+				<Link href={`/lk/${lk}/table`}>
+					<a>Tabellen Ansicht</a>
+				</Link>
+			</h3>
+			<div className="iframe-wrapper">
+				<iframe src={`/lk/${lk}/graphs`} id={'Graphs'}></iframe>
+			</div>
 		</Layout>
 	);
 }
