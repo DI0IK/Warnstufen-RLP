@@ -39,6 +39,14 @@ if (!onVercel) {
 					);
 					res.setHeader('Access-Control-Allow-Credentials', true);
 
+					if (process.env.WARTUNG === 'true' && parsedUrl.path !== '/maintenance') {
+						// Zu watungsseite weiterleiten
+						res.statusCode = 302;
+						res.setHeader('Location', '/maintenance');
+						res.end();
+						return;
+					}
+
 					if (bannedIPs === undefined) {
 						bannedIPs = fs.readFileSync('./bannedIPs.txt', 'utf8').split('\n');
 					}
