@@ -12,9 +12,7 @@ export default function Maintenance() {
 			}}
 		>
 			<h1>Wartungsarbeiten</h1>
-			<h2>
-				Wir arbeiten gerade an der Seite. Dies kann einige Stunden bis zu wenigen Tagen dauern.
-			</h2>
+			<h2>Wir arbeiten gerade an der Website. Bitte haben Sie einen Moment Geduld.</h2>
 		</div>
 	);
 }
