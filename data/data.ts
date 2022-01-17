@@ -54,7 +54,7 @@ export default class DataFetcher {
 			// Dateformat: YYYY-MM-DD
 			const sheet = await getSheet(url, 'Tabelle1');
 
-			const dayTable = parseDayTable(sheet);
+			const dayTable = parseDayTable(sheet, date);
 			if (!dayTable) continue;
 			this._dayTables[
 				date.toLocaleDateString('de-DE', {
@@ -78,7 +78,7 @@ export default class DataFetcher {
 
 		const sheet = await getSheet(url, 'Tabelle1');
 
-		const dayTable = parseDayTable(sheet);
+		const dayTable = parseDayTable(sheet, date);
 		if (!dayTable) return;
 		this._dayTables[
 			date.toLocaleDateString('de-DE', {

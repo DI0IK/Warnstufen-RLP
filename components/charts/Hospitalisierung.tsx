@@ -1,4 +1,3 @@
-import DataFetcher from '../../../data/data';
 import { Chart, ChartProps } from 'react-chartjs-2';
 import {
 	Chart as ChartJS,
@@ -27,7 +26,7 @@ import {
 	Tooltip,
 	SubTitle,
 } from 'chart.js';
-import { DistrictData } from '../../../data/dayTableParser';
+import { DistrictData } from '../../data/dayTableParser';
 
 ChartJS.register(
 	ArcElement,
@@ -57,14 +56,12 @@ ChartJS.register(
 );
 
 export default function Hospitalisierung({
-	props,
+	data,
 }: {
-	props: {
-		data: {
-			data: DistrictData;
-			date: string;
-		}[];
-	};
+	data: {
+		data: DistrictData;
+		date: string;
+	}[];
 }) {
 	const options: ChartProps<'line', number[], string>['options'] = {
 		scales: {
@@ -78,9 +75,7 @@ export default function Hospitalisierung({
 			<div>
 				<h2>
 					Hospitalisierung:{' '}
-					<span>
-						{props.data[props.data.length - 1].data.siebenTage.IntensivHospitalisierungRLP}
-					</span>
+					<span>{data[data.length - 1].data.inzidenz.IntensivHospitalisierungRLP}</span>
 				</h2>
 			</div>
 			<Chart
@@ -88,47 +83,21 @@ export default function Hospitalisierung({
 				data={{
 					datasets: [
 						{
-							data: props.data
-								.filter((entry) => entry.data.siebenTage.IntensivHospitalisierungRLP)
-								.map((entry) => entry.data.siebenTage.IntensivHospitalisierungRLP),
+							data: data
+								.filter((entry) => entry.data.inzidenz.IntensivHospitalisierungRLP)
+								.map((entry) => entry.data.inzidenz.IntensivHospitalisierungRLP),
 							label: 'Hospitalisierung',
 							borderColor: '#ff0000',
 							backgroundColor: '#ff0000',
 							fill: false,
 						},
 					],
-					labels: props.data
-						.filter((entry) => entry.data.siebenTage.IntensivHospitalisierungRLP)
+					labels: data
+						.filter((entry) => entry.data.inzidenz.IntensivHospitalisierungRLP)
 						.map((entry) => entry.date),
 				}}
 				options={options}
 			/>
 		</div>
 	);
-}
-
-export async function getServerSideProps(context) {
-	const prom = new Promise((resolve, reject) => {
-		const data = DataFetcher.getInstance();
-
-		const interv = setInterval(() => {
-			if (data.isReady) {
-				clearInterval(interv);
-				resolve({
-					props: {
-						data: data
-							.getTablesForDistrict(context.params.lk.replace(/_/g, ' '))
-							.filter((entry) => {
-								// only display last 3 weeks
-								const date = new Date(entry.date.split('.').reverse().join('-'));
-								const now = new Date();
-								return date.getTime() > now.getTime() - 3 * 7 * 24 * 60 * 60 * 1000;
-							}),
-					},
-				});
-			}
-		}, 100);
-	});
-
-	return { props: await prom };
 }

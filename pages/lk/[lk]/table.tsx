@@ -42,45 +42,28 @@ export default function Table({
 							<th colSpan={6} scope="colgroup">
 								Laborbestätigt, seit Beginn der Pandemie
 							</th>
-							<th colSpan={7} scope="colgroup">
-								Gemeldet, die letzten 7 Tage
+							<th colSpan={2} scope="colgroup">
+								Neue Fälle
+							</th>
+							<th colSpan={6} scope="colgroup">
+								Inzidenz der letzten 7-Tage pro 100.000
 							</th>
 						</tr>
 						<tr>
-							<th scope="col" rowSpan={2}>
-								Gesamt
-							</th>
-							<th scope="col" rowSpan={2}>
-								Differenz zum Vortag
-							</th>
-							<th scope="col" rowSpan={2}>
-								Hospitalisiert
-							</th>
-							<th scope="col" rowSpan={2}>
-								Verstorben
-							</th>
-							<th scope="col" rowSpan={2}>
-								Genesen
-							</th>
-							<th scope="col" rowSpan={2}>
-								aktuelle Fälle
-							</th>
-							<th scope="col" rowSpan={2}>
-								Gesamt
-							</th>
-							<th scope="colgroup" colSpan={5}>
-								Inzidenz pro 100.000
-							</th>
-							<th scope="col" rowSpan={2}>
-								Hospitalisierungsinzidenz RLP
-							</th>
-						</tr>
-						<tr>
+							<th scope="col">Gesamt</th>
+							<th scope="col">Differenz zum Vortag</th>
+							<th scope="col">Hospitalisiert</th>
+							<th scope="col">Verstorben</th>
+							<th scope="col">Genesen</th>
+							<th scope="col">aktuelle Fälle</th>
+							<th scope="col">Letzte 7 Tage</th>
+							<th scope="col">Gleicher Zeitraum Vorwoche</th>
 							<th scope="col">RLP</th>
 							<th scope="col">RLP + USAF</th>
 							<th scope="col">&lt;20 Jahre</th>
 							<th scope="col">20-59 Jahre</th>
 							<th scope="col">≥60 Jahre</th>
+							<th scope="col">Hospitalisierungsinzidenz RLP</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -103,13 +86,14 @@ export default function Table({
 									<td>{dateItem.data.seitBeginn.Verstorben}</td>
 									<td>{dateItem.data.seitBeginn.Genesen}</td>
 									<td>{dateItem.data.seitBeginn.aktuelleFaelle}</td>
-									<td>{dateItem.data.siebenTage.Gesamt}</td>
-									<td>{dateItem.data.siebenTage.Inzidenz.RLP}</td>
-									<td>{dateItem.data.siebenTage.Inzidenz.RLPundUSAF}</td>
-									<td>{dateItem.data.siebenTage.Inzidenz.lt20y}</td>
-									<td>{dateItem.data.siebenTage.Inzidenz.lt60y}</td>
-									<td>{dateItem.data.siebenTage.Inzidenz.gt60y}</td>
-									<td>{dateItem.data.siebenTage.IntensivHospitalisierungRLP}</td>
+									<td>{dateItem.data.neueFaelle.letzte7Tage}</td>
+									<td>{dateItem.data.neueFaelle.vor7Tagenletzte7Tage || ''}</td>
+									<td>{dateItem.data.inzidenz.RLP}</td>
+									<td>{dateItem.data.inzidenz.RLPundUSAF}</td>
+									<td>{dateItem.data.inzidenz.lt20y}</td>
+									<td>{dateItem.data.inzidenz.lt60y}</td>
+									<td>{dateItem.data.inzidenz.gt60y}</td>
+									<td>{dateItem.data.inzidenz.IntensivHospitalisierungRLP || ''}</td>
 								</tr>
 							);
 						})}
