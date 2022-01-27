@@ -1,41 +1,35 @@
 import Link from 'next/link';
-import Warning from './warning';
 
 export default function Layout({ children }) {
 	return (
-		<div className="layout-item">
-			<Warning />
-			{children}
+		<div className="layout">
 			<header>
-				<button className="menuButton"></button>
-				<div className="menuEntry">
-					<Link href="/">
-						<a>Zurück zur Landkreis Auswahl</a>
-					</Link>
-					<Link href="/docs">
-						<a>API Dokumentation</a>
-					</Link>
-					<Link href="/kontakt">
-						<a>Kontakt/Datenschutz</a>
-					</Link>
-					<Link href="/coronaverordnungen">
-						<a>Coronaverordnungen</a>
-					</Link>
-					<Link href="https://lua.rlp.de/fileadmin/lua/Downloads/Corona/Listen/Leitindikatoren_Corona-Warnstufen.xlsx">
-						<a>Datenquelle</a>
-					</Link>
-					<Link href="https://github.com/DI0IK/Warnstufen-RLP">
-						<a>Github</a>
-					</Link>
-					<button
-						onClick={() => {
-							document.querySelector('html')!.classList.toggle('dark');
-						}}
-					>
-						Design umschalten
-					</button>
-				</div>
+				<nav>
+					<ul>
+						<li>
+							<Link href="/">
+								<a>Home</a>
+							</Link>
+						</li>
+						<li>
+							<Link href="/kontakt">
+								<a>Kontakt</a>
+							</Link>
+						</li>
+						<li>
+							<Link href="/api-docs">
+								<a>API</a>
+							</Link>
+						</li>
+						<li>
+							<Link href="https://corona.rlp.de/de/service/rechtsgrundlagen/">
+								<a>Coronaverordnungen</a>
+							</Link>
+						</li>
+					</ul>
+				</nav>
 			</header>
+			<main>{children}</main>
 		</div>
 	);
 }

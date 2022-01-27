@@ -1,32 +1,30 @@
 {
-	"name": "warnstufe-rlp",
-	"version": "0.1.0",
+	"name": "warnstufe-rlp-source",
 	"private": true,
 	"scripts": {
 		"build": "next build",
-		"start:dev": "sudo NODE_ENV=development node server.js",
-		"start:prod": "sudo NODE_ENV=production pm2 start server.js",
-		"stop:prod": "sudo pm2 stop all && sudo pm2 delete all",
+		"dev": "sudo NODE_ENV=development node server.js",
+		"start": "sudo NODE_ENV=production node server.js",
 		"lint": "next lint",
 		"vercel-build": "npm run build"
 	},
 	"dependencies": {
-		"axios": "^0.23.0",
-		"canvas": "^2.8.0",
-		"cors": "^2.8.5",
-		"exceljs": "^4.3.0",
-		"next": "11.1.2",
-		"react": "17.0.2",
-		"react-dom": "17.0.2",
-		"remark": "^13.0.0",
-		"remark-html": "^13.0.2",
-		"sass": "^1.43.3"
+		"axios": "latest",
+		"chart.js": "latest",
+		"exceljs": "latest",
+		"next": "latest",
+		"react": "latest",
+		"react-chartjs-2": "latest",
+		"react-dom": "latest",
+		"remark": "latest",
+		"remark-html": "latest",
+		"sass": "latest"
 	},
 	"devDependencies": {
-		"@types/node": "^16.11.3",
-		"@types/react": "^17.0.31",
-		"eslint": "7.32.0",
-		"eslint-config-next": "11.1.2",
-		"typescript": "^4.4.4"
+		"@types/node": "latest",
+		"@types/react": "latest",
+		"eslint": "latest",
+		"eslint-config-next": "latest",
+		"typescript": "latest"
 	}
 }

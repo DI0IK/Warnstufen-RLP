@@ -1,0 +1,44 @@
+.list {
+	max-width: 100%;
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		max-width: 80%;
+		margin: 0 auto;
+		padding: 0;
+		flex-direction: row;
+
+		li {
+			width: max-content;
+			margin: 0 auto;
+			padding: 0;
+			list-style: none;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			font-size: 2rem;
+			font-weight: bold;
+			border-radius: 5px;
+			padding: 10px;
+			margin-bottom: 10px;
+			box-shadow: 0 0 10px #000;
+			transition: all 0.3s ease-in-out;
+			border: 1px solid #000;
+
+			&:hover,
+			&:focus {
+				background-color: #000;
+				color: #fff;
+				cursor: pointer;
+			}
+
+			a {
+				&:focus {
+					text-decoration: underline;
+				}
+			}
+		}
+	}
+}

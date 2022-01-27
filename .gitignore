@@ -33,8 +33,22 @@ yarn-error.log*
 # vercel
 .vercel
 
-/pages/kontakt.md
-/**/*.crt
-/**/*.key
+# typescript
+*.tsbuildinfo
 
-/logs/*
+# Kontakt
+*/kontakt.md
+
+# Cache
+cache
+
+# Certs
+certs
+
+# Env
+.env
+
+# Logs
+logs
+bannedIPs.txt
+bannedPaths.txt
