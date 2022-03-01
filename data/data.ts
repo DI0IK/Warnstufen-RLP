@@ -166,7 +166,7 @@ export default class DataFetcher {
 		return [
 			'Januar',
 			'Februar',
-			'März',
+			'Maerz',
 			'April',
 			'Mai',
 			'Juni',
