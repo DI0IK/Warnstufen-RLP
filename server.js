@@ -34,7 +34,7 @@ app.prepare().then(() => {
 				if (req.url.match(/^\/lk\/[a-zA-Z_.-]+\/[a-zA-Z]+$/)) return;
 			});
 		})
-		.listen(process.env.PORT ? Number.parseInt(process.env.PORT) : 3000, (err) => {
+		.listen(process.env.PORT ? Number.parseInt(process.env.PORT) : 80, (err) => {
 			if (err) throw err;
 			console.log('> Ready on http://localhost:' + (process.env.PORT || 3000));
 		});
