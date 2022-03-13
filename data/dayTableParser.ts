@@ -8,10 +8,10 @@ export default function parseDayTable(input: Worksheet, date: Date): DayTable {
 		startRow = 5;
 	}
 	if (new Date(Date.UTC(2022, 0, 17, 0, 0, 0)) <= date) {
-		console.log('Using new format');
 		for (let rowNum = startRow; rowNum < input.rowCount + 1; rowNum++) {
 			const row = input.getRow(rowNum);
 			const districtName = String(row.getCell('A').value);
+			if (districtName === 'null') continue;
 			const data: DistrictData = {
 				seitBeginn: {
 					Gesamt: Number(row.getCell('B').value),
@@ -42,6 +42,7 @@ export default function parseDayTable(input: Worksheet, date: Date): DayTable {
 		for (let rowNum = startRow; rowNum < input.rowCount + 1; rowNum++) {
 			const row = input.getRow(rowNum);
 			const districtName = String(row.getCell('A').value);
+			if (districtName === 'null') continue;
 			const data: DistrictData = {
 				seitBeginn: {
 					Gesamt: Number(row.getCell('B').value),
