@@ -158,6 +158,14 @@ export default class DataFetcher {
 					day: '2-digit',
 					timeZone: 'UTC',
 				})
+			) ||
+			Object.keys(this._dayTables).includes(
+				new Date(nowDate.setDate(nowDate.getDate() - 2)).toLocaleDateString('de-DE', {
+					year: 'numeric',
+					month: '2-digit',
+					day: '2-digit',
+					timeZone: 'UTC',
+				})
 			)
 		);
 	}
